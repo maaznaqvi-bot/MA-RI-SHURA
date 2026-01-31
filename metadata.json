@@ -1,0 +1,5 @@
+{
+  "name": "YM Shura Navigator",
+  "description": "A modern, interactive organizational chart for the YM MA/RI 2026 Sub-Regional Shura, featuring D3-powered visualizations and an AI assistant to query the leadership structure.",
+  "requestFramePermissions": []
+}
