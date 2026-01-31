@@ -1,3 +1,4 @@
+
 import { ShuraMember } from './types';
 
 export const COLORS = {
@@ -7,6 +8,9 @@ export const COLORS = {
   white: '#ffffff',
   text: '#1f2937',
 };
+
+// Updated Default Calendar ID
+export const DEFAULT_CALENDAR_ID = 'c_8bc4a558316fd6f9f0d6a72d8e324583d9dd7feb869be42a2b39f1cb9b68ea1a@group.calendar.google.com'; 
 
 // Root node shared by both hierarchies
 const ROOT_MAAZ: ShuraMember = { 

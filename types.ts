@@ -9,11 +9,12 @@ export interface ShuraMember {
   phone?: string;
 }
 
+export interface HierarchyNode extends ShuraMember {
+  children?: HierarchyNode[];
+}
+
+// Added ChatMessage interface to fix the import error in ChatInterface.tsx
 export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
-}
-
-export interface HierarchyNode extends ShuraMember {
-  children?: HierarchyNode[];
 }

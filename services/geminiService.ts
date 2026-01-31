@@ -1,8 +1,10 @@
 
 import { GoogleGenAI } from "@google/genai";
 import { ALL_SHURA_DATA } from "../constants";
+import { ChatMessage } from "../types";
 
-export async function askAboutShura(question: string, history: { role: string; text: string }[] = []) {
+// Updated history parameter to use the ChatMessage interface for improved type safety
+export async function askAboutShura(question: string, history: ChatMessage[] = []) {
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   const shuraContext = ALL_SHURA_DATA.map(m => 
@@ -21,10 +23,9 @@ export async function askAboutShura(question: string, history: { role: string; t
     Ahmad Somakia is the Events Lead who manages the calendar.
 
     CALENDAR FEATURES:
-    - Users can merge existing calendars (like local chapter calendars) into the main view using the "Link Chapter Calendar" button.
-    - To link a calendar, the user needs the Google Calendar ID, which is found in Calendar Settings > Integrate Calendar.
-    - Users can also request new events to be added to the calendar using the "Request Event" button.
-    - Individual sidebar events can be added to personal calendars via the "+ Add to Cal" link.
+    - The Sub-Regional Calendar is the central source of truth for all regional events.
+    - All regional schedules are synced directly from the primary Google Calendar.
+    - Individual sidebar events can be added to personal calendars via the "+ Add" link.
 
     Leadership Data:
     ${shuraContext}
@@ -34,15 +35,16 @@ export async function askAboutShura(question: string, history: { role: string; t
     - Provide all information in clean, plain text.
 
     Guidelines:
-    - If asked about adding existing calendars, explain the "Link Chapter Calendar" button and where to find the Calendar ID.
     - Maintain a helpful, respectful, and concise professional tone.
+    - If asked about adding events, direct them to the Events Lead (Ahmad Somakia).
   `;
 
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: [
-        ...history.map(h => ({ role: h.role === 'user' ? 'user' : 'model', parts: [{ text: h.text }] })),
+        // Mapping history to the expected part format for Gemini API
+        ...history.map(h => ({ role: h.role, parts: [{ text: h.text }] })),
         { role: 'user', parts: [{ text: question }] }
       ],
       config: {
@@ -51,6 +53,7 @@ export async function askAboutShura(question: string, history: { role: string; t
       },
     });
 
+    // Accessing .text property directly as per Gemini API guidelines
     return response.text || "I'm sorry, I couldn't process that request.";
   } catch (error) {
     console.error("Gemini API Error:", error);
