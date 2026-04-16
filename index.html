@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YM Shura 2026 — MA/RI</title>
+    <!-- Redirect legacy hash routes -->
+    <script>
+        if (window.location.hash === '#/directory') {
+            window.location.replace('/directory.html');
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -221,7 +227,7 @@
             <a href="#shura"       class="nav-link"        onclick="setActive(this)">SR Shura</a>
             <a href="#neighbornet" class="nav-link"        onclick="setActive(this)">NeighborNets</a>
         </div>
-        <a href="/directory" class="nav-dir-btn">
+        <a href="/directory.html" class="nav-dir-btn">
             <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             Directory
         </a>
