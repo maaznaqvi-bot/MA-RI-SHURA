@@ -428,11 +428,11 @@ function parseCSVRow(row) {
 
 async function fetchTab(gid) {
     if (gid.includes('_GID')) return []; // not configured yet
-    const url = gid === '0' ? `${SHEET_BASE}?output=csv` : `${SHEET_BASE}?gid=${gid}&single=true&output=csv`;
+    // Use our Vercel API proxy — bypasses Google Workspace CORS restrictions
+    const url = `/api/events?gid=${gid}`;
     let text = null;
-    try { const r = await fetch(url); if (r.ok) text = await r.text(); } catch(e) {}
-    if (!text) {
-        try { const r = await fetch(PROXY + encodeURIComponent(url)); if (r.ok) text = await r.text(); } catch(e) {}
+    try { const r = await fetch(url); if (r.ok) text = await r.text(); } catch(e) {
+        console.error('API proxy fetch failed:', e);
     }
     if (!text) return [];
     return text.trim().split('\n').slice(1)
