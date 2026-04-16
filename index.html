@@ -1,47 +1,754 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YM Shura 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8fafc;
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --green-dark:    #062d22;
+            --green:         #0b3d2e;
+            --green-mid:     #145945;
+            --gold:          #c8a951;
+            --white:         #ffffff;
+            --gray-50:       #f8fafc;
+            --gray-100:      #f1f5f9;
+            --gray-200:      #e2e8f0;
+            --gray-400:      #94a3b8;
+            --gray-500:      #64748b;
+            --gray-900:      #0f172a;
+            --radius:        2.5rem;
+            --radius-sm:     1rem;
         }
-        /* Custom scrollbar for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #0b3d2e;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #145945;
-        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-900); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 4px; }
+
+        /* ── HEADER ── */
+        .header { background: linear-gradient(160deg, var(--green) 0%, var(--green-dark) 100%); padding: 4rem 1rem 3rem; text-align: center; }
+        .header-inner { max-width: 80rem; margin: 0 auto; }
+        .accent-bar { width: 5rem; height: 5px; background: var(--gold); border-radius: 9999px; margin: 0 auto 1.75rem; box-shadow: 0 0 14px var(--gold); }
+        .header h1 { color: white; font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 900; letter-spacing: -0.02em; text-transform: uppercase; }
+        .header-sub { color: var(--gold); font-size: clamp(0.75rem, 2vw, 1.1rem); font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; margin-top: 0.4rem; }
+        .header-badge { display: inline-block; margin-top: 0.75rem; padding: 0.2rem 0.9rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 9999px; font-size: 0.55rem; color: rgba(255,255,255,0.35); font-weight: 900; letter-spacing: 0.3em; text-transform: uppercase; }
+
+        /* Search */
+        .search-wrap { margin-top: 2rem; position: relative; max-width: 34rem; margin-left: auto; margin-right: auto; }
+        .search-input { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 1rem; padding: 1rem 1rem 1rem 2.75rem; color: white; font-family: 'Poppins', sans-serif; font-size: 0.875rem; outline: none; transition: box-shadow 0.2s; }
+        .search-input::placeholder { color: rgba(255,255,255,0.4); }
+        .search-input:focus { box-shadow: 0 0 0 2px var(--gold); }
+        .search-icon { position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4); width: 1.1rem; height: 1.1rem; }
+        .search-results { position: absolute; top: calc(100% + 0.5rem); left: 0; right: 0; background: white; border-radius: 1rem; box-shadow: 0 20px 50px rgba(0,0,0,0.2); overflow: hidden; z-index: 50; max-height: 20rem; overflow-y: auto; text-align: left; display: none; }
+        .search-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1.25rem; border: none; background: none; width: 100%; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid var(--gray-100); font-family: 'Poppins', sans-serif; }
+        .search-item:hover { background: var(--gray-50); }
+        .search-avatar { width: 2.25rem; height: 2.25rem; border-radius: 9999px; background: #ecfdf5; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.7rem; color: var(--green); flex-shrink: 0; }
+        .search-name { font-size: 0.8rem; font-weight: 700; color: var(--gray-900); text-align: left; }
+        .search-role { font-size: 0.6rem; font-weight: 900; color: var(--gold); text-transform: uppercase; letter-spacing: 0.08em; }
+        .search-empty { padding: 1.5rem; text-align: center; color: var(--gray-400); font-size: 0.8rem; }
+
+        /* ── NAV ── */
+        .nav { background: white; border-bottom: 1px solid var(--gray-100); position: sticky; top: 0; z-index: 40; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+        .nav-inner { max-width: 80rem; margin: 0 auto; padding: 0 1.5rem; display: flex; overflow-x: auto; scrollbar-width: none; }
+        .nav-inner::-webkit-scrollbar { display: none; }
+        .nav-link { display: block; padding: 1rem 0.875rem; font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray-400); text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; flex-shrink: 0; }
+        @media (min-width: 768px) { .nav-link { font-size: 0.8rem; padding: 1rem 1.1rem; } }
+        .nav-link:hover { color: var(--green); }
+        .nav-link.active { color: var(--green); border-bottom-color: var(--green); }
+
+        /* ── LAYOUT ── */
+        main { max-width: 80rem; margin: 0 auto; padding: 3rem 1rem 5rem; }
+        .sections { display: flex; flex-direction: column; gap: 3.5rem; }
+        .scroll-mt { scroll-margin-top: 4.5rem; }
+
+        /* ── CARD ── */
+        .card { background: white; border-radius: var(--radius); padding: 2rem; box-shadow: 0 2px 20px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); }
+        @media (min-width: 768px) { .card { padding: 2.5rem; } }
+        .sec-title { font-size: clamp(1.4rem, 3.5vw, 2rem); font-weight: 900; color: var(--gray-900); letter-spacing: -0.02em; }
+        .sec-sub { font-size: 0.8rem; color: var(--gray-400); margin-top: 0.25rem; font-style: italic; }
+        .sec-label { font-size: 0.6rem; font-weight: 900; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.2em; margin-top: 0.2rem; }
+        .sec-header { margin-bottom: 1.75rem; }
+
+        /* ── CALENDAR ── */
+        .cal-layout { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        @media (min-width: 900px) { .cal-layout { grid-template-columns: 1fr 320px; } }
+
+        /* Month grid */
+        .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+        .cal-month-label { font-size: 1.1rem; font-weight: 900; color: var(--gray-900); }
+        .cal-nav-btn { background: var(--gray-100); border: none; border-radius: 0.6rem; width: 2.25rem; height: 2.25rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--gray-500); transition: background 0.15s; font-size: 1rem; }
+        .cal-nav-btn:hover { background: var(--gray-200); }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+        .cal-dow { text-align: center; font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray-400); padding-bottom: 0.6rem; }
+        .cal-day { aspect-ratio: 1; border-radius: 0.6rem; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600; color: var(--gray-500); cursor: default; position: relative; transition: background 0.1s; gap: 2px; }
+        .cal-day.other-month { color: var(--gray-200); }
+        .cal-day.today { background: var(--green); color: white; font-weight: 900; }
+        .cal-day.has-event { cursor: pointer; }
+        .cal-day.has-event:not(.today) { background: #ecfdf5; color: var(--green); font-weight: 700; }
+        .cal-day.has-event:hover:not(.today) { background: #d1fae5; }
+        .cal-day-dot { width: 4px; height: 4px; border-radius: 9999px; background: var(--gold); }
+        .cal-day.today .cal-day-dot { background: rgba(255,255,255,0.7); }
+
+        /* Upcoming Events panel */
+        .upcoming-panel { display: flex; flex-direction: column; gap: 0; }
+        .upcoming-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+        .upcoming-title { font-size: 0.9rem; font-weight: 900; color: var(--gray-900); text-transform: uppercase; letter-spacing: 0.08em; }
+        .upcoming-count { font-size: 0.6rem; font-weight: 900; color: var(--gold); background: #fefce8; border: 1px solid #fef08a; padding: 0.2rem 0.6rem; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .event-card { padding: 1rem; border-radius: 1rem; border: 1px solid var(--gray-100); margin-bottom: 0.6rem; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; background: white; }
+        .event-card:hover { border-color: #a7f3d0; box-shadow: 0 2px 12px rgba(11,61,46,0.08); }
+        .event-card.next-up { border-color: var(--green); background: linear-gradient(135deg, #f0fdf4, white); }
+        .event-date-badge { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .event-month { font-size: 0.55rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); }
+        .event-day-num { font-size: 1.5rem; font-weight: 900; color: var(--green); line-height: 1; }
+        .event-info { flex: 1; }
+        .event-title-text { font-size: 0.875rem; font-weight: 700; color: var(--gray-900); }
+        .event-meta { font-size: 0.7rem; color: var(--gray-400); margin-top: 0.2rem; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+        .event-meta span { display: flex; align-items: center; gap: 0.25rem; }
+        .next-badge { font-size: 0.55rem; font-weight: 900; background: var(--green); color: white; padding: 0.15rem 0.5rem; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; align-self: flex-start; }
+        .no-events { text-align: center; padding: 2rem 1rem; color: var(--gray-400); font-size: 0.8rem; }
+        .no-events svg { margin: 0 auto 0.75rem; display: block; opacity: 0.3; }
+
+        /* Event detail popup */
+        .event-popup { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem; }
+        .event-popup.open { display: flex; }
+        .event-popup-inner { background: white; border-radius: 2rem; padding: 2rem; max-width: 26rem; width: 100%; box-shadow: 0 30px 60px rgba(0,0,0,0.25); }
+        .event-popup-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
+        .event-popup-date { background: var(--green); color: white; border-radius: 1rem; padding: 0.75rem; text-align: center; min-width: 3.5rem; }
+        .event-popup-date-month { font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); }
+        .event-popup-date-day { font-size: 2rem; font-weight: 900; line-height: 1; }
+        .event-popup-close { background: var(--gray-100); border: none; border-radius: 9999px; width: 2rem; height: 2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--gray-500); flex-shrink: 0; }
+        .event-popup-close:hover { background: var(--gray-200); }
+        .event-popup-title { font-size: 1.25rem; font-weight: 900; color: var(--gray-900); }
+        .event-popup-meta { margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem; }
+        .event-popup-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--gray-500); }
+        .event-popup-row svg { color: var(--green); flex-shrink: 0; }
+        .event-popup-desc { margin-top: 1rem; font-size: 0.8rem; color: var(--gray-500); line-height: 1.6; padding-top: 1rem; border-top: 1px solid var(--gray-100); }
+
+        /* Setup banner */
+        .setup-banner { background: #fefce8; border: 1.5px dashed #fbbf24; border-radius: 1.25rem; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 1rem; }
+        .setup-banner-icon { font-size: 1.25rem; flex-shrink: 0; }
+        .setup-banner-title { font-size: 0.8rem; font-weight: 900; color: #92400e; margin-bottom: 0.25rem; }
+        .setup-banner-text { font-size: 0.72rem; color: #78350f; line-height: 1.6; }
+        .setup-banner-text code { background: rgba(0,0,0,0.07); padding: 0.1rem 0.35rem; border-radius: 0.3rem; font-family: monospace; font-size: 0.7rem; }
+        .setup-banner a { color: var(--green); font-weight: 700; }
+
+        /* ── SR OVERVIEW ── */
+        .overview { background: var(--green); border-radius: var(--radius); padding: 2.5rem; position: relative; overflow: hidden; }
+        .overview-circle { position: absolute; top: -4rem; right: -4rem; width: 14rem; height: 14rem; background: rgba(255,255,255,0.04); border-radius: 9999px; }
+        .overview-inner { position: relative; z-index: 1; }
+        .overview-hdr { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+        .overview-icon { padding: 0.75rem; background: rgba(255,255,255,0.1); border-radius: 1rem; color: var(--gold); }
+        .overview-title { font-size: 1.75rem; font-weight: 900; color: white; }
+        .overview-label { font-size: 0.6rem; font-weight: 900; color: rgba(200,169,81,0.7); text-transform: uppercase; letter-spacing: 0.2em; margin-top: 0.2rem; }
+        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        @media (min-width: 768px) { .stats { grid-template-columns: repeat(4,1fr); } }
+        .stat { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 1.4rem; border-radius: 1.5rem; transition: background 0.2s; }
+        .stat:hover { background: rgba(255,255,255,0.09); }
+        .stat-lbl { font-size: 0.58rem; font-weight: 900; color: var(--gold); text-transform: uppercase; letter-spacing: 0.15em; }
+        .stat-val { font-size: 1.05rem; font-weight: 900; color: white; margin-top: 0.2rem; }
+        .stat-desc { font-size: 0.62rem; color: rgba(255,255,255,0.4); margin-top: 0.1rem; }
+
+        /* ── ORG CHART ── */
+        .org-tooltip { position: fixed; pointer-events: none; background: var(--green); border: 1px solid rgba(200,169,81,0.3); padding: 0.875rem; border-radius: 0.875rem; box-shadow: 0 16px 40px rgba(0,0,0,0.3); opacity: 0; z-index: 9999; min-width: 160px; max-width: 260px; transition: opacity 0.15s; }
+
+        /* ── DIRECTORY ── */
+        .dir-grid { display: grid; grid-template-columns: 1fr; gap: 0.6rem; }
+        @media (min-width: 640px)  { .dir-grid { grid-template-columns: 1fr 1fr; } }
+        @media (min-width: 1024px) { .dir-grid { grid-template-columns: 1fr 1fr 1fr; } }
+        .dir-card { border: 1px solid transparent; background: var(--gray-50); border-radius: 1rem; padding: 0.9rem; cursor: pointer; text-align: left; width: 100%; font-family: 'Poppins', sans-serif; transition: background 0.15s, border-color 0.15s; }
+        .dir-card:hover { background: #ecfdf5; border-color: #a7f3d0; }
+        .dir-top { display: flex; align-items: center; gap: 0.75rem; }
+        .dir-avatar { width: 2.5rem; height: 2.5rem; border-radius: 0.75rem; background: white; border: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--green); transition: background 0.15s, color 0.15s; flex-shrink: 0; }
+        .dir-card:hover .dir-avatar { background: var(--green); color: white; }
+        .dir-name { font-size: 0.82rem; font-weight: 700; color: var(--gray-900); }
+        .dir-role { font-size: 0.58rem; font-weight: 900; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.1rem; }
+        .dir-expand { display: none; padding-top: 0.75rem; border-top: 1px solid var(--gray-100); margin-top: 0.75rem; }
+        .dir-card.open .dir-expand { display: block; }
+        .dir-desc { font-size: 0.72rem; color: var(--gray-400); line-height: 1.5; }
+        .dir-btns { display: flex; gap: 0.4rem; margin-top: 0.7rem; flex-wrap: wrap; }
+        .dir-btn { padding: 0.4rem 0.9rem; border-radius: 0.5rem; font-size: 0.65rem; font-weight: 700; text-decoration: none; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; transition: background 0.15s; }
+        .dir-btn-email { background: var(--green); color: white; }
+        .dir-btn-email:hover { background: var(--green-mid); }
+        .dir-btn-phone { background: white; color: var(--green); border: 1.5px solid var(--green); }
+        .dir-btn-phone:hover { background: var(--gray-50); }
+        .dir-btn-profile { background: var(--gray-100); color: var(--gray-500); }
+        .dir-btn-profile:hover { background: var(--gray-200); }
+
+        /* ── MEMBER MODAL ── */
+        .modal-overlay { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem; }
+        .modal-overlay.open { display: flex; }
+        .modal { background: white; width: 100%; max-width: 30rem; border-radius: 2.5rem; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.3); }
+        .modal-hdr { height: 7rem; background: linear-gradient(135deg, var(--green), var(--green-mid)); position: relative; }
+        .modal-close { position: absolute; top: 1.25rem; right: 1.25rem; background: rgba(255,255,255,0.15); border: none; border-radius: 9999px; width: 2.25rem; height: 2.25rem; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; }
+        .modal-close:hover { background: rgba(255,255,255,0.25); }
+        .modal-body { padding: 0 1.75rem 2.25rem; margin-top: -3.5rem; }
+        .modal-avatar-wrap { width: 7rem; height: 7rem; border-radius: 1.6rem; background: white; padding: 4px; box-shadow: 0 6px 20px rgba(0,0,0,0.12); margin: 0 auto 0.875rem; }
+        .modal-avatar-inner { width: 100%; height: 100%; border-radius: 1.3rem; background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; font-weight: 900; color: var(--green); border: 2px dashed var(--gray-200); }
+        .modal-name { text-align: center; font-size: 1.5rem; font-weight: 900; color: var(--gray-900); }
+        .modal-meta { display: flex; align-items: center; gap: 0.5rem; justify-content: center; margin-top: 0.4rem; flex-wrap: wrap; }
+        .modal-role { padding: 0.2rem 0.875rem; background: #fefce8; color: var(--gold); font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; border-radius: 9999px; border: 1px solid #fef08a; }
+        .modal-desc { margin-top: 1.25rem; font-size: 0.82rem; color: var(--gray-400); line-height: 1.7; text-align: center; }
+        .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; margin-top: 1.75rem; }
+        .modal-btn { display: flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.875rem; border-radius: 1rem; font-family: 'Poppins', sans-serif; font-size: 0.82rem; font-weight: 700; text-decoration: none; cursor: pointer; border: none; transition: background 0.15s; }
+        .modal-btn-primary { background: var(--green); color: white; }
+        .modal-btn-primary:hover { background: var(--green-mid); }
+        .modal-btn-secondary { background: white; color: var(--green); border: 2px solid var(--green); }
+        .modal-btn-secondary:hover { background: var(--gray-50); }
+        .modal-btn-disabled { background: var(--gray-100); color: var(--gray-400); cursor: default; }
+
+        /* ── FOOTER ── */
+        footer { background: white; border-top: 1px solid var(--gray-100); padding: 2.5rem 2rem; text-align: center; }
+        .footer-title { font-weight: 900; color: var(--gray-900); text-transform: uppercase; font-size: 0.875rem; }
+        .footer-links { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 0.75rem; font-size: 0.62rem; font-weight: 900; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.15em; }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "@google/genai": "https://esm.sh/@google/genai@^1.39.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "react": "https://esm.sh/react@^19.2.4",
-    "d3": "https://esm.sh/d3@^7.9.0"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
 </head>
 <body>
-    <div id="root"></div>
-<script type="module" src="/index.tsx"></script>
+
+<!-- Member Modal -->
+<div class="modal-overlay" id="member-modal" onclick="closeMemberModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-hdr">
+            <button class="modal-close" onclick="closeMemberModal()">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-avatar-wrap"><div class="modal-avatar-inner" id="m-initials"></div></div>
+            <div class="modal-name" id="m-name"></div>
+            <div class="modal-meta"><span class="modal-role" id="m-role"></span></div>
+            <div class="modal-desc" id="m-desc"></div>
+            <div class="modal-actions" id="m-actions"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Detail Popup -->
+<div class="event-popup" id="event-popup" onclick="closeEventPopup()">
+    <div class="event-popup-inner" onclick="event.stopPropagation()">
+        <div class="event-popup-top">
+            <div style="display:flex;gap:1rem;align-items:flex-start;flex:1">
+                <div class="event-popup-date">
+                    <div class="event-popup-date-month" id="ep-month"></div>
+                    <div class="event-popup-date-day" id="ep-day"></div>
+                </div>
+                <div>
+                    <div class="event-popup-title" id="ep-title"></div>
+                    <div class="event-popup-meta" id="ep-meta"></div>
+                </div>
+            </div>
+            <button class="event-popup-close" onclick="closeEventPopup()">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="event-popup-desc" id="ep-desc" style="display:none"></div>
+    </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-inner">
+        <div class="accent-bar"></div>
+        <h1>Young Muslims</h1>
+        <div class="header-sub">Massachusetts &amp; Rhode Island</div>
+        <div class="header-badge">Est. 2022</div>
+        <div class="search-wrap" style="margin-top:2rem">
+            <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input class="search-input" id="search-input" type="text" placeholder="Search member directory..." oninput="onSearch(this.value)" autocomplete="off">
+            <div class="search-results" id="search-results"></div>
+        </div>
+    </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav">
+    <div class="nav-inner">
+        <a href="#calendar"  class="nav-link active" onclick="setActive(this)">Calendar</a>
+        <a href="#shura"     class="nav-link"        onclick="setActive(this)">SR Shura</a>
+        <a href="#overview"  class="nav-link"        onclick="setActive(this)">SR Overview</a>
+        <a href="#neighbornet" class="nav-link"      onclick="setActive(this)">NeighborNets</a>
+        <a href="#directory" class="nav-link"        onclick="setActive(this)">Directory</a>
+    </div>
+</nav>
+
+<main>
+    <div class="sections">
+
+        <!-- CALENDAR + UPCOMING EVENTS -->
+        <section id="calendar" class="card scroll-mt">
+            <div class="sec-header">
+                <div class="sec-title">Sub-Regional Calendar</div>
+                <div class="sec-label">Official MA/RI Schedule</div>
+            </div>
+
+            <!-- Setup instructions banner -->
+            <div class="setup-banner" id="setup-banner" style="display:none">
+                <div class="setup-banner-icon">📋</div>
+                <div>
+                    <div class="setup-banner-title">One-time Setup: Connect your Google Sheet</div>
+                    <div class="setup-banner-text">
+                        1. Create a Google Sheet with columns: <code>Title</code>, <code>Date</code> (YYYY-MM-DD), <code>Time</code>, <code>Location</code>, <code>Description</code><br>
+                        2. Go to <strong>File → Share → Publish to web</strong> → select <strong>Sheet1</strong> → <strong>CSV</strong> → click Publish<br>
+                        3. Copy the URL and replace <code>YOUR_SHEET_CSV_URL</code> in the <code>&lt;script&gt;</code> at the bottom of this file<br>
+                        4. Remove this banner — you're done! <a href="https://docs.google.com/spreadsheets/create" target="_blank">Create Sheet →</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cal-layout">
+                <!-- Month grid -->
+                <div>
+                    <div class="cal-nav">
+                        <button class="cal-nav-btn" onclick="changeMonth(-1)">&#8249;</button>
+                        <div class="cal-month-label" id="cal-month-label"></div>
+                        <button class="cal-nav-btn" onclick="changeMonth(1)">&#8250;</button>
+                    </div>
+                    <div class="cal-grid" id="cal-grid">
+                        <div class="cal-dow">Sun</div>
+                        <div class="cal-dow">Mon</div>
+                        <div class="cal-dow">Tue</div>
+                        <div class="cal-dow">Wed</div>
+                        <div class="cal-dow">Thu</div>
+                        <div class="cal-dow">Fri</div>
+                        <div class="cal-dow">Sat</div>
+                    </div>
+                </div>
+
+                <!-- Upcoming events panel -->
+                <div>
+                    <div class="upcoming-header">
+                        <div class="upcoming-title">Upcoming Events</div>
+                        <div class="upcoming-count" id="upcoming-count">0 Events</div>
+                    </div>
+                    <div class="upcoming-panel" id="upcoming-panel">
+                        <div class="no-events">
+                            <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            Loading events…
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SR SHURA ORG CHART -->
+        <section id="shura" class="card scroll-mt">
+            <div class="sec-header">
+                <div class="sec-title">Sub-Regional Shura</div>
+                <div class="sec-sub">Cabinet leadership and department leads.</div>
+            </div>
+            <div id="shura-chart"></div>
+        </section>
+
+        <!-- SR OVERVIEW -->
+        <section id="overview" class="overview scroll-mt">
+            <div class="overview-circle"></div>
+            <div class="overview-inner">
+                <div class="overview-hdr">
+                    <div class="overview-icon">
+                        <svg width="28" height="28" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/></svg>
+                    </div>
+                    <div>
+                        <div class="overview-title">SR Overview</div>
+                        <div class="overview-label">MA/RI Regional Dashboard</div>
+                    </div>
+                </div>
+                <div class="stats">
+                    <div class="stat"><div class="stat-lbl">Leadership</div><div class="stat-val">7 SR Shura Leads</div><div class="stat-desc">Sub-Regional Cabinet</div></div>
+                    <div class="stat"><div class="stat-lbl">Presence</div><div class="stat-val">6 Active NN's</div><div class="stat-desc">Sub-Regional Presence</div></div>
+                    <div class="stat"><div class="stat-lbl">Active Core</div><div class="stat-val">36 Active Leaders</div><div class="stat-desc">Active Regional Force</div></div>
+                    <div class="stat"><div class="stat-lbl">Youth Reach</div><div class="stat-val">700+ Members</div><div class="stat-desc">Estimated Impact</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEIGHBORNET COORDINATORS ONLY (no core teams) -->
+        <section id="neighbornet" class="card scroll-mt">
+            <div class="sec-header">
+                <div class="sec-title">Neighbor-net Coordinators</div>
+                <div class="sec-sub">Regional leadership connecting SRC to local chapters.</div>
+            </div>
+            <div id="nnc-chart"></div>
+        </section>
+
+        <!-- DIRECTORY — Shura members only, no core team -->
+        <section id="directory" class="card scroll-mt">
+            <div class="sec-header">
+                <div class="sec-title">Member Directory</div>
+                <div class="sec-sub">Click any card to expand. Shura &amp; NeighborNet Coordinators.</div>
+            </div>
+            <div class="dir-grid" id="dir-grid"></div>
+        </section>
+
+    </div>
+</main>
+
+<footer>
+    <div class="footer-title">YM MA/RI Shura Portal</div>
+    <div class="footer-links">
+        <span>© 2026 Young Muslims</span>
+        <span>Internal Access Only</span>
+    </div>
+</footer>
+
+<div class="org-tooltip" id="org-tooltip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+// ================================================================
+// CONFIG — paste your published Google Sheet CSV URL here
+// ================================================================
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTbXtkL4ry38KEg6MvKsED3gRhZRmNcU_El9yQY29kf9Uis7fjPyOW1ap9L64SYWhkheeBOuLufd1-K/pub?gid=0&single=true&output=csv';
+
+// ================================================================
+// DATA — Shura + NNC members only (no core team)
+// ================================================================
+const SRC_MEMBER = {id:'maaz',name:'Maaz Naqvi',role:'SRC',email:'maaz.naqvi@youngmuslims.com',phone:'508-579-2075',description:'Sub-Regional Coordinator leading the MA/RI sub-region. Responsible for overall vision, strategy, and leadership.'};
+
+const SHURA = [SRC_MEMBER,
+    {id:'asad-shahzad',name:'Asad Shahzad',role:'SG',parentId:'maaz',email:'asad.shahzad@youngmuslims.com',phone:'401-419-8352',description:'Secretary General responsible for administrative oversight, documentation, and cross-departmental coordination.'},
+    {id:'abdurrahman-abou',name:'Abdurrahman Aboumahmoud',role:'Tarbiyyah Lead',parentId:'maaz',email:'abdurrahman.aboumahmoud@youngmuslims.com',phone:'978-960-7613',description:'Responsible for the spiritual growth and educational curriculum across all local chapters.'},
+    {id:'ahmad-somakia',name:'Ahmad Somakia',role:'Events Lead',parentId:'maaz',email:'ahmad.somakia@youngmuslims.com',phone:'774-315-8606',description:'Coordinates sub-regional events, camps, and workshops to foster brotherhood and community.'},
+    {id:'nabil-barkallah',name:'Nabil Barkallah',role:'Societal Impact Lead',parentId:'maaz',email:'nabil.barkallah@youngmuslims.com',phone:'978-989-3133',description:'Oversees community service initiatives, social activism, and external outreach programs.'},
+    {id:'abdullah-abou',name:'Abdullah Aboumahmoud',role:'Expansion Lead',parentId:'maaz',email:'abdullah.aboumahmoud@youngmuslims.com',phone:'978-483-7030',description:'Focused on scaling the organization by opening new NeighborNets and supporting emerging communities.'},
+    {id:'haris-waqar',name:'Haris Waqar',role:'Expansion + Cloud',parentId:'maaz',email:'haris.waqar@youngmuslims.com',description:'Manages digital infrastructure and reporting tools while supporting expansion logistics.'},
+    {id:'aiman-baig',name:'Aiman Baig',role:'Expansion + Cloud',parentId:'maaz',email:'aiman.baig@youngmuslims.com',description:'Technical coordinator focusing on cloud-based management systems and local expansion support.'}
+];
+
+const NNC = [SRC_MEMBER,
+    {id:'amin-badmos',name:'Amin Badmos',role:'NNC',parentId:'maaz',email:'amin.badmos@youngmuslims.com',description:'NeighborNet Coordinator for Worcester.'},
+    {id:'abdullah-mohammed',name:'Abdullah Mohammed',role:'NNC',parentId:'maaz',email:'abdullah.mohammed@youngmuslims.com',description:'NeighborNet Coordinator for Metrowest.'},
+    {id:'yussuf-nasri',name:'Yussuf Nasri',role:'NNC',parentId:'maaz',email:'yussuf.nasri@youngmuslims.com',description:'NeighborNet Coordinator for Sharon.'},
+    {id:'hassan-jafri',name:'Hassan Jafri',role:'NNC',parentId:'maaz',email:'hassan.jafri@youngmuslims.com',description:'NeighborNet Coordinator for Lowell.'},
+    {id:'hanzalah-qamar',name:'Hanzalah Qamar',role:'NNC',parentId:'maaz',email:'hanzalah.qamar@youngmuslims.com',description:'NeighborNet Coordinator for Pawtucket.'},
+    {id:'yoseph-hassan',name:'Yoseph Hassan',role:'NNC',parentId:'maaz',email:'yoseph.hassan@youngmuslims.com',description:'NeighborNet Coordinator for Quincy.'}
+];
+
+// Directory = Shura leads + NNCs (no core team members)
+const NNC_ONLY = NNC.filter(m => m.role === 'NNC');
+const DIRECTORY = [...SHURA, ...NNC_ONLY.filter(n => !SHURA.find(s => s.id === n.id))];
+
+// ================================================================
+// EVENTS STATE
+// ================================================================
+let allEvents = [];
+let calYear, calMonth;
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const SHORT_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// ================================================================
+// GOOGLE SHEETS — fetch & parse CSV
+// ================================================================
+async function fetchEvents() {
+    if (SHEET_CSV_URL === 'YOUR_SHEET_CSV_URL') {
+        // Demo events so the UI isn't empty
+        allEvents = [
+            {title:'Regional Shura Meeting',date:'2026-04-20',time:'7:00 PM',location:'Worcester, MA',description:'Monthly meeting for all SR Shura leads.'},
+            {title:'Spring Community Halaqa',date:'2026-04-26',time:'6:30 PM',location:'Boston, MA',description:'Open halaqa for all NeighborNet members.'},
+            {title:'NeighborNet Coordinators Call',date:'2026-05-03',time:'8:00 PM',location:'Virtual (Zoom)',description:'Weekly sync between SRC and all NNCs.'},
+            {title:'Expansion Planning Workshop',date:'2026-05-10',time:'10:00 AM',location:'Metrowest, MA',description:'Strategy session for opening new NeighborNets.'},
+            {title:'SR Summer Camp Planning',date:'2026-05-17',time:'7:00 PM',location:'Sharon, MA',description:'Planning kickoff for the annual summer camp.'},
+        ];
+        renderCalendar();
+        renderUpcoming();
+        return;
+    }
+    try {
+        const res = await fetch(SHEET_CSV_URL);
+        const text = await res.text();
+        const rows = text.trim().split('\n').slice(1); // skip header
+        allEvents = rows.map(row => {
+            const cols = row.split(',').map(c => c.replace(/^"|"$/g,'').trim());
+            return { title: cols[0]||'', date: cols[1]||'', time: cols[2]||'', location: cols[3]||'', description: cols[4]||'' };
+        }).filter(e => e.title && e.date);
+        // Hide setup banner once connected
+        document.getElementById('setup-banner').style.display = 'none';
+    } catch(e) {
+        console.error('Could not fetch events:', e);
+        allEvents = [];
+    }
+    renderCalendar();
+    renderUpcoming();
+}
+
+// ================================================================
+// CALENDAR RENDERING
+// ================================================================
+function initCalendar() {
+    const now = new Date();
+    calYear  = now.getFullYear();
+    calMonth = now.getMonth();
+}
+
+function getEventsForDate(y, m, d) {
+    const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    return allEvents.filter(e => e.date === ds);
+}
+
+function renderCalendar() {
+    document.getElementById('cal-month-label').textContent = `${MONTHS[calMonth]} ${calYear}`;
+    const grid = document.getElementById('cal-grid');
+    // Remove old day cells (keep the 7 header cells)
+    const existing = grid.querySelectorAll('.cal-day');
+    existing.forEach(el => el.remove());
+
+    const today = new Date();
+    const firstDay = new Date(calYear, calMonth, 1).getDay();
+    const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+    const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
+
+    // Previous month padding
+    for (let i = firstDay - 1; i >= 0; i--) {
+        const el = document.createElement('div');
+        el.className = 'cal-day other-month';
+        el.textContent = daysInPrev - i;
+        grid.appendChild(el);
+    }
+    // Current month
+    for (let d = 1; d <= daysInMonth; d++) {
+        const el = document.createElement('div');
+        el.className = 'cal-day';
+        const isToday = today.getFullYear()===calYear && today.getMonth()===calMonth && today.getDate()===d;
+        if (isToday) el.classList.add('today');
+        const evs = getEventsForDate(calYear, calMonth, d);
+        if (evs.length) {
+            el.classList.add('has-event');
+            el.addEventListener('click', () => showEventPopup(evs[0]));
+        }
+        const span = document.createElement('span');
+        span.textContent = d;
+        el.appendChild(span);
+        if (evs.length) {
+            const dot = document.createElement('div');
+            dot.className = 'cal-day-dot';
+            el.appendChild(dot);
+        }
+        grid.appendChild(el);
+    }
+    // Next month padding
+    const total = firstDay + daysInMonth;
+    const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
+    for (let d = 1; d <= remaining; d++) {
+        const el = document.createElement('div');
+        el.className = 'cal-day other-month';
+        el.textContent = d;
+        grid.appendChild(el);
+    }
+}
+
+function changeMonth(dir) {
+    calMonth += dir;
+    if (calMonth > 11) { calMonth = 0; calYear++; }
+    if (calMonth < 0)  { calMonth = 11; calYear--; }
+    renderCalendar();
+}
+
+// ================================================================
+// UPCOMING EVENTS
+// ================================================================
+function renderUpcoming() {
+    const panel = document.getElementById('upcoming-panel');
+    const countEl = document.getElementById('upcoming-count');
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    const upcoming = allEvents
+        .filter(e => new Date(e.date + 'T00:00:00') >= today)
+        .sort((a,b) => new Date(a.date) - new Date(b.date))
+        .slice(0, 6);
+
+    countEl.textContent = `${upcoming.length} Event${upcoming.length!==1?'s':''}`;
+
+    if (!upcoming.length) {
+        panel.innerHTML = `<div class="no-events"><svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>No upcoming events</div>`;
+        return;
+    }
+
+    panel.innerHTML = upcoming.map((ev, i) => {
+        const d = new Date(ev.date + 'T00:00:00');
+        const mon = SHORT_MONTHS[d.getMonth()];
+        const day = d.getDate();
+        return `
+        <div class="event-card ${i===0?'next-up':''}" onclick='showEventPopup(${JSON.stringify(ev).replace(/'/g,"&#39;")})'>
+            <div style="display:flex;align-items:flex-start;gap:0.875rem">
+                <div style="text-align:center;min-width:2.75rem">
+                    <div class="event-month">${mon}</div>
+                    <div class="event-day-num">${day}</div>
+                </div>
+                <div class="event-info">
+                    <div class="event-title-text">${ev.title}</div>
+                    <div class="event-meta">
+                        ${ev.time ? `<span><svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>${ev.time}</span>` : ''}
+                        ${ev.location ? `<span><svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>${ev.location}</span>` : ''}
+                    </div>
+                </div>
+                ${i===0 ? '<span class="next-badge">Next</span>' : ''}
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ================================================================
+// EVENT POPUP
+// ================================================================
+function showEventPopup(ev) {
+    const d = new Date(ev.date + 'T00:00:00');
+    document.getElementById('ep-month').textContent = SHORT_MONTHS[d.getMonth()].toUpperCase();
+    document.getElementById('ep-day').textContent = d.getDate();
+    document.getElementById('ep-title').textContent = ev.title;
+
+    const metaEl = document.getElementById('ep-meta');
+    metaEl.innerHTML = [
+        ev.time     ? `<div class="event-popup-row"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>${ev.time}</div>` : '',
+        ev.location ? `<div class="event-popup-row"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>${ev.location}</div>` : '',
+        `<div class="event-popup-row"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}</div>`
+    ].join('');
+
+    const descEl = document.getElementById('ep-desc');
+    if (ev.description) { descEl.textContent = ev.description; descEl.style.display = 'block'; }
+    else { descEl.style.display = 'none'; }
+
+    document.getElementById('event-popup').classList.add('open');
+}
+function closeEventPopup() { document.getElementById('event-popup').classList.remove('open'); }
+
+// ================================================================
+// MEMBER MODAL
+// ================================================================
+function openMemberModal(m) {
+    document.getElementById('m-initials').textContent = m.name.split(' ').map(w=>w[0]).join('').toUpperCase();
+    document.getElementById('m-name').textContent = m.name;
+    document.getElementById('m-role').textContent = m.role;
+    document.getElementById('m-desc').textContent = m.description || '';
+    document.getElementById('m-actions').innerHTML = `
+        ${m.email ? `<a href="mailto:${m.email}" class="modal-btn modal-btn-primary"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>Email</a>` : '<span class="modal-btn modal-btn-disabled">Email N/A</span>'}
+        ${m.phone ? `<a href="tel:${m.phone}" class="modal-btn modal-btn-secondary"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>Call</a>` : '<span class="modal-btn modal-btn-disabled">Call N/A</span>'}`;
+    document.getElementById('member-modal').classList.add('open');
+}
+function closeMemberModal() { document.getElementById('member-modal').classList.remove('open'); }
+
+// ================================================================
+// SEARCH
+// ================================================================
+function onSearch(val) {
+    const box = document.getElementById('search-results');
+    if (!val.trim()) { box.style.display = 'none'; return; }
+    const q = val.toLowerCase();
+    const results = DIRECTORY.filter(m => m.name.toLowerCase().includes(q) || m.role.toLowerCase().includes(q)).slice(0,8);
+    box.style.display = 'block';
+    box.innerHTML = results.length
+        ? results.map(m => `<button class="search-item" onclick="openMemberModal(${JSON.stringify(m).replace(/"/g,'&quot;')});document.getElementById('search-input').value='';document.getElementById('search-results').style.display='none'"><div class="search-avatar">${m.name[0]}</div><div><div class="search-name">${m.name}</div><div class="search-role">${m.role}</div></div></button>`).join('')
+        : `<div class="search-empty">No results for "${val}"</div>`;
+}
+document.addEventListener('click', e => { if (!e.target.closest('.search-wrap')) document.getElementById('search-results').style.display='none'; });
+
+// ================================================================
+// NAV ACTIVE
+// ================================================================
+function setActive(el) {
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    el.classList.add('active');
+}
+
+// ================================================================
+// ORG CHART (D3)
+// ================================================================
+const C = { green:'#0b3d2e', dark:'#062d22', blue:'#1e40af', gray:'#374151', gold:'#c8a951', white:'#ffffff' };
+
+function renderOrgChart(containerId, data) {
+    const el = document.getElementById(containerId);
+    if (!el || !data.length) return;
+    const tooltip = document.getElementById('org-tooltip');
+    const W=240, H=105, nW=270, nH=150;
+    const root = d3.stratify().id(d=>d.id).parentId(d=>d.parentId)(data);
+    const tree = d3.tree().nodeSize([nW,nH])(root);
+    let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+    tree.each(d=>{minX=Math.min(minX,d.x);maxX=Math.max(maxX,d.x);minY=Math.min(minY,d.y);maxY=Math.max(maxY,d.y);});
+    const pad=60, vbW=maxX-minX+W+pad*2, vbH=maxY-minY+H+pad*2;
+    const svg = d3.select(el).append('svg')
+        .attr('viewBox',`${minX-W/2-pad} ${minY-pad} ${vbW} ${vbH}`)
+        .attr('preserveAspectRatio','xMidYMid meet')
+        .style('width','100%').style('height','auto');
+    const g = svg.append('g');
+    g.selectAll('.link').data(tree.links()).enter().append('path')
+        .attr('fill','none').attr('stroke',C.gold).attr('stroke-width',2).attr('opacity',0.4)
+        .attr('d',d3.linkVertical().x(d=>d.x).y(d=>d.y));
+    const node = g.selectAll('.node').data(tree.descendants()).enter().append('g')
+        .attr('transform',d=>`translate(${d.x-W/2},${d.y-H/2})`)
+        .style('cursor','pointer')
+        .on('click',(e,d)=>openMemberModal(d.data))
+        .on('mouseover',(e,d)=>{
+            tooltip.style.opacity='1';
+            tooltip.innerHTML=`<div style="font-size:0.6rem;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:${C.gold}">${d.data.role}</div><div style="font-weight:700;color:white;margin-top:0.2rem">${d.data.name}</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.5);font-style:italic;margin-top:0.4rem">Click for profile</div>`;
+        })
+        .on('mousemove',e=>{tooltip.style.left=(e.pageX+14)+'px';tooltip.style.top=(e.pageY-14)+'px';})
+        .on('mouseout',()=>{tooltip.style.opacity='0';});
+    node.append('rect').attr('width',W).attr('height',H).attr('rx',14).attr('ry',14)
+        .attr('fill',d=>d.depth===0?C.dark:d.data.role==='NNC'?C.blue:d.data.role==='Core Team'?C.gray:C.green)
+        .attr('stroke',C.gold).attr('stroke-width',2)
+        .style('filter','drop-shadow(0 4px 10px rgba(0,0,0,0.15))');
+    node.append('text').attr('x',W/2).attr('y',H/2-2).attr('text-anchor','middle')
+        .attr('fill',C.white).attr('font-weight','700').attr('font-size','13px').attr('pointer-events','none')
+        .text(d=>d.data.name);
+    node.append('text').attr('x',W/2).attr('y',H/2+20).attr('text-anchor','middle')
+        .attr('fill',C.gold).attr('font-size','10px').attr('font-weight','800').attr('letter-spacing','0.8px').attr('pointer-events','none')
+        .text(d=>d.data.role);
+}
+
+// ================================================================
+// DIRECTORY
+// ================================================================
+function renderDirectory() {
+    const grid = document.getElementById('dir-grid');
+    const sorted = [...DIRECTORY].sort((a,b) => a.name.localeCompare(b.name));
+    sorted.forEach(m => {
+        const card = document.createElement('button');
+        card.className = 'dir-card';
+        card.innerHTML = `
+            <div class="dir-top">
+                <div class="dir-avatar">${m.name[0]}</div>
+                <div><div class="dir-name">${m.name}</div><div class="dir-role">${m.role}</div></div>
+            </div>
+            <div class="dir-expand">
+                <div class="dir-desc">${m.description||''}</div>
+                <div class="dir-btns">
+                    ${m.email?`<a href="mailto:${m.email}" class="dir-btn dir-btn-email" onclick="event.stopPropagation()">Email</a>`:''}
+                    ${m.phone?`<a href="tel:${m.phone}" class="dir-btn dir-btn-phone" onclick="event.stopPropagation()">Call</a>`:''}
+                    <button class="dir-btn dir-btn-profile" onclick="event.stopPropagation();openMemberModal(${JSON.stringify(m).replace(/"/g,'&#34;')})">Full Profile</button>
+                </div>
+            </div>`;
+        card.addEventListener('click', () => {
+            const was = card.classList.contains('open');
+            document.querySelectorAll('.dir-card').forEach(c=>c.classList.remove('open'));
+            if (!was) card.classList.add('open');
+        });
+        grid.appendChild(card);
+    });
+}
+
+// ================================================================
+// INIT
+// ================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    initCalendar();
+    fetchEvents();
+    renderOrgChart('shura-chart', SHURA);
+    renderOrgChart('nnc-chart', NNC);
+    renderDirectory();
+
+    // Scroll-spy nav
+    const secs = document.querySelectorAll('section[id]');
+    const links = document.querySelectorAll('.nav-link');
+    new IntersectionObserver(entries => {
+        entries.forEach(en => {
+            if (en.isIntersecting)
+                links.forEach(l => l.classList.toggle('active', l.getAttribute('href')==='#'+en.target.id));
+        });
+    }, {rootMargin:'-20% 0px -60% 0px'}).observe && secs.forEach(s => new IntersectionObserver(entries => {
+        if(entries[0].isIntersecting) links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+entries[0].target.id));
+    },{rootMargin:'-20% 0px -60% 0px'}).observe(s));
+});
+</script>
 </body>
 </html>
