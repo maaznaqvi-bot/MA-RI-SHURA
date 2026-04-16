@@ -440,34 +440,56 @@ const SHORT_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct
 // ================================================================
 // GOOGLE SHEETS — fetch & parse CSV
 // ================================================================
-async function fetchEvents() {
-    if (SHEET_CSV_URL === 'YOUR_SHEET_CSV_URL') {
-        // Demo events so the UI isn't empty
-        allEvents = [
-            {title:'Regional Shura Meeting',date:'2026-04-20',time:'7:00 PM',location:'Worcester, MA',description:'Monthly meeting for all SR Shura leads.'},
-            {title:'Spring Community Halaqa',date:'2026-04-26',time:'6:30 PM',location:'Boston, MA',description:'Open halaqa for all NeighborNet members.'},
-            {title:'NeighborNet Coordinators Call',date:'2026-05-03',time:'8:00 PM',location:'Virtual (Zoom)',description:'Weekly sync between SRC and all NNCs.'},
-            {title:'Expansion Planning Workshop',date:'2026-05-10',time:'10:00 AM',location:'Metrowest, MA',description:'Strategy session for opening new NeighborNets.'},
-            {title:'SR Summer Camp Planning',date:'2026-05-17',time:'7:00 PM',location:'Sharon, MA',description:'Planning kickoff for the annual summer camp.'},
-        ];
-        renderCalendar();
-        renderUpcoming();
-        return;
+// Parse a CSV row correctly — handles commas inside quoted fields
+function parseCSVRow(row) {
+    const cols = [];
+    let cur = '', inQuotes = false;
+    for (let i = 0; i < row.length; i++) {
+        const ch = row[i];
+        if (ch === '"') { inQuotes = !inQuotes; }
+        else if (ch === ',' && !inQuotes) { cols.push(cur.trim()); cur = ''; }
+        else { cur += ch; }
     }
+    cols.push(cur.trim());
+    return cols;
+}
+
+async function fetchEvents() {
+    const PROXY = 'https://corsproxy.io/?';
+    let text = null;
+
     try {
         const res = await fetch(SHEET_CSV_URL);
-        const text = await res.text();
-        const rows = text.trim().split('\n').slice(1); // skip header
-        allEvents = rows.map(row => {
-            const cols = row.split(',').map(c => c.replace(/^"|"$/g,'').trim());
-            return { title: cols[0]||'', date: cols[1]||'', time: cols[2]||'', location: cols[3]||'', description: cols[4]||'' };
-        }).filter(e => e.title && e.date);
-        // Hide setup banner once connected
-        document.getElementById('setup-banner').style.display = 'none';
-    } catch(e) {
-        console.error('Could not fetch events:', e);
+        if (res.ok) text = await res.text();
+    } catch(e) { /* direct fetch blocked, try proxy */ }
+
+    if (!text) {
+        try {
+            const res = await fetch(PROXY + encodeURIComponent(SHEET_CSV_URL));
+            if (res.ok) text = await res.text();
+        } catch(e) {
+            console.error('Could not fetch events:', e);
+        }
+    }
+
+    if (text) {
+        const rows = text.trim().split('\n').slice(1);
+        allEvents = rows
+            .map(row => {
+                const cols = parseCSVRow(row);
+                return {
+                    title:       cols[0] || '',
+                    date:        cols[1] || '',
+                    time:        cols[2] || '',
+                    location:    cols[3] || '',
+                    description: cols[4] || ''
+                };
+            })
+            .filter(e => e.title && e.date);
+    } else {
         allEvents = [];
     }
+
     renderCalendar();
     renderUpcoming();
 }
