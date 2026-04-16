@@ -1,7 +1,10 @@
 {
-  "rewrites": [
-    { "source": "/directory", "destination": "/directory.html" },
-    { "source": "/(.*)",      "destination": "/index.html" }
+  "routes": [
+    { "src": "/directory", "dest": "/directory.html" },
+    { "src": "/directory.html", "dest": "/directory.html" },
+    { "src": "/index.html", "dest": "/index.html" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ],
   "headers": [
     {
