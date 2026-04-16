@@ -1,6 +1,7 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/directory", "destination": "/directory.html" },
+    { "source": "/(.*)",      "destination": "/index.html" }
   ],
   "headers": [
     {

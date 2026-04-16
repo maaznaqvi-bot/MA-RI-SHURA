@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Directory — YM MA/RI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --green-dark: #062d22; --green: #0b3d2e; --green-mid: #145945;
+            --gold: #c8a951; --white: #ffffff;
+            --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+            --gray-400: #94a3b8; --gray-500: #64748b; --gray-900: #0f172a;
+            --radius: 2.5rem;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-900); min-height: 100vh; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 4px; }
+
+        /* HEADER */
+        .header { background: linear-gradient(160deg, var(--green) 0%, var(--green-dark) 100%); padding: 3rem 1rem 2.5rem; }
+        .header-inner { max-width: 72rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+        .header-left { display: flex; align-items: center; gap: 1rem; }
+        .back-btn { display: flex; align-items: center; gap: 0.4rem; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.5rem 0.875rem; background: rgba(255,255,255,0.08); border-radius: 9999px; transition: background 0.15s, color 0.15s; white-space: nowrap; }
+        .back-btn:hover { background: rgba(255,255,255,0.15); color: white; }
+        .header-title { color: white; font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 900; letter-spacing: -0.02em; }
+        .header-sub { color: var(--gold); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.2rem; }
+        .header-count { color: rgba(255,255,255,0.5); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+
+        /* SEARCH + FILTER BAR */
+        .toolbar { background: white; border-bottom: 1px solid var(--gray-100); padding: 1rem 1rem; position: sticky; top: 0; z-index: 40; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+        .toolbar-inner { max-width: 72rem; margin: 0 auto; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+        .search-wrap { position: relative; flex: 1; min-width: 180px; }
+        .search-icon { position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); color: var(--gray-400); width: 1rem; height: 1rem; }
+        .search-input { width: 100%; border: 1px solid var(--gray-200); border-radius: 0.75rem; padding: 0.7rem 0.875rem 0.7rem 2.5rem; font-family: 'Poppins', sans-serif; font-size: 0.82rem; outline: none; transition: border-color 0.15s, box-shadow 0.15s; color: var(--gray-900); background: var(--gray-50); }
+        .search-input:focus { border-color: var(--green); box-shadow: 0 0 0 2px rgba(11,61,46,0.1); background: white; }
+        .filter-btn { padding: 0.7rem 1rem; border: 1px solid var(--gray-200); border-radius: 0.75rem; background: var(--gray-50); font-family: 'Poppins', sans-serif; font-size: 0.75rem; font-weight: 700; color: var(--gray-500); cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+        .filter-btn:hover, .filter-btn.active { background: var(--green); color: white; border-color: var(--green); }
+
+        /* MAIN */
+        main { max-width: 72rem; margin: 0 auto; padding: 2.5rem 1rem 5rem; }
+
+        /* GROUP HEADERS */
+        .group { margin-bottom: 2.5rem; }
+        .group-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
+        .group-dot { width: 0.5rem; height: 0.5rem; border-radius: 9999px; background: var(--gold); flex-shrink: 0; }
+        .group-title { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gray-500); }
+        .group-count { font-size: 0.6rem; font-weight: 900; color: var(--gold); background: #fefce8; border: 1px solid #fef08a; padding: 0.15rem 0.5rem; border-radius: 9999px; }
+
+        /* MEMBER CARDS */
+        .members-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+        @media (min-width: 520px)  { .members-grid { grid-template-columns: 1fr 1fr; } }
+        @media (min-width: 900px)  { .members-grid { grid-template-columns: 1fr 1fr 1fr; } }
+        @media (min-width: 1200px) { .members-grid { grid-template-columns: repeat(4, 1fr); } }
+
+        .member-card { background: white; border: 1px solid var(--gray-100); border-radius: 1.5rem; padding: 1.25rem; cursor: pointer; transition: all 0.15s; text-align: left; width: 100%; font-family: 'Poppins', sans-serif; display: flex; flex-direction: column; }
+        .member-card:hover { border-color: #a7f3d0; box-shadow: 0 4px 16px rgba(11,61,46,0.1); transform: translateY(-1px); }
+        .card-top { display: flex; align-items: flex-start; gap: 0.875rem; }
+        .card-avatar { width: 3rem; height: 3rem; border-radius: 1rem; background: #ecfdf5; border: 1.5px solid #a7f3d0; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1rem; color: var(--green); flex-shrink: 0; transition: background 0.15s; }
+        .member-card:hover .card-avatar { background: var(--green); color: white; border-color: var(--green); }
+        .card-name { font-size: 0.875rem; font-weight: 700; color: var(--gray-900); line-height: 1.3; }
+        .card-role { font-size: 0.6rem; font-weight: 900; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.2rem; }
+        .card-nn { font-size: 0.65rem; color: var(--gray-400); margin-top: 0.15rem; font-weight: 600; }
+        .card-desc { font-size: 0.72rem; color: var(--gray-400); line-height: 1.5; margin-top: 0.875rem; padding-top: 0.875rem; border-top: 1px solid var(--gray-100); flex: 1; }
+        .card-actions { display: flex; gap: 0.4rem; margin-top: 0.875rem; }
+        .card-btn { flex: 1; padding: 0.5rem; border-radius: 0.625rem; font-size: 0.65rem; font-weight: 700; text-decoration: none; text-align: center; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; transition: background 0.15s; }
+        .card-btn-email { background: var(--green); color: white; }
+        .card-btn-email:hover { background: var(--green-mid); }
+        .card-btn-phone { background: white; color: var(--green); border: 1.5px solid var(--green); }
+        .card-btn-phone:hover { background: var(--gray-50); }
+        .card-btn-na { background: var(--gray-100); color: var(--gray-400); cursor: default; }
+
+        /* EMPTY STATE */
+        .empty-state { text-align: center; padding: 4rem 2rem; color: var(--gray-400); }
+        .empty-state svg { margin: 0 auto 1rem; display: block; opacity: 0.25; }
+        .empty-state p { font-size: 0.875rem; }
+
+        /* MODAL */
+        .modal-overlay { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem; }
+        .modal-overlay.open { display: flex; }
+        .modal { background: white; width: 100%; max-width: 30rem; border-radius: 2.5rem; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.3); }
+        .modal-hdr { height: 7rem; background: linear-gradient(135deg, var(--green), var(--green-mid)); position: relative; }
+        .modal-close { position: absolute; top: 1.25rem; right: 1.25rem; background: rgba(255,255,255,0.15); border: none; border-radius: 9999px; width: 2.25rem; height: 2.25rem; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; }
+        .modal-close:hover { background: rgba(255,255,255,0.25); }
+        .modal-body { padding: 0 1.75rem 2.25rem; margin-top: -3.5rem; }
+        .modal-avatar-wrap { width: 7rem; height: 7rem; border-radius: 1.6rem; background: white; padding: 4px; box-shadow: 0 6px 20px rgba(0,0,0,0.12); margin: 0 auto 0.875rem; }
+        .modal-avatar-inner { width: 100%; height: 100%; border-radius: 1.3rem; background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; font-weight: 900; color: var(--green); border: 2px dashed var(--gray-200); }
+        .modal-name { text-align: center; font-size: 1.5rem; font-weight: 900; color: var(--gray-900); }
+        .modal-meta { display: flex; align-items: center; gap: 0.5rem; justify-content: center; margin-top: 0.4rem; flex-wrap: wrap; }
+        .modal-role { padding: 0.2rem 0.875rem; background: #fefce8; color: var(--gold); font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; border-radius: 9999px; border: 1px solid #fef08a; }
+        .modal-desc { margin-top: 1.25rem; font-size: 0.82rem; color: var(--gray-400); line-height: 1.7; text-align: center; }
+        .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; margin-top: 1.75rem; }
+        .modal-btn { display: flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.875rem; border-radius: 1rem; font-family: 'Poppins', sans-serif; font-size: 0.82rem; font-weight: 700; text-decoration: none; cursor: pointer; border: none; transition: background 0.15s; }
+        .modal-btn-primary { background: var(--green); color: white; }
+        .modal-btn-primary:hover { background: var(--green-mid); }
+        .modal-btn-secondary { background: white; color: var(--green); border: 2px solid var(--green); }
+        .modal-btn-secondary:hover { background: var(--gray-50); }
+        .modal-btn-disabled { background: var(--gray-100); color: var(--gray-400); cursor: default; }
+
+        /* FOOTER */
+        footer { background: white; border-top: 1px solid var(--gray-100); padding: 2rem; text-align: center; font-size: 0.65rem; font-weight: 900; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.15em; }
+    </style>
+</head>
+<body>
+
+<!-- Member Modal -->
+<div class="modal-overlay" id="member-modal" onclick="closeMemberModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-hdr"><button class="modal-close" onclick="closeMemberModal()"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+        <div class="modal-body">
+            <div class="modal-avatar-wrap"><div class="modal-avatar-inner" id="m-initials"></div></div>
+            <div class="modal-name" id="m-name"></div>
+            <div class="modal-meta"><span class="modal-role" id="m-role"></span></div>
+            <div class="modal-desc" id="m-desc"></div>
+            <div class="modal-actions" id="m-actions"></div>
+        </div>
+    </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-inner">
+        <div class="header-left">
+            <a href="/" class="back-btn">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Back
+            </a>
+            <div>
+                <div class="header-title">Member Directory</div>
+                <div class="header-sub">YM MA/RI Shura &amp; NeighborNet Coordinators</div>
+            </div>
+        </div>
+        <div class="header-count" id="total-count"></div>
+    </div>
+</header>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+    <div class="toolbar-inner">
+        <div class="search-wrap">
+            <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input class="search-input" id="search-input" type="text" placeholder="Search by name or role…" oninput="filterMembers()" autocomplete="off">
+        </div>
+        <button class="filter-btn active" data-filter="all"    onclick="setFilter(this)">All</button>
+        <button class="filter-btn"        data-filter="Shura"  onclick="setFilter(this)">Shura</button>
+        <button class="filter-btn"        data-filter="NNC"    onclick="setFilter(this)">NNCs</button>
+    </div>
+</div>
+
+<main id="main-content"></main>
+
+<footer>© 2026 Young Muslims MA/RI · Internal Access Only</footer>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────
+const SRC = {id:'maaz',name:'Maaz Naqvi',role:'SRC',group:'Shura',email:'maaz.naqvi@youngmuslims.com',phone:'508-579-2075',description:'Sub-Regional Coordinator leading the MA/RI sub-region. Responsible for overall vision, strategy, and leadership.'};
+
+const ALL_MEMBERS = [
+    SRC,
+    {id:'asad-shahzad',name:'Asad Shahzad',role:'SG',group:'Shura',email:'asad.shahzad@youngmuslims.com',phone:'401-419-8352',description:'Secretary General responsible for administrative oversight, documentation, and cross-departmental coordination.'},
+    {id:'abdurrahman-abou',name:'Abdurrahman Aboumahmoud',role:'Tarbiyyah Lead',group:'Shura',email:'abdurrahman.aboumahmoud@youngmuslims.com',phone:'978-960-7613',description:'Responsible for the spiritual growth and educational curriculum across all local chapters.'},
+    {id:'ahmad-somakia',name:'Ahmad Somakia',role:'Events Lead',group:'Shura',email:'ahmad.somakia@youngmuslims.com',phone:'774-315-8606',description:'Coordinates sub-regional events, camps, and workshops to foster brotherhood and community.'},
+    {id:'nabil-barkallah',name:'Nabil Barkallah',role:'Societal Impact Lead',group:'Shura',email:'nabil.barkallah@youngmuslims.com',phone:'978-989-3133',description:'Oversees community service initiatives, social activism, and external outreach programs.'},
+    {id:'abdullah-abou',name:'Abdullah Aboumahmoud',role:'Expansion Lead',group:'Shura',email:'abdullah.aboumahmoud@youngmuslims.com',phone:'978-483-7030',description:'Focused on scaling the organization by opening new NeighborNets and supporting emerging communities.'},
+    {id:'haris-waqar',name:'Haris Waqar',role:'Expansion + Cloud',group:'Shura',email:'haris.waqar@youngmuslims.com',description:'Manages digital infrastructure and reporting tools while supporting expansion logistics.'},
+    {id:'aiman-baig',name:'Aiman Baig',role:'Expansion + Cloud',group:'Shura',email:'aiman.baig@youngmuslims.com',description:'Technical coordinator focusing on cloud-based management systems and local expansion support.'},
+    {id:'amin-badmos',name:'Amin Badmos',role:'NNC',nn:'Worcester',group:'NNC',email:'amin.badmos@youngmuslims.com',description:'NeighborNet Coordinator for Worcester. Leading local chapter operations and community growth.'},
+    {id:'abdullah-mohammed',name:'Abdullah Mohammed',role:'NNC',nn:'Metrowest',group:'NNC',email:'abdullah.mohammed@youngmuslims.com',description:'NeighborNet Coordinator for Metrowest. Leading local growth and youth development.'},
+    {id:'yussuf-nasri',name:'Yussuf Nasri',role:'NNC',nn:'Sharon',group:'NNC',email:'yussuf.nasri@youngmuslims.com',description:'NeighborNet Coordinator for Sharon. Leading local chapter strategy and team building.'},
+    {id:'hassan-jafri',name:'Hassan Jafri',role:'NNC',nn:'Lowell',group:'NNC',email:'hassan.jafri@youngmuslims.com',description:'NeighborNet Coordinator for Lowell. Building a vibrant local youth community.'},
+    {id:'hanzalah-qamar',name:'Hanzalah Qamar',role:'NNC',nn:'Pawtucket',group:'NNC',email:'hanzalah.qamar@youngmuslims.com',description:'NeighborNet Coordinator for Pawtucket. Managing the Rhode Island regional presence.'},
+    {id:'yoseph-hassan',name:'Yoseph Hassan',role:'NNC',nn:'Quincy',group:'NNC',email:'yoseph.hassan@youngmuslims.com',description:'NeighborNet Coordinator for Quincy. Fostering a new local chapter and community growth.'},
+];
+
+let activeFilter = 'all';
+
+document.getElementById('total-count').textContent = `${ALL_MEMBERS.length} Members`;
+
+// ── RENDER ─────────────────────────────────────────────────────────
+function filterMembers() {
+    const q = document.getElementById('search-input').value.toLowerCase().trim();
+    let filtered = ALL_MEMBERS;
+    if (activeFilter !== 'all') filtered = filtered.filter(m => m.group === activeFilter);
+    if (q) filtered = filtered.filter(m => m.name.toLowerCase().includes(q) || m.role.toLowerCase().includes(q) || (m.nn||'').toLowerCase().includes(q));
+    renderDirectory(filtered);
+}
+
+function setFilter(btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    filterMembers();
+}
+
+function renderDirectory(members) {
+    const main = document.getElementById('main-content');
+    if (!members.length) {
+        main.innerHTML = `<div class="empty-state"><svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg><p>No members found.</p></div>`;
+        return;
+    }
+
+    // Group: Shura first, then NNCs
+    const groups = [
+        { key: 'Shura', label: 'Sub-Regional Shura', members: members.filter(m=>m.group==='Shura') },
+        { key: 'NNC',   label: 'NeighborNet Coordinators', members: members.filter(m=>m.group==='NNC') },
+    ].filter(g => g.members.length > 0);
+
+    main.innerHTML = groups.map(g => `
+        <div class="group">
+            <div class="group-header">
+                <div class="group-dot"></div>
+                <div class="group-title">${g.label}</div>
+                <div class="group-count">${g.members.length}</div>
+            </div>
+            <div class="members-grid">
+                ${g.members.map(m => `
+                <button class="member-card" onclick='openMemberModal(${JSON.stringify(m).replace(/'/g,"&#39;")})'>
+                    <div class="card-top">
+                        <div class="card-avatar">${m.name[0]}</div>
+                        <div>
+                            <div class="card-name">${m.name}</div>
+                            <div class="card-role">${m.role}${m.nn?' — '+m.nn:''}</div>
+                            ${m.nn ? `<div class="card-nn">${m.nn} NeighborNet</div>` : ''}
+                        </div>
+                    </div>
+                    <div class="card-desc">${m.description||''}</div>
+                    <div class="card-actions">
+                        ${m.email ? `<a href="mailto:${m.email}" class="card-btn card-btn-email" onclick="event.stopPropagation()">Email</a>` : '<span class="card-btn card-btn-na">No Email</span>'}
+                        ${m.phone ? `<a href="tel:${m.phone}" class="card-btn card-btn-phone" onclick="event.stopPropagation()">Call</a>` : '<span class="card-btn card-btn-na">No Phone</span>'}
+                    </div>
+                </button>`).join('')}
+            </div>
+        </div>`).join('');
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────
+function openMemberModal(m) {
+    document.getElementById('m-initials').textContent = m.name.split(' ').map(w=>w[0]).join('').toUpperCase();
+    document.getElementById('m-name').textContent = m.name;
+    document.getElementById('m-role').textContent = m.role + (m.nn ? ' — ' + m.nn : '');
+    document.getElementById('m-desc').textContent = m.description || '';
+    document.getElementById('m-actions').innerHTML = `
+        ${m.email?`<a href="mailto:${m.email}" class="modal-btn modal-btn-primary"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>Email</a>`:'<span class="modal-btn modal-btn-disabled">Email N/A</span>'}
+        ${m.phone?`<a href="tel:${m.phone}" class="modal-btn modal-btn-secondary"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>Call</a>`:'<span class="modal-btn modal-btn-disabled">Call N/A</span>'}`;
+    document.getElementById('member-modal').classList.add('open');
+}
+function closeMemberModal() { document.getElementById('member-modal').classList.remove('open'); }
+
+// Init
+renderDirectory(ALL_MEMBERS);
+</script>
+</body>
+</html>
