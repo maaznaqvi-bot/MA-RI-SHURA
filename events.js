@@ -1,12 +1,12 @@
 export const config = { runtime: 'edge' };
 
-const SHEET_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTbXtkL4ry38KEg6MvKsED3gRhZRmNcU_El9yQY29kf9Uis7fjPyOW1ap9L64SYWhkheeBOuLufd1-K/pub';
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTbXtkL4ry38KEg6MvKsED3gRhZRmNcU_El9yQY29kf9Uis7fjPyOW1ap9L64SYWhkheeBOuLufd1-K/pub?output=csv';
 
 export default async function handler(req) {
   const { searchParams } = new URL(req.url);
   const gid = searchParams.get('gid') || '0';
 
-  const url = `${SHEET_BASE}?gid=${gid}&single=true&output=csv`;
+  const url = gid === '0' ? SHEET_URL : `${SHEET_URL}&gid=${gid}&single=true`;
 
   try {
     const res = await fetch(url, {
