@@ -173,6 +173,51 @@
         footer { background: white; border-top: 1px solid var(--gray-100); padding: 2.5rem 2rem; text-align: center; }
         .footer-title { font-weight: 900; color: var(--gray-900); text-transform: uppercase; font-size: 0.875rem; }
         .footer-links { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 0.75rem; font-size: 0.62rem; font-weight: 900; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.15em; }
+
+        /* DIRECTORY PANEL */
+        .dir-panel { display: none; position: fixed; inset: 0; z-index: 300; background: var(--gray-50); overflow-y: auto; }
+        .dir-panel.open { display: block; }
+        .dir-header { background: linear-gradient(160deg, var(--green) 0%, var(--green-dark) 100%); padding: 2.5rem 1.5rem; }
+        .dir-header-inner { max-width: 72rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+        .dir-back-btn { display: flex; align-items: center; gap: 0.4rem; color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); border: none; border-radius: 9999px; padding: 0.5rem 1rem; font-family: 'Poppins', sans-serif; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+        .dir-back-btn:hover { background: rgba(255,255,255,0.2); color: white; }
+        .dir-header-title { color: white; font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 900; letter-spacing: -0.02em; }
+        .dir-header-sub { color: var(--gold); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.2rem; }
+        .dir-toolbar { background: white; border-bottom: 1px solid var(--gray-100); padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 10; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+        .dir-toolbar-inner { max-width: 72rem; margin: 0 auto; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+        .dir-search-wrap { position: relative; flex: 1; min-width: 180px; }
+        .dir-search-icon { position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); color: var(--gray-400); width: 1rem; height: 1rem; }
+        .dir-search-input { width: 100%; border: 1px solid var(--gray-200); border-radius: 0.75rem; padding: 0.7rem 0.875rem 0.7rem 2.5rem; font-family: 'Poppins', sans-serif; font-size: 0.82rem; outline: none; transition: border-color 0.15s; color: var(--gray-900); background: var(--gray-50); }
+        .dir-search-input:focus { border-color: var(--green); background: white; }
+        .dir-filter-btn { padding: 0.7rem 1rem; border: 1px solid var(--gray-200); border-radius: 0.75rem; background: var(--gray-50); font-family: 'Poppins', sans-serif; font-size: 0.75rem; font-weight: 700; color: var(--gray-500); cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+        .dir-filter-btn:hover, .dir-filter-btn.active { background: var(--green); color: white; border-color: var(--green); }
+        .dir-main { max-width: 72rem; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+        .dir-group { margin-bottom: 2.5rem; }
+        .dir-group-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
+        .dir-group-dot { width: 0.5rem; height: 0.5rem; border-radius: 9999px; background: var(--gold); flex-shrink: 0; }
+        .dir-group-title { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gray-500); }
+        .dir-group-count { font-size: 0.6rem; font-weight: 900; color: var(--gold); background: #fefce8; border: 1px solid #fef08a; padding: 0.15rem 0.5rem; border-radius: 9999px; }
+        .dir-members-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+        @media (min-width: 520px)  { .dir-members-grid { grid-template-columns: 1fr 1fr; } }
+        @media (min-width: 900px)  { .dir-members-grid { grid-template-columns: 1fr 1fr 1fr; } }
+        @media (min-width: 1200px) { .dir-members-grid { grid-template-columns: repeat(4, 1fr); } }
+        .dir-member-card { background: white; border: 1px solid var(--gray-100); border-radius: 1.5rem; padding: 1.25rem; cursor: pointer; transition: all 0.15s; text-align: left; width: 100%; font-family: 'Poppins', sans-serif; display: flex; flex-direction: column; }
+        .dir-member-card:hover { border-color: #a7f3d0; box-shadow: 0 4px 16px rgba(11,61,46,0.1); transform: translateY(-1px); }
+        .dir-card-top { display: flex; align-items: flex-start; gap: 0.875rem; }
+        .dir-card-avatar { width: 3rem; height: 3rem; border-radius: 1rem; background: #ecfdf5; border: 1.5px solid #a7f3d0; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1rem; color: var(--green); flex-shrink: 0; transition: background 0.15s; }
+        .dir-member-card:hover .dir-card-avatar { background: var(--green); color: white; border-color: var(--green); }
+        .dir-card-name { font-size: 0.875rem; font-weight: 700; color: var(--gray-900); line-height: 1.3; }
+        .dir-card-role { font-size: 0.6rem; font-weight: 900; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.2rem; }
+        .dir-card-nn { font-size: 0.65rem; color: var(--gray-400); margin-top: 0.15rem; font-weight: 600; }
+        .dir-card-desc { font-size: 0.72rem; color: var(--gray-400); line-height: 1.5; margin-top: 0.875rem; padding-top: 0.875rem; border-top: 1px solid var(--gray-100); flex: 1; }
+        .dir-card-actions { display: flex; gap: 0.4rem; margin-top: 0.875rem; }
+        .dir-card-btn { flex: 1; padding: 0.5rem; border-radius: 0.625rem; font-size: 0.65rem; font-weight: 700; text-decoration: none; text-align: center; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; transition: background 0.15s; display: block; }
+        .dir-card-btn-email { background: var(--green); color: white; }
+        .dir-card-btn-email:hover { background: var(--green-mid); }
+        .dir-card-btn-phone { background: white; color: var(--green); border: 1.5px solid var(--green) !important; }
+        .dir-card-btn-phone:hover { background: var(--gray-50); }
+        .dir-card-btn-na { background: var(--gray-100); color: var(--gray-400); cursor: default; }
+        .dir-empty { text-align: center; padding: 4rem 2rem; color: var(--gray-400); font-size: 0.875rem; }
     </style>
 </head>
 <body>
@@ -227,7 +272,7 @@
             <a href="#shura"       class="nav-link"        onclick="setActive(this)">SR Shura</a>
             <a href="#neighbornet" class="nav-link"        onclick="setActive(this)">NeighborNets</a>
         </div>
-        <a href="/directory.html" class="nav-dir-btn">
+        <a href="#" class="nav-dir-btn" onclick="showDirectory();return false;">
             <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             Directory
         </a>
@@ -578,6 +623,91 @@ function renderOrgChart(containerId, data) {
         .text(d=>d.data.nn);
 }
 
+
+
+// ── DIRECTORY PANEL ───────────────────────────────────────────────
+const DIR_MEMBERS = [
+    {name:'Maaz Naqvi',role:'SRC',group:'Shura',email:'maaz.naqvi@youngmuslims.com',phone:'508-579-2075',description:'Sub-Regional Coordinator leading the MA/RI sub-region. Responsible for overall vision, strategy, and leadership.'},
+    {name:'Asad Shahzad',role:'SG',group:'Shura',email:'asad.shahzad@youngmuslims.com',phone:'401-419-8352',description:'Secretary General responsible for administrative oversight, documentation, and cross-departmental coordination.'},
+    {name:'Abdurrahman Aboumahmoud',role:'Tarbiyyah Lead',group:'Shura',email:'abdurrahman.aboumahmoud@youngmuslims.com',phone:'978-960-7613',description:'Responsible for the spiritual growth and educational curriculum across all local chapters.'},
+    {name:'Ahmad Somakia',role:'Events Lead',group:'Shura',email:'ahmad.somakia@youngmuslims.com',phone:'774-315-8606',description:'Coordinates sub-regional events, camps, and workshops to foster brotherhood and community.'},
+    {name:'Nabil Barkallah',role:'Societal Impact Lead',group:'Shura',email:'nabil.barkallah@youngmuslims.com',phone:'978-989-3133',description:'Oversees community service initiatives, social activism, and external outreach programs.'},
+    {name:'Abdullah Aboumahmoud',role:'Expansion Lead',group:'Shura',email:'abdullah.aboumahmoud@youngmuslims.com',phone:'978-483-7030',description:'Focused on scaling the organization by opening new NeighborNets and supporting emerging communities.'},
+    {name:'Haris Waqar',role:'Expansion + Cloud',group:'Shura',email:'haris.waqar@youngmuslims.com',description:'Manages digital infrastructure and reporting tools while supporting expansion logistics.'},
+    {name:'Aiman Baig',role:'Expansion + Cloud',group:'Shura',email:'aiman.baig@youngmuslims.com',description:'Technical coordinator focusing on cloud-based management systems and local expansion support.'},
+    {name:'Amin Badmos',role:'NNC',nn:'Worcester',group:'NNC',email:'amin.badmos@youngmuslims.com',description:'NeighborNet Coordinator for Worcester. Leading local chapter operations and community growth.'},
+    {name:'Abdullah Mohammed',role:'NNC',nn:'Metrowest',group:'NNC',email:'abdullah.mohammed@youngmuslims.com',description:'NeighborNet Coordinator for Metrowest. Leading local growth and youth development.'},
+    {name:'Yussuf Nasri',role:'NNC',nn:'Sharon',group:'NNC',email:'yussuf.nasri@youngmuslims.com',description:'NeighborNet Coordinator for Sharon. Leading local chapter strategy and team building.'},
+    {name:'Hassan Jafri',role:'NNC',nn:'Lowell',group:'NNC',email:'hassan.jafri@youngmuslims.com',description:'NeighborNet Coordinator for Lowell. Building a vibrant local youth community.'},
+    {name:'Hanzalah Qamar',role:'NNC',nn:'Pawtucket',group:'NNC',email:'hanzalah.qamar@youngmuslims.com',description:'NeighborNet Coordinator for Pawtucket. Managing the Rhode Island regional presence.'},
+    {name:'Yoseph Hassan',role:'NNC',nn:'Quincy',group:'NNC',email:'yoseph.hassan@youngmuslims.com',description:'NeighborNet Coordinator for Quincy. Fostering a new local chapter and community growth.'},
+];
+
+let dirFilter = 'all';
+
+function showDirectory() {
+    document.getElementById('dir-panel').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    renderDir(DIR_MEMBERS);
+}
+function hideDirectory() {
+    document.getElementById('dir-panel').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+function filterDir() {
+    const q = document.getElementById('dir-search').value.toLowerCase().trim();
+    let filtered = DIR_MEMBERS;
+    if (dirFilter !== 'all') filtered = filtered.filter(m => m.group === dirFilter);
+    if (q) filtered = filtered.filter(m => m.name.toLowerCase().includes(q) || m.role.toLowerCase().includes(q) || (m.nn||'').toLowerCase().includes(q));
+    renderDir(filtered);
+}
+
+function setDirFilter(btn) {
+    document.querySelectorAll('.dir-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    dirFilter = btn.dataset.filter;
+    filterDir();
+}
+
+function renderDir(members) {
+    const main = document.getElementById('dir-main');
+    if (!members.length) { main.innerHTML = '<div class="dir-empty">No members found.</div>'; return; }
+    const groups = [
+        { key:'Shura', label:'Sub-Regional Shura',        members: members.filter(m=>m.group==='Shura') },
+        { key:'NNC',   label:'NeighborNet Coordinators',  members: members.filter(m=>m.group==='NNC') },
+    ].filter(g => g.members.length > 0);
+    main.innerHTML = groups.map(g => `
+        <div class="dir-group">
+            <div class="dir-group-header">
+                <div class="dir-group-dot"></div>
+                <div class="dir-group-title">${g.label}</div>
+                <div class="dir-group-count">${g.members.length}</div>
+            </div>
+            <div class="dir-members-grid">
+                ${g.members.map(m => `
+                <button class="dir-member-card" onclick='openMemberModal(${JSON.stringify(m).replace(/'/g,"&#39;")})'>
+                    <div class="dir-card-top">
+                        <div class="dir-card-avatar">${m.name[0]}</div>
+                        <div>
+                            <div class="dir-card-name">${m.name}</div>
+                            <div class="dir-card-role">${m.role}${m.nn?' — '+m.nn:''}</div>
+                            ${m.nn?`<div class="dir-card-nn">${m.nn} NeighborNet</div>`:''}
+                        </div>
+                    </div>
+                    <div class="dir-card-desc">${m.description||''}</div>
+                    <div class="dir-card-actions">
+                        ${m.email?`<a href="mailto:${m.email}" class="dir-card-btn dir-card-btn-email" onclick="event.stopPropagation()">Email</a>`:'<span class="dir-card-btn dir-card-btn-na">No Email</span>'}
+                        ${m.phone?`<a href="tel:${m.phone}" class="dir-card-btn dir-card-btn-phone" onclick="event.stopPropagation()">Call</a>`:'<span class="dir-card-btn dir-card-btn-na">No Phone</span>'}
+                    </div>
+                </button>`).join('')}
+            </div>
+        </div>`).join('');
+}
+
+// Close directory on Escape key
+document.addEventListener('keydown', e => { if (e.key === 'Escape') hideDirectory(); });
+
 // ── SCROLL SPY ────────────────────────────────────────────────────
 function initScrollSpy() {
     const secs = document.querySelectorAll('section[id]');
@@ -596,5 +726,36 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollSpy();
 });
 </script>
+
+<!-- DIRECTORY PANEL (full-screen overlay, no separate page needed) -->
+<div class="dir-panel" id="dir-panel">
+    <div class="dir-header">
+        <div class="dir-header-inner">
+            <div style="display:flex;align-items:center;gap:1rem">
+                <button class="dir-back-btn" onclick="hideDirectory()">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                    Back
+                </button>
+                <div>
+                    <div class="dir-header-title">Member Directory</div>
+                    <div class="dir-header-sub">YM MA/RI Shura &amp; NeighborNet Coordinators</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dir-toolbar">
+        <div class="dir-toolbar-inner">
+            <div class="dir-search-wrap">
+                <svg class="dir-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input class="dir-search-input" id="dir-search" type="text" placeholder="Search by name or role…" oninput="filterDir()" autocomplete="off">
+            </div>
+            <button class="dir-filter-btn active" data-filter="all"   onclick="setDirFilter(this)">All</button>
+            <button class="dir-filter-btn"        data-filter="Shura" onclick="setDirFilter(this)">Shura</button>
+            <button class="dir-filter-btn"        data-filter="NNC"   onclick="setDirFilter(this)">NNCs</button>
+        </div>
+    </div>
+    <div class="dir-main" id="dir-main"></div>
+</div>
+
 </body>
 </html>
