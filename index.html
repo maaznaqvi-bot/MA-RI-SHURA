@@ -767,7 +767,7 @@ function buildHierarchy(node) {
     if (node.children && !collapsedNodes.has(node.id)) {
         h.children = node.children.map(buildHierarchy);
     } else {
-        h.children = null;
+        delete h.children;
     }
     return h;
 }
