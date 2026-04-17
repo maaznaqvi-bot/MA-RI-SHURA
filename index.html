@@ -715,55 +715,50 @@ function closeMemberModal() { document.getElementById('member-modal').classList.
 function setActive(el) { document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active')); el.classList.add('active'); }
 
 // ── UNIFIED ORG CHART ────────────────────────────────────────────
-const C = { green:'#0b3d2e', dark:'#062d22', blue:'#1e40af', gold:'#c8a951', white:'#ffffff', shura:'#145945', nnc:'#1e40af' };
+const C = { green:'#0b3d2e', dark:'#062d22', blue:'#1e40af', gold:'#c8a951', white:'#ffffff', shura:'#145945', nnc:'#1d4ed8' };
 
-// Full unified tree — Maaz at root, Shura leads + NNCs as children
 const UNIFIED_TREE = {
     id:'maaz', name:'Maaz Naqvi', role:'SRC', type:'root',
     email:'maaz.naqvi@youngmuslims.com', phone:'508-579-2075',
     description:'Sub-Regional Coordinator leading the MA/RI sub-region.',
     children: [
-        {
-            id:'shura-group', name:'SR Shura', role:'Cabinet', type:'group-shura',
-            description:'Sub-Regional Shura cabinet and department leads.',
-            children: [
-                {id:'asad-shahzad',name:'Asad Shahzad',role:'SG',type:'shura',email:'asad.shahzad@youngmuslims.com',phone:'401-419-8352',description:'Secretary General responsible for administrative oversight and cross-departmental coordination.'},
-                {id:'abdurrahman-abou',name:'Abdurrahman Aboumahmoud',role:'Tarbiyyah Lead',type:'shura',email:'abdurrahman.aboumahmoud@youngmuslims.com',phone:'978-960-7613',description:'Responsible for spiritual growth and educational curriculum across all local chapters.'},
-                {id:'ahmad-somakia',name:'Ahmad Somakia',role:'Events Lead',type:'shura',email:'ahmad.somakia@youngmuslims.com',phone:'774-315-8606',description:'Coordinates sub-regional events, camps, and workshops.'},
-                {id:'nabil-barkallah',name:'Nabil Barkallah',role:'Societal Impact Lead',type:'shura',email:'nabil.barkallah@youngmuslims.com',phone:'978-989-3133',description:'Oversees community service, social activism, and outreach programs.'},
-                {id:'abdullah-abou',name:'Abdullah Aboumahmoud',role:'Expansion Lead',type:'shura',email:'abdullah.aboumahmoud@youngmuslims.com',phone:'978-483-7030',description:'Focused on opening new NeighborNets and supporting emerging communities.'}
-                {id:'aiman-baig',name:'Aiman Baig',role:'Expansion + Cloud',type:'shura',email:'aiman.baig@youngmuslims.com',description:'Technical coordinator focusing on cloud-based management systems.'},
-            ]
+        { id:'shura-group', name:'SR Shura', role:'Cabinet', type:'group-shura',
+          description:'Sub-Regional Shura cabinet and department leads.',
+          children: [
+            {id:'asad-shahzad',name:'Asad Shahzad',role:'SG',type:'shura',email:'asad.shahzad@youngmuslims.com',phone:'401-419-8352',description:'Secretary General responsible for administrative oversight and cross-departmental coordination.'},
+            {id:'abdurrahman-abou',name:'Abdurrahman Aboumahmoud',role:'Tarbiyyah Lead',type:'shura',email:'abdurrahman.aboumahmoud@youngmuslims.com',phone:'978-960-7613',description:'Responsible for spiritual growth and educational curriculum across all local chapters.'},
+            {id:'ahmad-somakia',name:'Ahmad Somakia',role:'Events Lead',type:'shura',email:'ahmad.somakia@youngmuslims.com',phone:'774-315-8606',description:'Coordinates sub-regional events, camps, and workshops.'},
+            {id:'nabil-barkallah',name:'Nabil Barkallah',role:'Societal Impact Lead',type:'shura',email:'nabil.barkallah@youngmuslims.com',phone:'978-989-3133',description:'Oversees community service, social activism, and outreach programs.'},
+            {id:'abdullah-abou',name:'Abdullah Aboumahmoud',role:'Expansion Lead',type:'shura',email:'abdullah.aboumahmoud@youngmuslims.com',phone:'978-483-7030',description:'Focused on opening new NeighborNets and supporting emerging communities.'},
+            {id:'aiman-baig',name:'Aiman Baig',role:'Expansion + Cloud',type:'shura',email:'aiman.baig@youngmuslims.com',description:'Technical coordinator focusing on cloud-based management systems.'},
+          ]
         },
-        {
-            id:'nnc-group', name:'NeighborNets', role:'Coordinators', type:'group-nnc',
-            description:'NeighborNet Coordinators connecting SRC to local chapters.',
-            children: [
-                {id:'amin-badmos',name:'Amin Badmos',role:'NNC',nn:'Worcester',type:'nnc',email:'amin.badmos@youngmuslims.com',description:'NeighborNet Coordinator for Worcester.'},
-                {id:'abdullah-mohammed',name:'Abdullah Mohammed',role:'NNC',nn:'Metrowest',type:'nnc',email:'abdullah.mohammed@youngmuslims.com',description:'NeighborNet Coordinator for Metrowest.'},
-                {id:'yussuf-nasri',name:'Yussuf Nasri',role:'NNC',nn:'Sharon',type:'nnc',email:'yussuf.nasri@youngmuslims.com',description:'NeighborNet Coordinator for Sharon.'},
-                {id:'hassan-jafri',name:'Hassan Jafri',role:'NNC',nn:'Lowell',type:'nnc',email:'hassan.jafri@youngmuslims.com',description:'NeighborNet Coordinator for Lowell.'},
-                {id:'hanzalah-qamar',name:'Hanzalah Qamar',role:'NNC',nn:'Pawtucket',type:'nnc',email:'hanzalah.qamar@youngmuslims.com',description:'NeighborNet Coordinator for Pawtucket.'},
-                {id:'yoseph-hassan',name:'Yoseph Hassan',role:'NNC',nn:'Quincy',type:'nnc',email:'yoseph.hassan@youngmuslims.com',description:'NeighborNet Coordinator for Quincy.'},
-            ]
+        { id:'nnc-group', name:'NeighborNets', role:'Coordinators', type:'group-nnc',
+          description:'NeighborNet Coordinators connecting SRC to local chapters.',
+          children: [
+            {id:'amin-badmos',name:'Amin Badmos',role:'NNC',nn:'Worcester',type:'nnc',email:'amin.badmos@youngmuslims.com',description:'NeighborNet Coordinator for Worcester.'},
+            {id:'abdullah-mohammed',name:'Abdullah Mohammed',role:'NNC',nn:'Metrowest',type:'nnc',email:'abdullah.mohammed@youngmuslims.com',description:'NeighborNet Coordinator for Metrowest.'},
+            {id:'yussuf-nasri',name:'Yussuf Nasri',role:'NNC',nn:'Sharon',type:'nnc',email:'yussuf.nasri@youngmuslims.com',description:'NeighborNet Coordinator for Sharon.'},
+            {id:'hassan-jafri',name:'Hassan Jafri',role:'NNC',nn:'Lowell',type:'nnc',email:'hassan.jafri@youngmuslims.com',description:'NeighborNet Coordinator for Lowell.'},
+            {id:'hanzalah-qamar',name:'Hanzalah Qamar',role:'NNC',nn:'Pawtucket',type:'nnc',email:'hanzalah.qamar@youngmuslims.com',description:'NeighborNet Coordinator for Pawtucket.'},
+            {id:'yoseph-hassan',name:'Yoseph Hassan',role:'NNC',nn:'Quincy',type:'nnc',email:'yoseph.hassan@youngmuslims.com',description:'NeighborNet Coordinator for Quincy.'},
+          ]
         }
     ]
 };
 
-// Track collapsed nodes
 const collapsedNodes = new Set();
 
 function getNodeColor(d) {
-    if (d.data.type === 'root')        return C.dark;
-    if (d.data.type === 'group-shura') return C.shura;
-    if (d.data.type === 'group-nnc')   return C.blue;
-    if (d.data.type === 'shura')       return C.green;
-    if (d.data.type === 'nnc')         return '#1d4ed8';
-    return C.green;
+    if (d.data.type==='root')        return C.dark;
+    if (d.data.type==='group-shura') return C.shura;
+    if (d.data.type==='group-nnc')   return C.blue;
+    if (d.data.type==='shura')       return C.green;
+    return C.nnc;
 }
 
 function buildHierarchy(node) {
-    const h = { ...node };
+    const h = {...node};
     if (node.children && !collapsedNodes.has(node.id)) {
         h.children = node.children.map(buildHierarchy);
     } else {
@@ -775,34 +770,28 @@ function buildHierarchy(node) {
 function renderUnifiedChart() {
     const container = document.getElementById('unified-chart');
     if (!container) return;
-    container.innerHTML = '<div class="chart-hint">Click any node to expand or collapse its branch</div>';
+    if (typeof d3 === 'undefined') { container.innerHTML = '<p style="padding:1rem;color:red">D3 not loaded</p>'; return; }
 
-    const tip = document.getElementById('org-tooltip');
-    const W = 220, H = 95, nW = 250, nH = 140;
-
-    const hierarchyData = buildHierarchy(UNIFIED_TREE);
-    const root = d3.hierarchy(hierarchyData);
-    const tree = d3.tree().nodeSize([nW, nH])(root);
+    const W=200, H=80, nW=230, nH=120;
+    const root = d3.hierarchy(buildHierarchy(UNIFIED_TREE));
+    const tree = d3.tree().nodeSize([nW,nH])(root);
 
     let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
     tree.each(d=>{minX=Math.min(minX,d.x);maxX=Math.max(maxX,d.x);minY=Math.min(minY,d.y);maxY=Math.max(maxY,d.y);});
-    const pad=60, vbW=maxX-minX+W+pad*2, vbH=maxY-minY+H+pad*2;
+    if (!isFinite(minX)) return;
+    const pad=50, vbW=maxX-minX+W+pad*2, vbH=maxY-minY+H+pad*2;
+
+    container.innerHTML = '<div class="chart-hint">Click group nodes ( − / ＋ ) to expand or collapse</div>';
 
     const svg = d3.select(container).append('svg')
         .attr('viewBox',`${minX-W/2-pad} ${minY-pad} ${vbW} ${vbH}`)
-        .attr('preserveAspectRatio','xMidYMid meet')
         .style('width','100%').style('height','auto');
 
     const g = svg.append('g');
 
-    // Links
     g.selectAll('.lk').data(tree.links()).enter().append('path')
         .attr('fill','none')
-        .attr('stroke', d => {
-            const t = d.target.data.type;
-            if (t==='group-shura'||t==='shura') return C.gold;
-            return '#93c5fd';
-        })
+        .attr('stroke', d => (d.target.data.type==='shura'||d.target.data.type==='group-shura') ? C.gold : '#93c5fd')
         .attr('stroke-width',2).attr('opacity',0.5)
         .attr('d',d3.linkVertical().x(d=>d.x).y(d=>d.y));
 
@@ -810,59 +799,46 @@ function renderUnifiedChart() {
         .attr('transform',d=>`translate(${d.x-W/2},${d.y-H/2})`)
         .style('cursor','pointer')
         .on('click',(e,d)=>{
-            const hasChildren = d.data.type === 'root' ||
-                d.data.type === 'group-shura' || d.data.type === 'group-nnc';
-            if (hasChildren) {
-                if (collapsedNodes.has(d.data.id)) collapsedNodes.delete(d.data.id);
-                else collapsedNodes.add(d.data.id);
+            const isGroup = ['root','group-shura','group-nnc'].includes(d.data.type);
+            if (isGroup) {
+                collapsedNodes.has(d.data.id) ? collapsedNodes.delete(d.data.id) : collapsedNodes.add(d.data.id);
                 renderUnifiedChart();
             } else {
                 openMemberModal(d.data);
             }
         })
         .on('mouseover',(e,d)=>{
-            const hasKids = d.data.type==='root'||d.data.type==='group-shura'||d.data.type==='group-nnc';
+            const tip = document.getElementById('org-tooltip');
+            const isGroup = ['root','group-shura','group-nnc'].includes(d.data.type);
             tip.style.opacity='1';
-            tip.innerHTML=`<div style="font-size:0.6rem;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:${C.gold}">${d.data.role}${d.data.nn?' — '+d.data.nn:''}</div><div style="font-weight:700;color:white;margin-top:0.25rem;font-size:0.82rem">${d.data.name}</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.5);font-style:italic;margin-top:0.4rem">${hasKids ? (collapsedNodes.has(d.data.id)?'Click to expand':'Click to collapse') : 'Click to view profile'}</div>`;
+            tip.innerHTML=`<div style="font-size:0.6rem;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:${C.gold}">${d.data.role}${d.data.nn?' — '+d.data.nn:''}</div><div style="font-weight:700;color:white;margin-top:0.25rem;font-size:0.82rem">${d.data.name}</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.5);font-style:italic;margin-top:0.4rem">${isGroup?(collapsedNodes.has(d.data.id)?'Click to expand':'Click to collapse'):'Click to view profile'}</div>`;
         })
-        .on('mousemove',e=>{tip.style.left=(e.pageX+16)+'px';tip.style.top=(e.pageY-16)+'px';})
-        .on('mouseout',()=>{tip.style.opacity='0';});
-
-    // Node background
-    node.append('rect').attr('width',W).attr('height',H).attr('rx',14).attr('ry',14)
-        .attr('fill', d => getNodeColor(d))
-        .attr('stroke', d => {
-            if (d.data.type==='group-shura'||d.data.type==='shura') return C.gold;
-            return '#93c5fd';
+        .on('mousemove',e=>{
+            const tip = document.getElementById('org-tooltip');
+            tip.style.left=(e.pageX+16)+'px'; tip.style.top=(e.pageY-16)+'px';
         })
-        .attr('stroke-width',2)
-        .style('filter','drop-shadow(0 4px 10px rgba(0,0,0,0.15))');
+        .on('mouseout',()=>{ document.getElementById('org-tooltip').style.opacity='0'; });
 
-    // Collapse indicator
-    node.filter(d => d.data.type==='group-shura'||d.data.type==='group-nnc'||d.data.type==='root')
-        .append('text')
-        .attr('x', W - 14).attr('y', 16)
-        .attr('text-anchor','middle')
-        .attr('fill','rgba(255,255,255,0.6)').attr('font-size','12px').attr('pointer-events','none')
-        .text(d => collapsedNodes.has(d.data.id) ? '＋' : '−');
+    node.append('rect').attr('width',W).attr('height',H).attr('rx',12)
+        .attr('fill',d=>getNodeColor(d))
+        .attr('stroke',d=>d.data.type.includes('nnc')?'#93c5fd':C.gold)
+        .attr('stroke-width',1.5);
 
-    // Name text
-    node.append('text').attr('x',W/2).attr('y',d=>d.data.nn?H/2-12:H/2+4)
-        .attr('text-anchor','middle')
-        .attr('fill',C.white).attr('font-weight','700').attr('font-size','13px').attr('pointer-events','none')
+    node.filter(d=>['root','group-shura','group-nnc'].includes(d.data.type))
+        .append('text').attr('x',W-10).attr('y',14)
+        .attr('text-anchor','end').attr('fill','rgba(255,255,255,0.7)').attr('font-size','14px').attr('pointer-events','none')
+        .text(d=>collapsedNodes.has(d.data.id)?'＋':'−');
+
+    node.append('text').attr('x',W/2).attr('y',d=>d.data.nn?H/2-10:H/2+4)
+        .attr('text-anchor','middle').attr('fill','#fff').attr('font-size','13px').attr('font-weight','700').attr('pointer-events','none')
         .text(d=>d.data.name);
 
-    // Role text
-    node.append('text').attr('x',W/2).attr('y',d=>d.data.nn?H/2+10:H/2+24)
-        .attr('text-anchor','middle')
-        .attr('fill',C.gold).attr('font-size','10px').attr('font-weight','800').attr('letter-spacing','0.8px').attr('pointer-events','none')
+    node.append('text').attr('x',W/2).attr('y',d=>d.data.nn?H/2+10:H/2+22)
+        .attr('text-anchor','middle').attr('fill',C.gold).attr('font-size','10px').attr('font-weight','800').attr('pointer-events','none')
         .text(d=>d.data.role);
 
-    // NN location
-    node.filter(d=>!!d.data.nn).append('text')
-        .attr('x',W/2).attr('y',H/2+27)
-        .attr('text-anchor','middle')
-        .attr('fill','rgba(255,255,255,0.65)').attr('font-size','10px').attr('font-weight','600').attr('pointer-events','none')
+    node.filter(d=>!!d.data.nn).append('text').attr('x',W/2).attr('y',H/2+26)
+        .attr('text-anchor','middle').attr('fill','rgba(255,255,255,0.65)').attr('font-size','10px').attr('pointer-events','none')
         .text(d=>d.data.nn);
 }
 
