@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDP Tracker — YM MA/RI</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+    --green-dark: #062d22; --green: #0b3d2e; --green-mid: #145945;
+    --gold: #c8a951; --white: #fff;
+    --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+    --gray-400: #94a3b8; --gray-500: #64748b; --gray-900: #0f172a;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-900); min-height: 100vh; }
+::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 4px; }
+button { font-family: inherit; cursor: pointer; border: none; }
+input, textarea { font-family: inherit; outline: none; }
+a { color: inherit; text-decoration: none; }
+
+/* AUTH */
+.auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; background: linear-gradient(160deg, var(--green) 0%, var(--green-dark) 100%); }
+.auth-card { background: white; width: 100%; max-width: 26rem; border-radius: 2rem; padding: 2.5rem 2rem; box-shadow: 0 30px 60px rgba(0,0,0,0.25); }
+.auth-logo { width: 80px; height: 80px; margin: 0 auto 1rem; display: block; }
+.auth-title { text-align: center; font-size: 1.4rem; font-weight: 900; color: var(--gray-900); letter-spacing: -0.02em; }
+.auth-sub { text-align: center; font-size: 0.72rem; color: var(--gold); font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.3rem; }
+.auth-tabs { display: flex; gap: 0.5rem; margin: 1.75rem 0 1.25rem; background: var(--gray-100); padding: 4px; border-radius: 9999px; }
+.auth-tab { flex: 1; padding: 0.6rem; background: transparent; border-radius: 9999px; font-size: 0.75rem; font-weight: 800; color: var(--gray-500); transition: all 0.15s; }
+.auth-tab.active { background: white; color: var(--green); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+.auth-field { margin-bottom: 0.875rem; }
+.auth-label { display: block; font-size: 0.68rem; font-weight: 900; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+.auth-input { width: 100%; padding: 0.85rem 1rem; border: 1px solid var(--gray-200); border-radius: 0.875rem; font-size: 0.875rem; background: var(--gray-50); transition: border-color 0.15s, background 0.15s; }
+.auth-input:focus { border-color: var(--green); background: white; }
+.auth-btn { width: 100%; padding: 0.95rem; background: var(--green); color: white; border-radius: 9999px; font-size: 0.82rem; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; transition: background 0.15s; margin-top: 0.5rem; }
+.auth-btn:hover { background: var(--green-mid); }
+.auth-btn:disabled { background: var(--gray-400); cursor: not-allowed; }
+.auth-err { color: #dc2626; font-size: 0.75rem; text-align: center; margin-top: 0.75rem; min-height: 1.1rem; }
+.auth-success { color: #059669; font-size: 0.75rem; text-align: center; margin-top: 0.75rem; }
+.auth-back { display: block; text-align: center; font-size: 0.65rem; color: rgba(255,255,255,0.6); margin-top: 1.25rem; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; }
+
+/* APP */
+.app { display: none; }
+.app.active { display: block; }
+.app-header { background: linear-gradient(160deg, var(--green) 0%, var(--green-dark) 100%); padding: 2rem 1rem 4.5rem; text-align: center; }
+.app-header-inner { max-width: 72rem; margin: 0 auto; position: relative; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.app-back { display: flex; align-items: center; gap: 0.4rem; color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+.app-back:hover { background: rgba(255,255,255,0.2); color: white; }
+.app-title-box { text-align: center; flex: 1; }
+.app-title { color: white; font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 900; letter-spacing: -0.02em; }
+.app-sub { color: var(--gold); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.25rem; }
+.app-logout { display: flex; align-items: center; gap: 0.4rem; color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+.app-logout:hover { background: rgba(220,38,38,0.4); color: white; }
+
+.app-main { max-width: 72rem; margin: -3.5rem auto 0; padding: 0 1rem 4rem; }
+
+/* Partner status bar */
+.partner-bar { background: white; border-radius: 1.5rem; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 20px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.partner-info { display: flex; align-items: center; gap: 0.875rem; }
+.partner-avatar { width: 2.75rem; height: 2.75rem; border-radius: 0.875rem; background: #ecfdf5; border: 1.5px solid #a7f3d0; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--green); flex-shrink: 0; }
+.partner-name { font-size: 0.875rem; font-weight: 700; color: var(--gray-900); }
+.partner-status { font-size: 0.65rem; color: var(--gray-400); margin-top: 0.1rem; }
+.partner-pair-btn { display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; background: var(--gold); color: white; border-radius: 9999px; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* TABS */
+.tabs { display: flex; gap: 0.25rem; background: white; padding: 6px; border-radius: 1.5rem; margin-bottom: 1.5rem; overflow-x: auto; scrollbar-width: none; box-shadow: 0 2px 20px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); }
+.tabs::-webkit-scrollbar { display: none; }
+.tab-btn { flex: 1; padding: 0.75rem 1rem; background: transparent; border-radius: 1.15rem; font-size: 0.72rem; font-weight: 800; color: var(--gray-500); white-space: nowrap; transition: all 0.15s; }
+.tab-btn.active { background: var(--green); color: white; box-shadow: 0 4px 10px rgba(11,61,46,0.18); }
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+.card { background: white; border-radius: 1.75rem; padding: 1.75rem; box-shadow: 0 2px 20px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); margin-bottom: 1.25rem; }
+.card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; gap: 1rem; flex-wrap: wrap; }
+.card-title { font-size: 1.05rem; font-weight: 900; color: var(--gray-900); }
+.card-sub { font-size: 0.7rem; color: var(--gray-400); margin-top: 0.15rem; }
+
+.btn-primary { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1rem; background: var(--green); color: white; border-radius: 9999px; font-size: 0.68rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; transition: background 0.15s; }
+.btn-primary:hover { background: var(--green-mid); }
+.btn-ghost { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1rem; background: var(--gray-100); color: var(--gray-500); border-radius: 9999px; font-size: 0.68rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; }
+.btn-ghost:hover { background: var(--gray-200); }
+.btn-danger { color: #dc2626; background: transparent; font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.5rem; border-radius: 0.375rem; }
+.btn-danger:hover { background: #fee2e2; }
+
+.section-label { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.875rem; }
+.section-dot { width: 0.5rem; height: 0.5rem; border-radius: 9999px; background: var(--gold); }
+.section-label-text { font-size: 0.68rem; font-weight: 900; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.15em; }
+
+/* GOALS */
+.goal-item { background: var(--gray-50); border: 1px solid var(--gray-100); border-radius: 1.25rem; padding: 1.25rem; margin-bottom: 0.75rem; transition: border-color 0.15s; }
+.goal-item:hover { border-color: #a7f3d0; }
+.goal-item.partner { border-left: 3px solid var(--gold); }
+.goal-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; }
+.goal-title-wrap { flex: 1; }
+.goal-title { font-size: 0.9rem; font-weight: 700; color: var(--gray-900); }
+.goal-desc { font-size: 0.72rem; color: var(--gray-500); margin-top: 0.25rem; line-height: 1.5; }
+.goal-owner { font-size: 0.58rem; font-weight: 900; color: var(--gold); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.4rem; }
+.goal-bar-wrap { margin-top: 0.875rem; }
+.goal-bar-top { display: flex; justify-content: space-between; margin-bottom: 0.4rem; }
+.goal-bar-label { font-size: 0.65rem; color: var(--gray-400); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+.goal-bar-pct { font-size: 0.75rem; font-weight: 900; color: var(--green); }
+.goal-bar-bg { width: 100%; height: 8px; background: var(--gray-100); border-radius: 9999px; overflow: hidden; }
+.goal-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green) 0%, var(--green-mid) 100%); border-radius: 9999px; transition: width 0.3s ease; }
+.goal-slider { width: 100%; margin-top: 0.5rem; }
+
+/* HABITS */
+.habit-item { background: var(--gray-50); border: 1px solid var(--gray-100); border-radius: 1.25rem; padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
+.habit-item.partner { border-left: 3px solid var(--gold); }
+.habit-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+.habit-title { font-size: 0.875rem; font-weight: 700; color: var(--gray-900); }
+.habit-streak { background: #fefce8; border: 1px solid #fef08a; color: var(--gold); padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; }
+.habit-days { display: flex; gap: 4px; }
+.habit-day { flex: 1; aspect-ratio: 1; border-radius: 0.5rem; background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 0.55rem; font-weight: 900; color: var(--gray-400); transition: all 0.15s; cursor: pointer; min-width: 0; }
+.habit-day.checked { background: var(--green); color: white; }
+.habit-day.today { border: 2px solid var(--gold); }
+.habit-day.partner-checked { background: #fefce8; border-color: var(--gold); color: var(--gold); cursor: default; }
+.habit-day.partner-checked.checked { background: linear-gradient(135deg, var(--green) 50%, var(--gold) 50%); color: white; }
+
+/* REFLECTIONS */
+.reflection-item { background: var(--gray-50); border: 1px solid var(--gray-100); border-radius: 1.25rem; padding: 1.25rem; margin-bottom: 0.75rem; }
+.reflection-item.partner { border-left: 3px solid var(--gold); }
+.reflection-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.875rem; gap: 1rem; }
+.reflection-date { font-size: 0.78rem; font-weight: 800; color: var(--gray-900); }
+.reflection-owner { font-size: 0.58rem; font-weight: 900; color: var(--gold); text-transform: uppercase; letter-spacing: 0.15em; }
+.reflection-row { margin-bottom: 0.75rem; }
+.reflection-row:last-child { margin-bottom: 0; }
+.reflection-label { font-size: 0.6rem; font-weight: 900; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.25rem; }
+.reflection-text { font-size: 0.78rem; color: var(--gray-900); line-height: 1.6; white-space: pre-wrap; }
+
+/* NOTES */
+.note-item { display: flex; margin-bottom: 0.75rem; gap: 0.5rem; }
+.note-item.me { justify-content: flex-end; }
+.note-bubble { max-width: 75%; padding: 0.75rem 1rem; border-radius: 1.25rem; font-size: 0.82rem; line-height: 1.5; word-wrap: break-word; }
+.note-item.me .note-bubble { background: var(--green); color: white; border-bottom-right-radius: 0.3rem; }
+.note-item.them .note-bubble { background: var(--gray-100); color: var(--gray-900); border-bottom-left-radius: 0.3rem; }
+.note-time { font-size: 0.55rem; color: var(--gray-400); margin-top: 0.3rem; padding: 0 0.4rem; }
+.note-item.me .note-time { text-align: right; }
+.notes-input-row { display: flex; gap: 0.5rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--gray-100); }
+.notes-input { flex: 1; padding: 0.75rem 1rem; border: 1px solid var(--gray-200); border-radius: 9999px; font-size: 0.82rem; background: var(--gray-50); }
+.notes-input:focus { border-color: var(--green); background: white; }
+.notes-send { padding: 0.75rem 1.25rem; background: var(--green); color: white; border-radius: 9999px; font-weight: 900; font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; }
+.notes-send:disabled { background: var(--gray-300); }
+
+/* Empty */
+.empty { text-align: center; padding: 2.5rem 1rem; color: var(--gray-400); font-size: 0.82rem; }
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem; }
+.modal-overlay.open { display: flex; }
+.modal-box { background: white; width: 100%; max-width: 28rem; border-radius: 1.75rem; padding: 1.75rem; box-shadow: 0 40px 80px rgba(0,0,0,0.3); }
+.modal-title { font-size: 1rem; font-weight: 900; color: var(--gray-900); margin-bottom: 1rem; }
+.modal-field { margin-bottom: 0.875rem; }
+.modal-label { display: block; font-size: 0.65rem; font-weight: 900; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.35rem; }
+.modal-input, .modal-textarea { width: 100%; padding: 0.75rem 0.875rem; border: 1px solid var(--gray-200); border-radius: 0.75rem; font-size: 0.82rem; background: var(--gray-50); resize: vertical; font-family: inherit; }
+.modal-input:focus, .modal-textarea:focus { border-color: var(--green); background: white; }
+.modal-textarea { min-height: 80px; }
+.modal-actions { display: flex; gap: 0.5rem; margin-top: 1.25rem; }
+.modal-actions .btn-primary, .modal-actions .btn-ghost { flex: 1; justify-content: center; padding: 0.75rem; font-size: 0.72rem; }
+
+/* Pairing code display */
+.pair-code-box { background: var(--green); color: white; padding: 1.5rem; border-radius: 1.25rem; text-align: center; margin: 0.75rem 0; }
+.pair-code-label { font-size: 0.6rem; font-weight: 900; color: var(--gold); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.5rem; }
+.pair-code { font-size: 2rem; font-weight: 900; letter-spacing: 0.5rem; }
+.pair-hint { font-size: 0.7rem; color: var(--gray-500); text-align: center; margin-top: 0.75rem; line-height: 1.5; }
+
+.loading { text-align: center; padding: 4rem 1rem; color: var(--gray-400); font-size: 0.82rem; }
+
+@media (max-width: 540px) {
+    .tabs { flex-wrap: nowrap; }
+    .tab-btn { font-size: 0.65rem; padding: 0.65rem 0.5rem; }
+    .app-header-inner { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div class="auth-wrap" id="auth-wrap">
+    <div class="auth-card">
+        <svg class="auth-logo" viewBox="0 0 80 80" fill="none">
+            <circle cx="40" cy="40" r="36" fill="#0b3d2e"/>
+            <circle cx="40" cy="40" r="36" fill="none" stroke="#c8a951" stroke-width="2"/>
+            <text x="40" y="50" text-anchor="middle" font-size="28" font-weight="900" fill="#c8a951" font-family="Poppins, sans-serif">YM</text>
+        </svg>
+        <div class="auth-title">PDP Tracker</div>
+        <div class="auth-sub">Partner Accountability</div>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="login-tab" onclick="switchTab('login')">Log In</button>
+            <button class="auth-tab" id="signup-tab" onclick="switchTab('signup')">Sign Up</button>
+        </div>
+
+        <div class="auth-field" id="name-field" style="display:none">
+            <label class="auth-label">Name</label>
+            <input type="text" class="auth-input" id="signup-name" placeholder="Your full name" autocomplete="name">
+        </div>
+        <div class="auth-field">
+            <label class="auth-label">Email</label>
+            <input type="email" class="auth-input" id="auth-email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="auth-field">
+            <label class="auth-label">Password</label>
+            <input type="password" class="auth-input" id="auth-password" placeholder="6+ characters" autocomplete="current-password">
+        </div>
+
+        <button class="auth-btn" id="auth-submit" onclick="submitAuth()">Log In</button>
+        <div class="auth-err" id="auth-err"></div>
+
+        <a class="auth-back" href="/">← Back to Shura Portal</a>
+    </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+    <div class="app-header">
+        <div class="app-header-inner">
+            <a class="app-back" href="/">
+                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Back
+            </a>
+            <div class="app-title-box">
+                <div class="app-title">PDP Tracker</div>
+                <div class="app-sub" id="user-greeting">Loading...</div>
+            </div>
+            <button class="app-logout" onclick="logout()">
+                Log Out
+            </button>
+        </div>
+    </div>
+
+    <div class="app-main">
+        <!-- Partner status bar -->
+        <div class="partner-bar">
+            <div class="partner-info">
+                <div class="partner-avatar" id="partner-avatar">?</div>
+                <div>
+                    <div class="partner-name" id="partner-name">No partner yet</div>
+                    <div class="partner-status" id="partner-status">Pair with someone to share progress</div>
+                </div>
+            </div>
+            <button class="partner-pair-btn" onclick="openPairing()">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span id="pair-btn-label">Pair</span>
+            </button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchPanel('goals')">Goals</button>
+            <button class="tab-btn" onclick="switchPanel('habits')">Habits</button>
+            <button class="tab-btn" onclick="switchPanel('reflections')">Reflections</button>
+            <button class="tab-btn" onclick="switchPanel('notes')">Notes</button>
+        </div>
+
+        <!-- GOALS -->
+        <div class="panel active" id="goals-panel">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">My Goals</div>
+                        <div class="card-sub">Track progress toward specific targets</div>
+                    </div>
+                    <button class="btn-primary" onclick="openGoalModal()">+ New Goal</button>
+                </div>
+                <div id="my-goals"><div class="loading">Loading...</div></div>
+            </div>
+            <div class="card" id="partner-goals-card" style="display:none">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Partner's Goals</div>
+                        <div class="card-sub">What <span id="partner-name-goals">they're</span> working on</div>
+                    </div>
+                </div>
+                <div id="partner-goals"></div>
+            </div>
+        </div>
+
+        <!-- HABITS -->
+        <div class="panel" id="habits-panel">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Daily Habits</div>
+                        <div class="card-sub">Last 7 days · tap today's square to check in</div>
+                    </div>
+                    <button class="btn-primary" onclick="openHabitModal()">+ New Habit</button>
+                </div>
+                <div id="my-habits"><div class="loading">Loading...</div></div>
+            </div>
+            <div class="card" id="partner-habits-card" style="display:none">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Partner's Habits</div>
+                        <div class="card-sub">Their last 7 days</div>
+                    </div>
+                </div>
+                <div id="partner-habits"></div>
+            </div>
+        </div>
+
+        <!-- REFLECTIONS -->
+        <div class="panel" id="reflections-panel">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Weekly Reflections</div>
+                        <div class="card-sub">Wins, challenges, next week</div>
+                    </div>
+                    <button class="btn-primary" onclick="openReflectionModal()">+ This Week</button>
+                </div>
+                <div id="my-reflections"><div class="loading">Loading...</div></div>
+            </div>
+            <div class="card" id="partner-reflections-card" style="display:none">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Partner's Reflections</div>
+                    </div>
+                </div>
+                <div id="partner-reflections"></div>
+            </div>
+        </div>
+
+        <!-- NOTES -->
+        <div class="panel" id="notes-panel">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Notes to Partner</div>
+                        <div class="card-sub">Encourage, check in, celebrate wins</div>
+                    </div>
+                </div>
+                <div id="notes-feed"><div class="loading">Loading...</div></div>
+                <div class="notes-input-row" id="notes-input-row" style="display:none">
+                    <input type="text" class="notes-input" id="note-text" placeholder="Write a note..." onkeypress="if(event.key==='Enter')sendNote()">
+                    <button class="notes-send" onclick="sendNote()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- GOAL MODAL -->
+<div class="modal-overlay" id="goal-modal" onclick="if(event.target===this)closeGoalModal()">
+    <div class="modal-box">
+        <div class="modal-title">New Goal</div>
+        <div class="modal-field">
+            <label class="modal-label">Title</label>
+            <input type="text" class="modal-input" id="goal-title" placeholder="e.g. Complete 30-day Quran challenge">
+        </div>
+        <div class="modal-field">
+            <label class="modal-label">Description (optional)</label>
+            <textarea class="modal-textarea" id="goal-desc" placeholder="Extra context..."></textarea>
+        </div>
+        <div class="modal-field">
+            <label class="modal-label">Target Date (optional)</label>
+            <input type="date" class="modal-input" id="goal-date">
+        </div>
+        <div class="modal-actions">
+            <button class="btn-ghost" onclick="closeGoalModal()">Cancel</button>
+            <button class="btn-primary" onclick="saveGoal()">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- HABIT MODAL -->
+<div class="modal-overlay" id="habit-modal" onclick="if(event.target===this)closeHabitModal()">
+    <div class="modal-box">
+        <div class="modal-title">New Habit</div>
+        <div class="modal-field">
+            <label class="modal-label">Habit Title</label>
+            <input type="text" class="modal-input" id="habit-title" placeholder="e.g. Fajr on time">
+        </div>
+        <div class="modal-actions">
+            <button class="btn-ghost" onclick="closeHabitModal()">Cancel</button>
+            <button class="btn-primary" onclick="saveHabit()">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- REFLECTION MODAL -->
+<div class="modal-overlay" id="reflection-modal" onclick="if(event.target===this)closeReflectionModal()">
+    <div class="modal-box">
+        <div class="modal-title">This Week's Reflection</div>
+        <div class="modal-field">
+            <label class="modal-label">Wins this week</label>
+            <textarea class="modal-textarea" id="ref-wins" placeholder="What went well?"></textarea>
+        </div>
+        <div class="modal-field">
+            <label class="modal-label">Challenges</label>
+            <textarea class="modal-textarea" id="ref-challenges" placeholder="What was hard?"></textarea>
+        </div>
+        <div class="modal-field">
+            <label class="modal-label">Focus for next week</label>
+            <textarea class="modal-textarea" id="ref-next" placeholder="What will you work on?"></textarea>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-ghost" onclick="closeReflectionModal()">Cancel</button>
+            <button class="btn-primary" onclick="saveReflection()">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- PAIRING MODAL -->
+<div class="modal-overlay" id="pair-modal" onclick="if(event.target===this)closePairing()">
+    <div class="modal-box">
+        <div class="modal-title" id="pair-title">Pair with a Partner</div>
+        <div id="pair-content"></div>
+        <div class="modal-actions">
+            <button class="btn-ghost" onclick="closePairing()">Close</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ── SUPABASE CONFIG ────────────────────────────────────────────
+const SUPABASE_URL = 'https://achdlzfbztougathqqst.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjaGRsemZienRvdWdhdGhxcXN0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2OTA5MzksImV4cCI6MjA5MjI2NjkzOX0.A3SEukj2Q1h0j4Jkgl4gU3QRjNtc07J22POUs0PBmjA';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── STATE ──────────────────────────────────────────────────────
+let currentUser = null;
+let currentProfile = null;
+let partnerProfile = null;
+let authMode = 'login';
+
+// ── AUTH ───────────────────────────────────────────────────────
+function switchTab(mode) {
+    authMode = mode;
+    document.getElementById('login-tab').classList.toggle('active', mode === 'login');
+    document.getElementById('signup-tab').classList.toggle('active', mode === 'signup');
+    document.getElementById('name-field').style.display = mode === 'signup' ? 'block' : 'none';
+    document.getElementById('auth-submit').textContent = mode === 'login' ? 'Log In' : 'Create Account';
+    document.getElementById('auth-err').textContent = '';
+}
+
+async function submitAuth() {
+    const email = document.getElementById('auth-email').value.trim();
+    const password = document.getElementById('auth-password').value;
+    const errEl = document.getElementById('auth-err');
+    const btn = document.getElementById('auth-submit');
+
+    if (!email || !password) { errEl.textContent = 'Please fill in all fields'; return; }
+    if (password.length < 6) { errEl.textContent = 'Password must be 6+ characters'; return; }
+
+    btn.disabled = true; btn.textContent = 'Please wait...'; errEl.textContent = '';
+
+    try {
+        if (authMode === 'signup') {
+            const name = document.getElementById('signup-name').value.trim();
+            if (!name) { errEl.textContent = 'Please enter your name'; btn.disabled = false; btn.textContent = 'Create Account'; return; }
+
+            const { data, error } = await sb.auth.signUp({ email, password });
+            if (error) throw error;
+
+            // Create profile - may need email confirmation first
+            if (data.user) {
+                const pairingCode = generatePairingCode();
+                const { error: profErr } = await sb.from('profiles').insert({
+                    id: data.user.id, name, email, pairing_code: pairingCode
+                });
+                if (profErr && !profErr.message.includes('duplicate')) throw profErr;
+            }
+
+            if (!data.session) {
+                errEl.style.color = '#059669';
+                errEl.textContent = 'Check your email to confirm your account, then log in.';
+                btn.disabled = false; btn.textContent = 'Create Account';
+                return;
+            }
+            await loadApp();
+        } else {
+            const { error } = await sb.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+            await loadApp();
+        }
+    } catch (err) {
+        errEl.style.color = '#dc2626';
+        errEl.textContent = err.message || 'Something went wrong';
+        btn.disabled = false;
+        btn.textContent = authMode === 'login' ? 'Log In' : 'Create Account';
+    }
+}
+
+async function logout() {
+    await sb.auth.signOut();
+    location.reload();
+}
+
+function generatePairingCode() {
+    const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+    let code = '';
+    for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+    return code;
+}
+
+// ── LOAD APP ───────────────────────────────────────────────────
+async function loadApp() {
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) { showAuth(); return; }
+    currentUser = user;
+
+    // Load profile
+    let { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+
+    // Create profile if missing (e.g. user was created before profile row)
+    if (!profile) {
+        const pairingCode = generatePairingCode();
+        const { data: newProfile, error } = await sb.from('profiles').insert({
+            id: user.id,
+            name: user.email.split('@')[0],
+            email: user.email,
+            pairing_code: pairingCode
+        }).select().single();
+        if (error) { alert('Failed to create profile: ' + error.message); return; }
+        profile = newProfile;
+    }
+    currentProfile = profile;
+
+    // Load partner if paired
+    if (profile.partner_id) {
+        const { data: partner } = await sb.from('profiles').select('*').eq('id', profile.partner_id).single();
+        partnerProfile = partner;
+    }
+
+    // Hide auth, show app
+    document.getElementById('auth-wrap').style.display = 'none';
+    document.getElementById('app').classList.add('active');
+    document.getElementById('user-greeting').textContent = `Hi, ${profile.name}`;
+
+    updatePartnerBar();
+    await refreshAll();
+}
+
+function showAuth() {
+    document.getElementById('auth-wrap').style.display = 'flex';
+    document.getElementById('app').classList.remove('active');
+}
+
+function updatePartnerBar() {
+    const nameEl = document.getElementById('partner-name');
+    const statusEl = document.getElementById('partner-status');
+    const avatarEl = document.getElementById('partner-avatar');
+    const btnLabel = document.getElementById('pair-btn-label');
+
+    if (partnerProfile) {
+        nameEl.textContent = partnerProfile.name;
+        statusEl.textContent = `Paired · ${partnerProfile.email}`;
+        avatarEl.textContent = partnerProfile.name[0].toUpperCase();
+        btnLabel.textContent = 'Change';
+        document.getElementById('partner-name-goals').textContent = partnerProfile.name + "'s";
+    } else {
+        nameEl.textContent = 'No partner yet';
+        statusEl.textContent = 'Pair with someone to share progress';
+        avatarEl.textContent = '?';
+        btnLabel.textContent = 'Pair';
+    }
+}
+
+// ── PAIRING ────────────────────────────────────────────────────
+function openPairing() {
+    const content = document.getElementById('pair-content');
+    if (partnerProfile) {
+        content.innerHTML = `
+            <p style="font-size:0.82rem;color:#64748b;margin-bottom:0.75rem">
+                You're currently paired with <strong>${escapeHtml(partnerProfile.name)}</strong>.
+            </p>
+            <button class="btn-ghost" onclick="unpair()" style="width:100%;justify-content:center;color:#dc2626;background:#fee2e2">Unpair</button>
+        `;
+    } else {
+        content.innerHTML = `
+            <p style="font-size:0.78rem;color:#64748b;margin-bottom:0.75rem">Share your code with your partner, OR enter theirs below.</p>
+            <div class="pair-code-box">
+                <div class="pair-code-label">Your Code</div>
+                <div class="pair-code">${currentProfile.pairing_code}</div>
+            </div>
+            <div class="modal-field" style="margin-top:1rem">
+                <label class="modal-label">Partner's Code</label>
+                <input type="text" class="modal-input" id="pair-input" placeholder="6 characters" maxlength="6" style="text-transform:uppercase;letter-spacing:0.3rem;text-align:center;font-weight:900">
+            </div>
+            <button class="btn-primary" onclick="submitPairing()" style="width:100%;justify-content:center;padding:0.75rem">Pair Up</button>
+            <div class="pair-hint">Once paired, you'll see each other's goals, habits, and reflections.</div>
+            <div class="auth-err" id="pair-err"></div>
+        `;
+    }
+    document.getElementById('pair-modal').classList.add('open');
+}
+
+function closePairing() { document.getElementById('pair-modal').classList.remove('open'); }
+
+async function submitPairing() {
+    const code = document.getElementById('pair-input').value.trim().toUpperCase();
+    const errEl = document.getElementById('pair-err');
+    if (code.length !== 6) { errEl.textContent = 'Code must be 6 characters'; return; }
+    if (code === currentProfile.pairing_code) { errEl.textContent = "You can't pair with yourself"; return; }
+
+    const { data: partner, error } = await sb.from('profiles').select('*').eq('pairing_code', code).maybeSingle();
+    if (error || !partner) { errEl.textContent = 'Invalid code. Double-check with your partner.'; return; }
+
+    // Set partner on both sides
+    await sb.from('profiles').update({ partner_id: partner.id }).eq('id', currentUser.id);
+    await sb.from('profiles').update({ partner_id: currentUser.id }).eq('id', partner.id);
+
+    partnerProfile = partner;
+    currentProfile.partner_id = partner.id;
+    closePairing();
+    updatePartnerBar();
+    await refreshAll();
+}
+
+async function unpair() {
+    if (!confirm('Unpair from your partner? Your data stays but you stop sharing.')) return;
+    if (partnerProfile) {
+        await sb.from('profiles').update({ partner_id: null }).eq('id', partnerProfile.id);
+    }
+    await sb.from('profiles').update({ partner_id: null }).eq('id', currentUser.id);
+    partnerProfile = null;
+    currentProfile.partner_id = null;
+    closePairing();
+    updatePartnerBar();
+    await refreshAll();
+}
+
+// ── TAB SWITCHING ──────────────────────────────────────────────
+function switchPanel(name) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+        const names = ['goals', 'habits', 'reflections', 'notes'];
+        b.classList.toggle('active', names[i] === name);
+    });
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(name + '-panel').classList.add('active');
+}
+
+// ── GOALS ──────────────────────────────────────────────────────
+function openGoalModal() {
+    document.getElementById('goal-title').value = '';
+    document.getElementById('goal-desc').value = '';
+    document.getElementById('goal-date').value = '';
+    document.getElementById('goal-modal').classList.add('open');
+}
+function closeGoalModal() { document.getElementById('goal-modal').classList.remove('open'); }
+
+async function saveGoal() {
+    const title = document.getElementById('goal-title').value.trim();
+    const description = document.getElementById('goal-desc').value.trim();
+    const targetDate = document.getElementById('goal-date').value || null;
+    if (!title) return;
+
+    const { error } = await sb.from('goals').insert({
+        user_id: currentUser.id, title, description, target_date: targetDate
+    });
+    if (error) { alert(error.message); return; }
+    closeGoalModal();
+    loadGoals();
+}
+
+async function updateGoalProgress(id, progress) {
+    await sb.from('goals').update({ progress: Number(progress) }).eq('id', id);
+}
+
+async function deleteGoal(id) {
+    if (!confirm('Delete this goal?')) return;
+    await sb.from('goals').delete().eq('id', id);
+    loadGoals();
+}
+
+async function loadGoals() {
+    const { data: mine } = await sb.from('goals').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+    renderGoals('my-goals', mine || [], true);
+
+    if (partnerProfile) {
+        const { data: theirs } = await sb.from('goals').select('*').eq('user_id', partnerProfile.id).order('created_at', { ascending: false });
+        renderGoals('partner-goals', theirs || [], false);
+        document.getElementById('partner-goals-card').style.display = 'block';
+    } else {
+        document.getElementById('partner-goals-card').style.display = 'none';
+    }
+}
+
+function renderGoals(containerId, goals, isMine) {
+    const el = document.getElementById(containerId);
+    if (!goals.length) {
+        el.innerHTML = `<div class="empty">${isMine ? 'No goals yet. Tap + to add one.' : 'No goals yet.'}</div>`;
+        return;
+    }
+    el.innerHTML = goals.map(g => `
+        <div class="goal-item${isMine ? '' : ' partner'}">
+            <div class="goal-top">
+                <div class="goal-title-wrap">
+                    <div class="goal-title">${escapeHtml(g.title)}</div>
+                    ${g.description ? `<div class="goal-desc">${escapeHtml(g.description)}</div>` : ''}
+                    ${g.target_date ? `<div class="goal-desc"><strong>Target:</strong> ${formatDate(g.target_date)}</div>` : ''}
+                </div>
+                ${isMine ? `<button class="btn-danger" onclick="deleteGoal('${g.id}')">Delete</button>` : ''}
+            </div>
+            <div class="goal-bar-wrap">
+                <div class="goal-bar-top">
+                    <div class="goal-bar-label">Progress</div>
+                    <div class="goal-bar-pct">${g.progress}%</div>
+                </div>
+                <div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${g.progress}%"></div></div>
+                ${isMine ? `<input type="range" class="goal-slider" min="0" max="100" value="${g.progress}" oninput="this.parentElement.querySelector('.goal-bar-fill').style.width=this.value+'%';this.parentElement.querySelector('.goal-bar-pct').textContent=this.value+'%'" onchange="updateGoalProgress('${g.id}', this.value)">` : ''}
+            </div>
+        </div>`).join('');
+}
+
+// ── HABITS ─────────────────────────────────────────────────────
+function openHabitModal() { document.getElementById('habit-title').value = ''; document.getElementById('habit-modal').classList.add('open'); }
+function closeHabitModal() { document.getElementById('habit-modal').classList.remove('open'); }
+
+async function saveHabit() {
+    const title = document.getElementById('habit-title').value.trim();
+    if (!title) return;
+    const { error } = await sb.from('habits').insert({ user_id: currentUser.id, title });
+    if (error) { alert(error.message); return; }
+    closeHabitModal();
+    loadHabits();
+}
+
+async function deleteHabit(id) {
+    if (!confirm('Delete this habit and all its check-ins?')) return;
+    await sb.from('habits').delete().eq('id', id);
+    loadHabits();
+}
+
+function getLast7Days() {
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        days.push(d.toISOString().slice(0, 10));
+    }
+    return days;
+}
+
+async function toggleHabitCheckin(habitId, date) {
+    const { data: existing } = await sb.from('habit_checkins').select('id').eq('habit_id', habitId).eq('date', date).maybeSingle();
+    if (existing) {
+        await sb.from('habit_checkins').delete().eq('id', existing.id);
+    } else {
+        await sb.from('habit_checkins').insert({ habit_id: habitId, user_id: currentUser.id, date });
+    }
+    loadHabits();
+}
+
+function computeStreak(checkins, today) {
+    const dates = new Set(checkins.map(c => c.date));
+    let streak = 0;
+    let d = new Date(today);
+    while (dates.has(d.toISOString().slice(0, 10))) {
+        streak++;
+        d.setDate(d.getDate() - 1);
+    }
+    return streak;
+}
+
+async function loadHabits() {
+    const days = getLast7Days();
+    const today = days[days.length - 1];
+    const weekStart = days[0];
+
+    const { data: mine } = await sb.from('habits').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+    const { data: myCheckins } = await sb.from('habit_checkins').select('*').eq('user_id', currentUser.id).gte('date', weekStart);
+    renderHabits('my-habits', mine || [], myCheckins || [], days, today, true);
+
+    if (partnerProfile) {
+        const { data: theirs } = await sb.from('habits').select('*').eq('user_id', partnerProfile.id).order('created_at', { ascending: false });
+        const { data: theirCheckins } = await sb.from('habit_checkins').select('*').eq('user_id', partnerProfile.id).gte('date', weekStart);
+        renderHabits('partner-habits', theirs || [], theirCheckins || [], days, today, false);
+        document.getElementById('partner-habits-card').style.display = 'block';
+    } else {
+        document.getElementById('partner-habits-card').style.display = 'none';
+    }
+}
+
+function renderHabits(containerId, habits, checkins, days, today, isMine) {
+    const el = document.getElementById(containerId);
+    if (!habits.length) {
+        el.innerHTML = `<div class="empty">${isMine ? 'No habits yet. Tap + to add one.' : 'No habits yet.'}</div>`;
+        return;
+    }
+    const DOW = ['S','M','T','W','T','F','S'];
+    el.innerHTML = habits.map(h => {
+        const hCheckins = checkins.filter(c => c.habit_id === h.id);
+        const dates = new Set(hCheckins.map(c => c.date));
+        const streak = computeStreak(hCheckins, today);
+        return `
+            <div class="habit-item${isMine ? '' : ' partner'}">
+                <div class="habit-top">
+                    <div>
+                        <div class="habit-title">${escapeHtml(h.title)}</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:0.5rem">
+                        ${streak > 0 ? `<div class="habit-streak">🔥 ${streak} day${streak !== 1 ? 's' : ''}</div>` : ''}
+                        ${isMine ? `<button class="btn-danger" onclick="deleteHabit('${h.id}')">Delete</button>` : ''}
+                    </div>
+                </div>
+                <div class="habit-days">
+                    ${days.map(date => {
+                        const checked = dates.has(date);
+                        const isToday = date === today;
+                        const dow = DOW[new Date(date + 'T00:00:00').getDay()];
+                        const click = isMine ? `onclick="toggleHabitCheckin('${h.id}','${date}')"` : '';
+                        return `<div class="habit-day${checked ? ' checked' : ''}${isToday ? ' today' : ''}" ${click}>${dow}</div>`;
+                    }).join('')}
+                </div>
+            </div>`;
+    }).join('');
+}
+
+// ── REFLECTIONS ────────────────────────────────────────────────
+function openReflectionModal() {
+    document.getElementById('ref-wins').value = '';
+    document.getElementById('ref-challenges').value = '';
+    document.getElementById('ref-next').value = '';
+    document.getElementById('reflection-modal').classList.add('open');
+}
+function closeReflectionModal() { document.getElementById('reflection-modal').classList.remove('open'); }
+
+function getWeekStart() {
+    const d = new Date();
+    const day = d.getDay();
+    const diff = d.getDate() - day; // Sunday = 0
+    d.setDate(diff);
+    return d.toISOString().slice(0, 10);
+}
+
+async function saveReflection() {
+    const wins = document.getElementById('ref-wins').value.trim();
+    const challenges = document.getElementById('ref-challenges').value.trim();
+    const next = document.getElementById('ref-next').value.trim();
+    if (!wins && !challenges && !next) return;
+
+    const weekStart = getWeekStart();
+    // Upsert if already exists for this week
+    const { data: existing } = await sb.from('reflections').select('id').eq('user_id', currentUser.id).eq('week_start', weekStart).maybeSingle();
+    if (existing) {
+        await sb.from('reflections').update({ wins, challenges, next_week: next }).eq('id', existing.id);
+    } else {
+        await sb.from('reflections').insert({ user_id: currentUser.id, week_start: weekStart, wins, challenges, next_week: next });
+    }
+    closeReflectionModal();
+    loadReflections();
+}
+
+async function loadReflections() {
+    const { data: mine } = await sb.from('reflections').select('*').eq('user_id', currentUser.id).order('week_start', { ascending: false });
+    renderReflections('my-reflections', mine || [], true);
+
+    if (partnerProfile) {
+        const { data: theirs } = await sb.from('reflections').select('*').eq('user_id', partnerProfile.id).order('week_start', { ascending: false });
+        renderReflections('partner-reflections', theirs || [], false);
+        document.getElementById('partner-reflections-card').style.display = 'block';
+    } else {
+        document.getElementById('partner-reflections-card').style.display = 'none';
+    }
+}
+
+function renderReflections(containerId, reflections, isMine) {
+    const el = document.getElementById(containerId);
+    if (!reflections.length) {
+        el.innerHTML = `<div class="empty">${isMine ? 'No reflections yet. Tap + to add this week.' : 'No reflections yet.'}</div>`;
+        return;
+    }
+    el.innerHTML = reflections.map(r => `
+        <div class="reflection-item${isMine ? '' : ' partner'}">
+            <div class="reflection-header">
+                <div class="reflection-date">Week of ${formatDate(r.week_start)}</div>
+            </div>
+            ${r.wins ? `<div class="reflection-row"><div class="reflection-label">Wins</div><div class="reflection-text">${escapeHtml(r.wins)}</div></div>` : ''}
+            ${r.challenges ? `<div class="reflection-row"><div class="reflection-label">Challenges</div><div class="reflection-text">${escapeHtml(r.challenges)}</div></div>` : ''}
+            ${r.next_week ? `<div class="reflection-row"><div class="reflection-label">Next Week</div><div class="reflection-text">${escapeHtml(r.next_week)}</div></div>` : ''}
+        </div>`).join('');
+}
+
+// ── NOTES ──────────────────────────────────────────────────────
+async function sendNote() {
+    if (!partnerProfile) { alert('Pair with a partner first'); return; }
+    const input = document.getElementById('note-text');
+    const message = input.value.trim();
+    if (!message) return;
+    input.value = '';
+    await sb.from('notes').insert({ from_user: currentUser.id, to_user: partnerProfile.id, message });
+    loadNotes();
+}
+
+async function loadNotes() {
+    const feed = document.getElementById('notes-feed');
+    const inputRow = document.getElementById('notes-input-row');
+
+    if (!partnerProfile) {
+        feed.innerHTML = `<div class="empty">Pair with a partner to send notes.</div>`;
+        inputRow.style.display = 'none';
+        return;
+    }
+
+    inputRow.style.display = 'flex';
+    const { data: notes } = await sb.from('notes').select('*').or(`and(from_user.eq.${currentUser.id},to_user.eq.${partnerProfile.id}),and(from_user.eq.${partnerProfile.id},to_user.eq.${currentUser.id})`).order('created_at', { ascending: true });
+
+    if (!notes || !notes.length) {
+        feed.innerHTML = `<div class="empty">No notes yet. Send the first one!</div>`;
+        return;
+    }
+
+    feed.innerHTML = notes.map(n => {
+        const isMe = n.from_user === currentUser.id;
+        return `<div class="note-item ${isMe ? 'me' : 'them'}">
+            <div>
+                <div class="note-bubble">${escapeHtml(n.message)}</div>
+                <div class="note-time">${formatNoteTime(n.created_at)}</div>
+            </div>
+        </div>`;
+    }).join('');
+
+    // scroll to bottom
+    feed.scrollTop = feed.scrollHeight;
+}
+
+// ── HELPERS ────────────────────────────────────────────────────
+function escapeHtml(s) {
+    const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML;
+}
+function formatDate(d) {
+    const date = new Date(d + 'T00:00:00');
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+function formatNoteTime(ts) {
+    const d = new Date(ts);
+    const now = new Date();
+    const diff = (now - d) / 1000;
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+    if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+async function refreshAll() {
+    await Promise.all([loadGoals(), loadHabits(), loadReflections(), loadNotes()]);
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+(async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+        await loadApp();
+    } else {
+        showAuth();
+    }
+})();
+
+// Auto-refresh notes every 15 seconds when notes panel is active
+setInterval(() => {
+    if (currentUser && partnerProfile && document.getElementById('notes-panel').classList.contains('active')) {
+        loadNotes();
+    }
+}, 15000);
+</script>
+</body>
+</html>
