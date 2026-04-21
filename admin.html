@@ -330,6 +330,27 @@ async function loadAll() {
 }
 
 // ── RENDER ─────────────────────────────────────────────────────
+async function deleteUser(userId, userName) {
+    if (!confirm(`Remove ${userName} and all their data? This cannot be undone.`)) return;
+    
+    // Delete all user data
+    await sb.from('habit_checkins').delete().eq('user_id', userId);
+    await sb.from('habits').delete().eq('user_id', userId);
+    await sb.from('goals').delete().eq('user_id', userId);
+    await sb.from('reflections').delete().eq('user_id', userId);
+    await sb.from('notes').delete().eq('from_user', userId);
+    await sb.from('notes').delete().eq('to_user', userId);
+    
+    // Unpair partner if exists
+    await sb.from('profiles').update({ partner_id: null }).eq('partner_id', userId);
+    
+    // Delete profile
+    await sb.from('profiles').delete().eq('id', userId);
+    
+    alert(`${userName} has been removed.`);
+    loadAll();
+}
+
 function filterUsers() {
     renderUsers();
 }
@@ -428,7 +449,10 @@ function renderUserCard(u) {
                     ${partner ? `<div class="user-partner">↔ Paired with ${escapeHtml(partner.name || partner.email)}</div>` : '<div class="user-partner" style="color:var(--gray-400)">No partner</div>'}
                 </div>
             </div>
-            <div class="user-badges">${badges || '<span style="font-size:0.65rem;color:var(--gray-400)">No activity yet</span>'}</div>
+            <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+                <div class="user-badges">${badges || '<span style="font-size:0.65rem;color:var(--gray-400)">No activity yet</span>'}</div>
+                <button onclick="deleteUser('${profile.id}','${escapeHtml(profile.name||profile.email)}')" style="padding:0.35rem 0.75rem;background:#fee2e2;color:#dc2626;border:none;border-radius:9999px;font-size:0.6rem;font-weight:900;cursor:pointer;font-family:inherit;white-space:nowrap">✕ Remove</button>
+            </div>
         </div>
         <div class="user-sections">
             <div>
