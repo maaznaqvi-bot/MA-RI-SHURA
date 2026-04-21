@@ -2,5 +2,9 @@
   "rewrites": [
     { "source": "/pdp", "destination": "/pdp.html" },
     { "source": "/api/events", "destination": "/api/events.js" }
+  ],
+  "builds": [
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "api/events.js", "use": "@vercel/node" }
   ]
 }
