@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — YM MA/RI PDP</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+    --green-dark: #062d22; --green: #0b3d2e; --green-mid: #145945;
+    --gold: #c8a951; --white: #fff;
+    --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+    --gray-400: #94a3b8; --gray-500: #64748b; --gray-900: #0f172a;
+    --blue: #1e40af; --blue-light: #dbeafe;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-900); min-height: 100vh; }
+button { font-family: inherit; cursor: pointer; border: none; }
+input, textarea { font-family: inherit; outline: none; }
+
+/* AUTH */
+.auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; background: linear-gradient(160deg, var(--green) 0%, var(--green-dark) 100%); }
+.auth-card { background: white; width: 100%; max-width: 22rem; border-radius: 2rem; padding: 2.5rem 2rem; box-shadow: 0 30px 60px rgba(0,0,0,0.25); }
+.auth-logo { width: 64px; height: 64px; margin: 0 auto 1rem; display: block; }
+.auth-title { text-align: center; font-size: 1.3rem; font-weight: 900; color: var(--gray-900); }
+.auth-sub { text-align: center; font-size: 0.68rem; color: var(--gold); font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.25rem; margin-bottom: 1.75rem; }
+.auth-label { display: block; font-size: 0.65rem; font-weight: 900; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+.auth-input { width: 100%; padding: 0.85rem 1rem; border: 1px solid var(--gray-200); border-radius: 0.875rem; font-size: 0.875rem; background: var(--gray-50); margin-bottom: 1rem; }
+.auth-input:focus { border-color: var(--green); background: white; }
+.auth-btn { width: 100%; padding: 0.95rem; background: var(--green); color: white; border-radius: 9999px; font-size: 0.82rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; }
+.auth-btn:hover { background: var(--green-mid); }
+.auth-err { color: #dc2626; font-size: 0.72rem; text-align: center; margin-top: 0.75rem; min-height: 1rem; }
+.auth-back { display: block; text-align: center; font-size: 0.65rem; color: rgba(255,255,255,0.6); margin-top: 1.25rem; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; text-decoration: none; }
+
+/* APP */
+.app { display: none; }
+.app.active { display: block; }
+.app-header { background: linear-gradient(160deg, var(--green) 0%, var(--green-dark) 100%); padding: 2rem 1rem 4.5rem; }
+.app-header-inner { max-width: 80rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.header-left { display: flex; align-items: center; gap: 1rem; }
+.app-back { display: flex; align-items: center; gap: 0.4rem; color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; }
+.app-title { color: white; font-size: clamp(1.3rem, 3vw, 1.75rem); font-weight: 900; letter-spacing: -0.02em; }
+.app-sub { color: var(--gold); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.2rem; }
+.logout-btn { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+.logout-btn:hover { background: rgba(220,38,38,0.4); color: white; }
+
+.app-main { max-width: 80rem; margin: -3.5rem auto 0; padding: 0 1rem 4rem; }
+
+/* STATS ROW */
+.stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1.5rem; }
+@media (min-width: 640px) { .stats-row { grid-template-columns: repeat(4, 1fr); } }
+.stat-card { background: white; border-radius: 1.25rem; padding: 1.25rem; box-shadow: 0 2px 20px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); }
+.stat-label { font-size: 0.6rem; font-weight: 900; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.15em; }
+.stat-value { font-size: 1.75rem; font-weight: 900; color: var(--green); margin-top: 0.25rem; line-height: 1; }
+.stat-desc { font-size: 0.65rem; color: var(--gray-400); margin-top: 0.25rem; }
+
+/* FILTERS */
+.filter-bar { background: white; border-radius: 1.25rem; padding: 1rem 1.25rem; margin-bottom: 1.25rem; box-shadow: 0 2px 20px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+.filter-label { font-size: 0.65rem; font-weight: 900; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+.filter-input { flex: 1; min-width: 160px; padding: 0.6rem 0.875rem; border: 1px solid var(--gray-200); border-radius: 0.75rem; font-size: 0.82rem; background: var(--gray-50); }
+.filter-input:focus { border-color: var(--green); background: white; }
+.sort-btn { padding: 0.6rem 0.875rem; border: 1px solid var(--gray-200); border-radius: 0.75rem; font-size: 0.72rem; font-weight: 700; color: var(--gray-500); background: var(--gray-50); white-space: nowrap; }
+.sort-btn.active { background: var(--green); color: white; border-color: var(--green); }
+
+/* USER CARDS */
+.users-grid { display: flex; flex-direction: column; gap: 1rem; }
+.user-card { background: white; border-radius: 1.75rem; padding: 1.5rem; box-shadow: 0 2px 20px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); }
+.user-card-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.user-identity { display: flex; align-items: center; gap: 0.875rem; }
+.user-avatar { width: 3rem; height: 3rem; border-radius: 1rem; background: #ecfdf5; border: 1.5px solid #a7f3d0; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; color: var(--green); flex-shrink: 0; }
+.user-name { font-size: 1rem; font-weight: 800; color: var(--gray-900); }
+.user-email { font-size: 0.68rem; color: var(--gray-400); margin-top: 0.1rem; }
+.user-partner { font-size: 0.62rem; color: var(--gold); font-weight: 700; margin-top: 0.15rem; }
+.user-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.badge { padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.58rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; }
+.badge-goals { background: #ecfdf5; color: var(--green); }
+.badge-habits { background: #fefce8; color: #854d0e; }
+.badge-streak { background: #fff7ed; color: #c2410c; }
+.badge-reflection { background: var(--blue-light); color: var(--blue); }
+
+/* SECTIONS */
+.user-sections { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 900px) { .user-sections { grid-template-columns: 1fr 1fr; } }
+.section-block { background: var(--gray-50); border-radius: 1.25rem; padding: 1rem; }
+.section-title { font-size: 0.68rem; font-weight: 900; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+.section-dot { width: 0.45rem; height: 0.45rem; border-radius: 9999px; background: var(--gold); }
+
+/* GOAL ROW */
+.goal-row { background: white; border-radius: 0.875rem; padding: 0.875rem; margin-bottom: 0.5rem; border: 1px solid var(--gray-100); }
+.goal-row:last-child { margin-bottom: 0; }
+.goal-row-title { font-size: 0.82rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.5rem; }
+.progress-bar-bg { width: 100%; height: 7px; background: var(--gray-100); border-radius: 9999px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--green-mid)); border-radius: 9999px; }
+.progress-row { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem; }
+.progress-pct { font-size: 0.7rem; font-weight: 900; color: var(--green); min-width: 2.5rem; text-align: right; }
+
+/* HABIT ROW */
+.habit-row { background: white; border-radius: 0.875rem; padding: 0.75rem 0.875rem; margin-bottom: 0.5rem; border: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.habit-row:last-child { margin-bottom: 0; }
+.habit-row-title { font-size: 0.78rem; font-weight: 700; color: var(--gray-900); flex: 1; }
+.habit-week-dots { display: flex; gap: 3px; }
+.habit-dot { width: 1.25rem; height: 1.25rem; border-radius: 0.3rem; display: flex; align-items: center; justify-content: center; font-size: 0.5rem; font-weight: 900; }
+.habit-dot.done { background: var(--green); color: white; }
+.habit-dot.miss { background: var(--gray-100); color: var(--gray-400); }
+.habit-dot.future { background: var(--gray-50); color: var(--gray-200); }
+.habit-streak-badge { font-size: 0.6rem; font-weight: 900; color: #c2410c; background: #fff7ed; padding: 0.15rem 0.45rem; border-radius: 9999px; white-space: nowrap; }
+
+/* REFLECTION ROW */
+.reflection-row { background: white; border-radius: 0.875rem; padding: 0.875rem; border: 1px solid var(--gray-100); }
+.reflection-week { font-size: 0.68rem; font-weight: 800; color: var(--gray-900); margin-bottom: 0.5rem; }
+.reflection-item-row { margin-bottom: 0.4rem; }
+.reflection-item-row:last-child { margin-bottom: 0; }
+.reflection-lbl { font-size: 0.55rem; font-weight: 900; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.1em; }
+.reflection-val { font-size: 0.72rem; color: var(--gray-700); line-height: 1.5; }
+
+.empty-section { text-align: center; padding: 1.25rem; color: var(--gray-400); font-size: 0.75rem; font-style: italic; }
+.loading { text-align: center; padding: 4rem; color: var(--gray-400); }
+.refresh-btn { display: flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1rem; background: var(--green); color: white; border-radius: 9999px; font-size: 0.68rem; font-weight: 900; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div class="auth-wrap" id="auth-wrap">
+    <div class="auth-card">
+        <svg class="auth-logo" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="28" fill="#0b3d2e"/>
+            <circle cx="32" cy="32" r="28" fill="none" stroke="#c8a951" stroke-width="2"/>
+            <text x="32" y="40" text-anchor="middle" font-size="20" font-weight="900" fill="#c8a951" font-family="Poppins,sans-serif">YM</text>
+        </svg>
+        <div class="auth-title">Admin Dashboard</div>
+        <div class="auth-sub">PDP Tracker</div>
+        <label class="auth-label">Admin Password</label>
+        <input type="password" class="auth-input" id="admin-password" placeholder="Enter password" onkeypress="if(event.key==='Enter')checkPassword()">
+        <button class="auth-btn" onclick="checkPassword()">Access Dashboard</button>
+        <div class="auth-err" id="auth-err"></div>
+        <a class="auth-back" href="/">← Back to Portal</a>
+    </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+    <div class="app-header">
+        <div class="app-header-inner">
+            <div class="header-left">
+                <a class="app-back" href="/">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                    Back
+                </a>
+                <div>
+                    <div class="app-title">Admin Dashboard</div>
+                    <div class="app-sub">PDP Tracker · All Users</div>
+                </div>
+            </div>
+            <div style="display:flex;gap:0.5rem">
+                <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+                <button class="logout-btn" onclick="logout()">Log Out</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-main">
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label">Total Users</div>
+                <div class="stat-value" id="stat-users">—</div>
+                <div class="stat-desc">Registered accounts</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active Pairs</div>
+                <div class="stat-value" id="stat-pairs">—</div>
+                <div class="stat-desc">Partner connections</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Goals</div>
+                <div class="stat-value" id="stat-goals">—</div>
+                <div class="stat-desc">Across all users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg Progress</div>
+                <div class="stat-value" id="stat-progress">—</div>
+                <div class="stat-desc">Goal completion</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+            <div class="filter-label">Filter</div>
+            <input type="text" class="filter-input" id="search-input" placeholder="Search by name or email..." oninput="filterUsers()">
+            <button class="sort-btn active" id="sort-name" onclick="setSort('name')">Name</button>
+            <button class="sort-btn" id="sort-progress" onclick="setSort('progress')">Progress</button>
+            <button class="sort-btn" id="sort-streak" onclick="setSort('streak')">Streak</button>
+        </div>
+
+        <!-- Users -->
+        <div id="users-container"><div class="loading">Loading dashboard...</div></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://achdlzfbztougathqqst.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjaGRsemZienRvdWdhdGhxcXN0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2OTA5MzksImV4cCI6MjA5MjI2NjkzOX0.A3SEukj2Q1h0j4Jkgl4gU3QRjNtc07J22POUs0PBmjA';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── ADMIN PASSWORD ─────────────────────────────────────────────
+// Change this to whatever you want the admin password to be
+const ADMIN_PASSWORD = 'YMAdmin2026!';
+
+let allUsersData = [];
+let sortMode = 'name';
+
+function checkPassword() {
+    const pw = document.getElementById('admin-password').value;
+    const err = document.getElementById('auth-err');
+    if (pw === ADMIN_PASSWORD) {
+        sessionStorage.setItem('ym_admin', '1');
+        showApp();
+    } else {
+        err.textContent = 'Incorrect password';
+        document.getElementById('admin-password').value = '';
+    }
+}
+
+function logout() {
+    sessionStorage.removeItem('ym_admin');
+    location.reload();
+}
+
+function showApp() {
+    document.getElementById('auth-wrap').style.display = 'none';
+    document.getElementById('app').classList.add('active');
+    loadAll();
+}
+
+// ── DATA LOADING ───────────────────────────────────────────────
+function getCurrentWeekDays() {
+    const days = [];
+    const today = new Date();
+    const sunday = new Date(today);
+    sunday.setDate(today.getDate() - today.getDay());
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(sunday);
+        d.setDate(sunday.getDate() + i);
+        days.push(d.toISOString().slice(0, 10));
+    }
+    return days;
+}
+
+async function loadAll() {
+    document.getElementById('users-container').innerHTML = '<div class="loading">Loading...</div>';
+
+    const [
+        { data: profiles },
+        { data: goals },
+        { data: habits },
+        { data: checkins },
+        { data: reflections }
+    ] = await Promise.all([
+        sb.from('profiles').select('*').order('name'),
+        sb.from('goals').select('*'),
+        sb.from('habits').select('*'),
+        sb.from('habit_checkins').select('*'),
+        sb.from('reflections').select('*').order('week_start', { ascending: false })
+    ]);
+
+    if (!profiles) { document.getElementById('users-container').innerHTML = '<div class="loading">Failed to load. Check RLS policies.</div>'; return; }
+
+    const weekDays = getCurrentWeekDays();
+    const today = new Date().toISOString().slice(0, 10);
+    const DOW = ['S','M','T','W','T','F','S'];
+
+    // Build user data objects
+    allUsersData = profiles.map(p => {
+        const userGoals = (goals || []).filter(g => g.user_id === p.id);
+        const userHabits = (habits || []).filter(h => h.user_id === p.id);
+        const userCheckins = (checkins || []).filter(c => c.user_id === p.id);
+        const userReflections = (reflections || []).filter(r => r.user_id === p.id);
+        const partner = profiles.find(x => x.id === p.partner_id);
+
+        const avgProgress = userGoals.length
+            ? Math.round(userGoals.reduce((s, g) => s + (g.progress || 0), 0) / userGoals.length)
+            : 0;
+
+        // Compute max streak across habits
+        let maxStreak = 0;
+        userHabits.forEach(h => {
+            const hCheckins = userCheckins.filter(c => c.habit_id === h.id);
+            const dates = new Set(hCheckins.map(c => c.date));
+            let streak = 0;
+            let d = new Date(today);
+            while (dates.has(d.toISOString().slice(0, 10))) {
+                streak++;
+                d.setDate(d.getDate() - 1);
+            }
+            if (streak > maxStreak) maxStreak = streak;
+        });
+
+        return {
+            profile: p,
+            partner,
+            goals: userGoals,
+            habits: userHabits,
+            checkins: userCheckins,
+            reflections: userReflections,
+            avgProgress,
+            maxStreak,
+            weekDays,
+            today,
+            DOW
+        };
+    });
+
+    // Stats
+    const totalUsers = profiles.length;
+    const pairedUsers = profiles.filter(p => p.partner_id).length;
+    const pairs = Math.floor(pairedUsers / 2);
+    const totalGoals = (goals || []).length;
+    const allProgress = (goals || []).map(g => g.progress || 0);
+    const avgProg = allProgress.length ? Math.round(allProgress.reduce((a, b) => a + b, 0) / allProgress.length) : 0;
+
+    document.getElementById('stat-users').textContent = totalUsers;
+    document.getElementById('stat-pairs').textContent = pairs;
+    document.getElementById('stat-goals').textContent = totalGoals;
+    document.getElementById('stat-progress').textContent = avgProg + '%';
+
+    renderUsers();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────
+function filterUsers() {
+    renderUsers();
+}
+
+function setSort(mode) {
+    sortMode = mode;
+    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('sort-' + mode).classList.add('active');
+    renderUsers();
+}
+
+function renderUsers() {
+    const q = document.getElementById('search-input').value.toLowerCase().trim();
+    let filtered = allUsersData.filter(u =>
+        !q ||
+        (u.profile.name || '').toLowerCase().includes(q) ||
+        (u.profile.email || '').toLowerCase().includes(q)
+    );
+
+    // Sort
+    if (sortMode === 'name') filtered.sort((a, b) => (a.profile.name || '').localeCompare(b.profile.name || ''));
+    if (sortMode === 'progress') filtered.sort((a, b) => b.avgProgress - a.avgProgress);
+    if (sortMode === 'streak') filtered.sort((a, b) => b.maxStreak - a.maxStreak);
+
+    const container = document.getElementById('users-container');
+    if (!filtered.length) {
+        container.innerHTML = '<div class="loading">No users found.</div>';
+        return;
+    }
+
+    container.innerHTML = '<div class="users-grid">' + filtered.map(u => renderUserCard(u)).join('') + '</div>';
+}
+
+function renderUserCard(u) {
+    const { profile, partner, goals, habits, checkins, reflections, avgProgress, maxStreak, weekDays, today, DOW } = u;
+
+    const badges = [
+        goals.length ? `<span class="badge badge-goals">${goals.length} goal${goals.length !== 1 ? 's' : ''}</span>` : '',
+        habits.length ? `<span class="badge badge-habits">${habits.length} habit${habits.length !== 1 ? 's' : ''}</span>` : '',
+        maxStreak > 0 ? `<span class="badge badge-streak">🔥 ${maxStreak}d streak</span>` : '',
+        reflections.length ? `<span class="badge badge-reflection">${reflections.length} reflection${reflections.length !== 1 ? 's' : ''}</span>` : '',
+    ].filter(Boolean).join('');
+
+    // Goals section
+    const goalsHtml = goals.length ? goals.map(g => `
+        <div class="goal-row">
+            <div class="goal-row-title">${escapeHtml(g.title)}</div>
+            <div class="progress-row">
+                <div class="progress-bar-bg" style="flex:1"><div class="progress-bar-fill" style="width:${g.progress||0}%"></div></div>
+                <div class="progress-pct">${g.progress||0}%</div>
+            </div>
+            ${g.target_date ? `<div style="font-size:0.6rem;color:var(--gray-400);margin-top:0.25rem">Target: ${formatDate(g.target_date)}</div>` : ''}
+        </div>`).join('') : '<div class="empty-section">No goals yet</div>';
+
+    // Habits section
+    const habitsHtml = habits.length ? habits.map(h => {
+        const hCheckins = checkins.filter(c => c.habit_id === h.id);
+        const dates = new Set(hCheckins.map(c => c.date));
+
+        // streak
+        let streak = 0;
+        let d = new Date(today);
+        while (dates.has(d.toISOString().slice(0, 10))) { streak++; d.setDate(d.getDate() - 1); }
+
+        const dots = weekDays.map((date, i) => {
+            const done = dates.has(date);
+            const future = date > today;
+            return `<div class="habit-dot ${future ? 'future' : done ? 'done' : 'miss'}">${DOW[i]}</div>`;
+        }).join('');
+
+        return `<div class="habit-row">
+            <div class="habit-row-title">${escapeHtml(h.title)}</div>
+            <div class="habit-week-dots">${dots}</div>
+            ${streak > 0 ? `<div class="habit-streak-badge">🔥${streak}d</div>` : ''}
+        </div>`;
+    }).join('') : '<div class="empty-section">No habits yet</div>';
+
+    // Latest reflection
+    const latestRef = reflections[0];
+    const reflectionHtml = latestRef ? `
+        <div class="reflection-row">
+            <div class="reflection-week">Week of ${formatDate(latestRef.week_start)}</div>
+            ${latestRef.wins ? `<div class="reflection-item-row"><div class="reflection-lbl">Wins</div><div class="reflection-val">${escapeHtml(latestRef.wins)}</div></div>` : ''}
+            ${latestRef.challenges ? `<div class="reflection-item-row"><div class="reflection-lbl">Challenges</div><div class="reflection-val">${escapeHtml(latestRef.challenges)}</div></div>` : ''}
+            ${latestRef.next_week ? `<div class="reflection-item-row"><div class="reflection-lbl">Next Week</div><div class="reflection-val">${escapeHtml(latestRef.next_week)}</div></div>` : ''}
+        </div>` : '<div class="empty-section">No reflections yet</div>';
+
+    return `
+    <div class="user-card">
+        <div class="user-card-header">
+            <div class="user-identity">
+                <div class="user-avatar">${(profile.name || '?')[0].toUpperCase()}</div>
+                <div>
+                    <div class="user-name">${escapeHtml(profile.name || 'Unknown')}</div>
+                    <div class="user-email">${escapeHtml(profile.email || '')}</div>
+                    ${partner ? `<div class="user-partner">↔ Paired with ${escapeHtml(partner.name || partner.email)}</div>` : '<div class="user-partner" style="color:var(--gray-400)">No partner</div>'}
+                </div>
+            </div>
+            <div class="user-badges">${badges || '<span style="font-size:0.65rem;color:var(--gray-400)">No activity yet</span>'}</div>
+        </div>
+        <div class="user-sections">
+            <div>
+                <div class="section-block" style="margin-bottom:0.75rem">
+                    <div class="section-title"><div class="section-dot"></div>Goals · Avg ${avgProgress}%</div>
+                    ${goalsHtml}
+                </div>
+                <div class="section-block">
+                    <div class="section-title"><div class="section-dot"></div>Latest Reflection</div>
+                    ${reflectionHtml}
+                </div>
+            </div>
+            <div class="section-block">
+                <div class="section-title"><div class="section-dot"></div>Habits · This Week</div>
+                ${habitsHtml}
+            </div>
+        </div>
+    </div>`;
+}
+
+// ── HELPERS ────────────────────────────────────────────────────
+function escapeHtml(s) {
+    const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML;
+}
+function formatDate(d) {
+    return new Date(d + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+if (sessionStorage.getItem('ym_admin') === '1') {
+    showApp();
+}
+</script>
+</body>
+</html>
