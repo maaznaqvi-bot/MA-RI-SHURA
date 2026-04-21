@@ -344,23 +344,72 @@ a { color: inherit; text-decoration: none; }
 
 <!-- GOAL MODAL -->
 <div class="modal-overlay" id="goal-modal" onclick="if(event.target===this)closeGoalModal()">
-    <div class="modal-box">
+    <div class="modal-box" style="max-height:90vh;overflow-y:auto">
         <div class="modal-title">New Goal</div>
+
+        <!-- Type selector -->
+        <div class="modal-field">
+            <label class="modal-label">Goal Type</label>
+            <div class="goal-type-grid" id="goal-type-grid">
+                <button class="goal-type-btn active" data-type="habit" onclick="selectGoalType(this,'habit')">
+                    <div class="goal-type-icon">🔥</div>
+                    <div class="goal-type-name">Habit</div>
+                    <div class="goal-type-desc">Daily streak</div>
+                </button>
+                <button class="goal-type-btn" data-type="quantity" onclick="selectGoalType(this,'quantity')">
+                    <div class="goal-type-icon">📖</div>
+                    <div class="goal-type-name">Quantity</div>
+                    <div class="goal-type-desc">Count to target</div>
+                </button>
+                <button class="goal-type-btn" data-type="milestone" onclick="selectGoalType(this,'milestone')">
+                    <div class="goal-type-icon">✅</div>
+                    <div class="goal-type-name">Milestone</div>
+                    <div class="goal-type-desc">Step checklist</div>
+                </button>
+                <button class="goal-type-btn" data-type="reflection" onclick="selectGoalType(this,'reflection')">
+                    <div class="goal-type-icon">💭</div>
+                    <div class="goal-type-name">Ongoing</div>
+                    <div class="goal-type-desc">Notes &amp; growth</div>
+                </button>
+            </div>
+        </div>
+
         <div class="modal-field">
             <label class="modal-label">Title</label>
-            <input type="text" class="modal-input" id="goal-title" placeholder="e.g. Complete 30-day Quran challenge">
+            <input type="text" class="modal-input" id="goal-title" placeholder="e.g. Pray Fajr on time every day">
         </div>
         <div class="modal-field">
             <label class="modal-label">Description (optional)</label>
-            <textarea class="modal-textarea" id="goal-desc" placeholder="Extra context..."></textarea>
+            <textarea class="modal-textarea" id="goal-desc" placeholder="Extra context..." style="min-height:60px"></textarea>
         </div>
+
+        <!-- Quantity fields -->
+        <div id="goal-quantity-fields" style="display:none">
+            <div class="modal-field">
+                <label class="modal-label">Target Amount</label>
+                <div style="display:flex;gap:0.5rem;align-items:center">
+                    <input type="number" class="modal-input" id="goal-target" placeholder="e.g. 30" min="1" style="flex:1">
+                    <input type="text" class="modal-input" id="goal-unit" placeholder="unit (juz, times...)" style="flex:1.5">
+                </div>
+            </div>
+        </div>
+
+        <!-- Milestone fields -->
+        <div id="goal-milestone-fields" style="display:none">
+            <div class="modal-field">
+                <label class="modal-label">Steps (one per line)</label>
+                <textarea class="modal-textarea" id="goal-steps" placeholder="Attend a halaqah&#10;Join a committee&#10;Lead an event" style="min-height:90px"></textarea>
+            </div>
+        </div>
+
         <div class="modal-field">
             <label class="modal-label">Target Date (optional)</label>
             <input type="date" class="modal-input" id="goal-date">
         </div>
+
         <div class="modal-actions">
             <button class="btn-ghost" onclick="closeGoalModal()">Cancel</button>
-            <button class="btn-primary" onclick="saveGoal()">Save</button>
+            <button class="btn-primary" onclick="saveGoal()">Save Goal</button>
         </div>
     </div>
 </div>
@@ -640,10 +689,35 @@ function switchPanel(name) {
 }
 
 // ── GOALS ──────────────────────────────────────────────────────
+let selectedGoalType = 'habit';
+
+function selectGoalType(btn, type) {
+    selectedGoalType = type;
+    document.querySelectorAll('.goal-type-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('goal-quantity-fields').style.display = type === 'quantity' ? 'block' : 'none';
+    document.getElementById('goal-milestone-fields').style.display = type === 'milestone' ? 'block' : 'none';
+    const placeholders = {
+        habit: 'e.g. Pray Fajr on time every day',
+        quantity: 'e.g. Read 30 juz of Quran',
+        milestone: 'e.g. Get involved in my community',
+        reflection: 'e.g. Grow in patience and gratitude'
+    };
+    document.getElementById('goal-title').placeholder = placeholders[type];
+}
+
 function openGoalModal() {
     document.getElementById('goal-title').value = '';
     document.getElementById('goal-desc').value = '';
     document.getElementById('goal-date').value = '';
+    document.getElementById('goal-target') && (document.getElementById('goal-target').value = '');
+    document.getElementById('goal-unit') && (document.getElementById('goal-unit').value = '');
+    document.getElementById('goal-steps') && (document.getElementById('goal-steps').value = '');
+    selectedGoalType = 'habit';
+    document.querySelectorAll('.goal-type-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.goal-type-btn[data-type="habit"]').classList.add('active');
+    document.getElementById('goal-quantity-fields').style.display = 'none';
+    document.getElementById('goal-milestone-fields').style.display = 'none';
     document.getElementById('goal-modal').classList.add('open');
 }
 function closeGoalModal() { document.getElementById('goal-modal').classList.remove('open'); }
@@ -654,8 +728,27 @@ async function saveGoal() {
     const targetDate = document.getElementById('goal-date').value || null;
     if (!title) return;
 
+    let meta = {};
+    if (selectedGoalType === 'quantity') {
+        meta.target = parseInt(document.getElementById('goal-target').value) || 1;
+        meta.unit = document.getElementById('goal-unit').value.trim() || 'times';
+        meta.current = 0;
+    } else if (selectedGoalType === 'milestone') {
+        const stepsRaw = document.getElementById('goal-steps').value;
+        meta.steps = stepsRaw.split('\n').map(s => s.trim()).filter(Boolean).map(s => ({ text: s, done: false }));
+    } else if (selectedGoalType === 'habit') {
+        meta.streak = 0;
+        meta.lastLogged = null;
+        meta.log = [];
+    }
+
     const { error } = await sb.from('goals').insert({
-        user_id: currentUser.id, title, description, target_date: targetDate
+        user_id: currentUser.id,
+        title,
+        description,
+        target_date: targetDate,
+        progress: 0,
+        description: JSON.stringify({ type: selectedGoalType, ...meta, notes: description })
     });
     if (error) { alert(error.message); return; }
     closeGoalModal();
@@ -685,55 +778,140 @@ async function loadGoals() {
     }
 }
 
+function parseGoalMeta(g) {
+    try { return JSON.parse(g.description || '{}'); } catch(e) { return {}; }
+}
+
 function renderGoals(containerId, goals, isMine) {
     const el = document.getElementById(containerId);
     if (!goals.length) {
         el.innerHTML = `<div class="empty">${isMine ? 'No goals yet. Tap + to add one.' : 'No goals yet.'}</div>`;
         return;
     }
-    el.innerHTML = goals.map(g => `
-        <div class="goal-item${isMine ? '' : ' partner'}">
+    el.innerHTML = goals.map(g => {
+        const meta = parseGoalMeta(g);
+        const type = meta.type || 'quantity';
+        const typeLabels = { habit:'Habit', quantity:'Quantity', milestone:'Milestone', reflection:'Ongoing' };
+        const tagHtml = `<span class="goal-type-tag ${type}">${typeLabels[type]||'Goal'}</span>`;
+
+        let trackingHtml = '';
+
+        if (type === 'habit') {
+            const today = new Date().toISOString().slice(0,10);
+            const log = meta.log || [];
+            const loggedToday = log.includes(today);
+            const streak = meta.streak || 0;
+            const last7 = Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()-(6-i));return d.toISOString().slice(0,10);});
+            const dotsHtml = last7.map((d,i) => {
+                const done = log.includes(d);
+                const isToday = d === today;
+                const dow = ['S','M','T','W','T','F','S'][new Date(d+'T00:00:00').getDay()];
+                return `<div class="streak-dot${done?' done':''}${isToday?' today':''}">${dow}</div>`;
+            }).join('');
+            trackingHtml = `
+                <div class="streak-display">
+                    <div><div class="streak-num">${streak}</div><div class="streak-label">Day Streak</div></div>
+                    ${isMine ? `<button class="streak-log-btn${loggedToday?' logged':''}" onclick="logHabitGoal('${g.id}','${today}')" ${loggedToday?'disabled':''}>
+                        ${loggedToday ? '✓ Logged Today' : '+ Log Today'}
+                    </button>` : ''}
+                </div>
+                <div class="streak-dots">${dotsHtml}</div>`;
+
+        } else if (type === 'quantity') {
+            const current = meta.current || 0;
+            const target = meta.target || 1;
+            const unit = meta.unit || 'times';
+            const pct = Math.min(100, Math.round(current/target*100));
+            trackingHtml = `
+                <div class="qty-display">
+                    <div><span class="qty-fraction">${current} / ${target}</span> <span class="qty-unit">${escapeHtml(unit)}</span></div>
+                    ${isMine ? `<div class="qty-controls">
+                        <button class="qty-btn" onclick="adjustQty('${g.id}',-1,${current},${target})">−</button>
+                        <input type="number" class="qty-input" value="${current}" min="0" max="${target}" onchange="setQty('${g.id}',this.value,${target})">
+                        <button class="qty-btn" onclick="adjustQty('${g.id}',1,${current},${target})">+</button>
+                    </div>` : ''}
+                </div>
+                <div class="goal-bar-bg" style="margin-top:0.5rem"><div class="goal-bar-fill" style="width:${pct}%"></div></div>
+                <div style="font-size:0.65rem;color:var(--gray-400);margin-top:0.3rem;text-align:right">${pct}% complete</div>`;
+
+        } else if (type === 'milestone') {
+            const steps = meta.steps || [];
+            const done = steps.filter(s => s.done).length;
+            trackingHtml = `
+                <div style="margin-top:0.75rem">
+                    ${steps.map((s,i) => `
+                    <div class="milestone-step${s.done?' done':''}" ${isMine?`onclick="toggleMilestone('${g.id}',${i})"`:''}">
+                        <div class="milestone-check${s.done?' done':''}"></div>
+                        <div class="milestone-step-text">${escapeHtml(s.text)}</div>
+                    </div>`).join('')}
+                    ${steps.length ? `<div class="milestone-progress">${done} of ${steps.length} steps complete</div>` : ''}
+                </div>`;
+
+        } else if (type === 'reflection') {
+            trackingHtml = `<div style="font-size:0.75rem;color:var(--gray-400);margin-top:0.5rem;font-style:italic">${meta.notes ? escapeHtml(meta.notes) : 'No notes yet.'}</div>`;
+        }
+
+        return `<div class="goal-item${isMine ? '' : ' partner'}">
             <div class="goal-top">
                 <div class="goal-title-wrap">
+                    ${tagHtml}
                     <div class="goal-title">${escapeHtml(g.title)}</div>
-                    ${g.description ? `<div class="goal-desc">${escapeHtml(g.description)}</div>` : ''}
                     ${g.target_date ? `<div class="goal-desc"><strong>Target:</strong> ${formatDate(g.target_date)}</div>` : ''}
                 </div>
                 ${isMine ? `<button class="btn-danger" onclick="deleteGoal('${g.id}')">Delete</button>` : ''}
             </div>
-            <div class="goal-bar-wrap">
-                <div class="goal-bar-bg" style="margin-bottom:0.75rem"><div class="goal-bar-fill" id="bar-${g.id}" style="width:${g.progress}%"></div></div>
-                ${isMine ? `
-                <div style="display:flex;align-items:center;gap:0.5rem">
-                    <button onclick="stepGoal('${g.id}',-10)" style="width:2rem;height:2rem;border-radius:0.5rem;background:var(--gray-100);color:var(--gray-700);font-size:1rem;font-weight:900;border:none;cursor:pointer;flex-shrink:0">−</button>
-                    <button onclick="stepGoal('${g.id}',-5)" style="width:2rem;height:2rem;border-radius:0.5rem;background:var(--gray-100);color:var(--gray-700);font-size:0.7rem;font-weight:900;border:none;cursor:pointer;flex-shrink:0">-5</button>
-                    <input type="number" id="pct-${g.id}" min="0" max="100" value="${g.progress}"
-                        style="flex:1;text-align:center;border:1.5px solid var(--gray-200);border-radius:0.625rem;padding:0.4rem;font-family:inherit;font-size:0.875rem;font-weight:900;color:var(--green);width:0"
-                        onchange="setGoalProgress('${g.id}', this.value)"
-                        onkeypress="if(event.key==='Enter')setGoalProgress('${g.id}',this.value)">
-                    <span style="font-size:0.875rem;font-weight:900;color:var(--green);flex-shrink:0">%</span>
-                    <button onclick="stepGoal('${g.id}',5)" style="width:2rem;height:2rem;border-radius:0.5rem;background:var(--gray-100);color:var(--gray-700);font-size:0.7rem;font-weight:900;border:none;cursor:pointer;flex-shrink:0">+5</button>
-                    <button onclick="stepGoal('${g.id}',10)" style="width:2rem;height:2rem;border-radius:0.5rem;background:var(--green);color:white;font-size:1rem;font-weight:900;border:none;cursor:pointer;flex-shrink:0">+</button>
-                </div>` : `<div style="font-size:0.75rem;font-weight:900;color:var(--green)">${g.progress}%</div>`}
-            </div>
-        </div>`).join('');
+            ${trackingHtml}
+        </div>`;
+    }).join('');
 }
 
-function stepGoal(id, delta) {
-    const input = document.getElementById('pct-' + id);
-    const newVal = Math.min(100, Math.max(0, parseInt(input.value || 0) + delta));
-    input.value = newVal;
-    setGoalProgress(id, newVal);
+async function logHabitGoal(goalId, today) {
+    const { data: goal } = await sb.from('goals').select('description').eq('id', goalId).single();
+    const meta = JSON.parse(goal.description || '{}');
+    const log = meta.log || [];
+    if (log.includes(today)) return;
+    log.push(today);
+
+    // Compute streak
+    let streak = 0;
+    let d = new Date(today);
+    while (log.includes(d.toISOString().slice(0,10))) {
+        streak++;
+        d.setDate(d.getDate()-1);
+    }
+    meta.log = log;
+    meta.streak = streak;
+    meta.lastLogged = today;
+    const pct = Math.min(100, Math.round(streak / 30 * 100));
+    await sb.from('goals').update({ description: JSON.stringify(meta), progress: pct }).eq('id', goalId);
+    loadGoals();
 }
 
-function setGoalProgress(id, value) {
-    const val = Math.min(100, Math.max(0, parseInt(value) || 0));
-    const input = document.getElementById('pct-' + id);
-    const bar = document.getElementById('bar-' + id);
-    if (input) input.value = val;
-    if (bar) bar.style.width = val + '%';
-    updateGoalProgress(id, val);
+async function adjustQty(goalId, delta, current, target) {
+    const newVal = Math.max(0, Math.min(target, current + delta));
+    await setQty(goalId, newVal, target);
 }
+
+async function setQty(goalId, value, target) {
+    const { data: goal } = await sb.from('goals').select('description').eq('id', goalId).single();
+    const meta = JSON.parse(goal.description || '{}');
+    meta.current = Math.max(0, Math.min(target, parseInt(value)||0));
+    const pct = Math.min(100, Math.round(meta.current/target*100));
+    await sb.from('goals').update({ description: JSON.stringify(meta), progress: pct }).eq('id', goalId);
+    loadGoals();
+}
+
+async function toggleMilestone(goalId, stepIdx) {
+    const { data: goal } = await sb.from('goals').select('description').eq('id', goalId).single();
+    const meta = JSON.parse(goal.description || '{}');
+    meta.steps[stepIdx].done = !meta.steps[stepIdx].done;
+    const done = meta.steps.filter(s => s.done).length;
+    const pct = Math.round(done / meta.steps.length * 100);
+    await sb.from('goals').update({ description: JSON.stringify(meta), progress: pct }).eq('id', goalId);
+    loadGoals();
+}
+
+
 
 // ── HABITS ─────────────────────────────────────────────────────
 function openHabitModal() { document.getElementById('habit-title').value = ''; document.getElementById('habit-modal').classList.add('open'); }
