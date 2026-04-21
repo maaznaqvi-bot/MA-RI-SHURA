@@ -319,11 +319,10 @@
 <nav class="nav">
     <div class="nav-inner">
         <div class="nav-links">
-            <a href="#calendar"    class="nav-link active" onclick="setActive(this)">Calendar</a>
-            <a href="#community"   class="nav-link"        onclick="setActive(this)">Community</a>
-            <a href="#map"         class="nav-link"        onclick="setActive(this)">Map</a>
-            <a href="#overview"    class="nav-link"        onclick="setActive(this)">SR Overview</a>
-            <a href="#structure"   class="nav-link"        onclick="setActive(this)">Structure</a>
+            <a href="#calendar"  class="nav-link active" onclick="setActive(this)">Calendar</a>
+            <a href="#community" class="nav-link"        onclick="setActive(this)">Community</a>
+            <a href="#overview"  class="nav-link"        onclick="setActive(this)">Overview</a>
+            <a href="#structure" class="nav-link"        onclick="setActive(this)">Structure</a>
         </div>
         <a href="/pdp" class="nav-dir-btn" style="background:var(--gold);margin-right:0.5rem">
             <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
@@ -374,9 +373,26 @@
             <div class="nn-events-section" id="nn-events-section"></div>
         </section>
 
-        <!-- WHATSAPP COMMUNITY -->
-        <section id="community" class="scroll-mt" style="display:flex;flex-direction:column;gap:0">
-            <!-- Main community card -->
+        <!-- COMMUNITY -->
+        <section id="community" class="scroll-mt">
+            <!-- Map -->
+            <div class="card" style="margin-bottom:1.25rem">
+                <div class="sec-header">
+                    <div class="sec-title">NeighborNet Map</div>
+                    <div class="sec-sub">YM MA/RI sub-region · hover a pin to explore</div>
+                </div>
+                <div id="nn-map-outer" style="background:#e8f4f0;border-radius:1.25rem;position:relative;overflow:visible;min-height:320px;">
+                <div class="nn-tooltip" id="nn-tooltip">
+                    <div class="nn-tt-name" id="nn-tt-name"></div>
+                    <div class="nn-tt-nnc" id="nn-tt-nnc"></div>
+                    <a class="nn-tt-wa" id="nn-tt-wa" href="#" target="_blank" rel="noopener">Join WhatsApp</a>
+                </div>
+                <svg id="nn-map-svg" style="width:100%;display:block;border-radius:1.25rem;"></svg>
+                <div id="nn-map-loading" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:#64748b;">Loading map...</div>
+            </div>
+            </div>
+
+            <!-- WhatsApp -->
             <div class="community-hero">
                 <div class="community-hero-circle"></div>
                 <div class="community-hero-inner">
@@ -483,109 +499,9 @@
                     </div>
                 </div>
             </div>
+        
         </section>
-        <!-- MAP -->
-        <section id="map" class="card scroll-mt">
-            <div class="sec-header">
-                <div class="sec-title">NeighborNet Map</div>
-                <div class="sec-sub">YM MA/RI sub-region · hover a pin to explore</div>
-            </div>
-            <div class="nn-map-container">
-                <div class="nn-tooltip" id="nn-tooltip">
-                    <div class="nn-tt-name" id="nn-tt-name"></div>
-                    <div class="nn-tt-nnc" id="nn-tt-nnc"></div>
-                    <a class="nn-tt-wa" id="nn-tt-wa" href="#" target="_blank" rel="noopener">Join WhatsApp</a>
-                </div>
-                <svg id="nn-map-svg" viewBox="0 0 680 320" width="100%" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Massachusetts -->
-                    <g id="ma-group">
-                        <path class="nn-state" id="ma-path" d="
-                            M 95 110 L 108 105 L 125 102 L 145 100 L 168 98 L 192 97
-                            L 215 96 L 238 95 L 262 94 L 285 94 L 308 94
-                            L 332 94 L 355 94 L 378 94 L 400 94 L 422 94
-                            L 445 95 L 465 96 L 480 98
-                            L 490 102 L 498 108 L 502 115
-                            L 498 122 L 492 128
-                            L 500 132 L 508 138 L 512 145
-                            L 508 152 L 500 156 L 492 158
-                            L 488 165 L 482 170
-                            L 472 172 L 460 170 L 448 166
-                            L 435 162 L 422 162 L 410 165
-                            L 395 168 L 378 170 L 362 168
-                            L 348 164 L 335 162
-                            L 320 164 L 308 168 L 295 170
-                            L 280 170 L 265 168 L 250 166
-                            L 235 166 L 220 168 L 205 170
-                            L 190 170 L 175 168 L 162 165
-                            L 150 160 L 138 155 L 128 148
-                            L 115 140 L 102 132 L 94 124
-                            Z"/>
-                        <text class="nn-state-label" x="285" y="140" text-anchor="middle">Massachusetts</text>
-                    </g>
-                    <!-- Rhode Island -->
-                    <g id="ri-group">
-                        <path class="nn-state" id="ri-path" d="
-                            M 420 170 L 435 168 L 448 170 L 458 175
-                            L 465 182 L 468 190 L 466 198
-                            L 462 206 L 455 212 L 447 216
-                            L 438 218 L 428 216 L 420 212
-                            L 414 206 L 411 198 L 412 190
-                            L 415 182 L 420 176 Z"/>
-                        <text class="nn-state-label" x="440" y="196" text-anchor="middle" font-size="8">RI</text>
-                    </g>
-                    <!-- Cape Cod -->
-                    <path class="nn-state" d="
-                        M 492 158 L 502 162 L 514 168 L 524 176
-                        L 530 185 L 528 192 L 522 196
-                        L 514 194 L 506 188 L 500 180
-                        L 494 172 L 490 165 Z" opacity="0.9"/>
-
-                    <!-- Worcester -->
-                    <g class="nn-pin" onmouseenter="nnShowTip(event,'Worcester','Amin Badmos','https://chat.whatsapp.com/FInBjNqPffkEKbM4NhUs38')" onmouseleave="nnHideTip()">
-                        <circle cx="210" cy="138" r="15" class="nn-pin-circle"/>
-                        <text x="210" y="143" text-anchor="middle" class="nn-pin-letter">W</text>
-                    </g>
-                    <text x="210" y="160" text-anchor="middle" class="nn-pin-name">Worcester</text>
-
-                    <!-- Lowell -->
-                    <g class="nn-pin" onmouseenter="nnShowTip(event,'Lowell','Hassan Jafri','https://chat.whatsapp.com/KnOAOLPgBuIGfRsBE85dMD')" onmouseleave="nnHideTip()">
-                        <circle cx="355" cy="108" r="15" class="nn-pin-circle"/>
-                        <text x="355" y="113" text-anchor="middle" class="nn-pin-letter">L</text>
-                    </g>
-                    <text x="355" y="130" text-anchor="middle" class="nn-pin-name">Lowell</text>
-
-                    <!-- Metrowest -->
-                    <g class="nn-pin" onmouseenter="nnShowTip(event,'Metrowest','Abdullah Mohammed','https://chat.whatsapp.com/JlnnhQ9i0BzEjwhdia6aPM')" onmouseleave="nnHideTip()">
-                        <circle cx="295" cy="148" r="15" class="nn-pin-circle"/>
-                        <text x="295" y="153" text-anchor="middle" class="nn-pin-letter">M</text>
-                    </g>
-                    <text x="295" y="170" text-anchor="middle" class="nn-pin-name">Metrowest</text>
-
-                    <!-- Sharon -->
-                    <g class="nn-pin" onmouseenter="nnShowTip(event,'Sharon','Yussuf Nasri','https://chat.whatsapp.com/Lcv9WlXXyWVAg3PDLb4hlP')" onmouseleave="nnHideTip()">
-                        <circle cx="400" cy="155" r="15" class="nn-pin-circle"/>
-                        <text x="400" y="160" text-anchor="middle" class="nn-pin-letter">S</text>
-                    </g>
-                    <text x="400" y="177" text-anchor="middle" class="nn-pin-name">Sharon</text>
-
-                    <!-- Quincy -->
-                    <g class="nn-pin" onmouseenter="nnShowTip(event,'Quincy','Yoseph Hassan','https://chat.whatsapp.com/LWFdSXpAQdB7Du5uX7k1IQ')" onmouseleave="nnHideTip()">
-                        <circle cx="448" cy="148" r="15" class="nn-pin-circle"/>
-                        <text x="448" y="153" text-anchor="middle" class="nn-pin-letter">Q</text>
-                    </g>
-                    <text x="448" y="170" text-anchor="middle" class="nn-pin-name">Quincy</text>
-
-                    <!-- Pawtucket (RI) -->
-                    <g class="nn-pin" onmouseenter="nnShowTip(event,'Pawtucket','Hanzalah Qamar','https://chat.whatsapp.com/JHkvkx4AwTeLBrjtkzNRqm')" onmouseleave="nnHideTip()">
-                        <circle cx="435" cy="192" r="15" class="nn-pin-circle"/>
-                        <text x="435" y="197" text-anchor="middle" class="nn-pin-letter">P</text>
-                    </g>
-                    <text x="435" y="214" text-anchor="middle" class="nn-pin-name">Pawtucket</text>
-                </svg>
-            </div>
-        </section>
-
-                <!-- SR OVERVIEW -->
+        <!-- SR OVERVIEW -->
         <section id="overview" class="overview scroll-mt">
             <div class="overview-circle"></div>
             <div class="overview-inner">
@@ -623,6 +539,7 @@
 
 <div class="org-tooltip" id="org-tooltip"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 <script>
 // ── CONFIG ──────────────────────────────────────────────────────
 // Each tab in the Google Sheet has its own CSV URL (gid parameter).
@@ -1030,7 +947,150 @@ function zoomChart(delta) {
 }
 
 
-// ── NN SVG MAP ────────────────────────────────────────────────
+// ── NN SVG MAP (D3 + US Census TopoJSON) ─────────────────────
+const NN_PINS = [
+    { name:'Worcester',  nnc:'Amin Badmos',       lng:-71.8023, lat:42.2626, wa:'https://chat.whatsapp.com/FInBjNqPffkEKbM4NhUs38' },
+    { name:'Lowell',     nnc:'Hassan Jafri',       lng:-71.3162, lat:42.6334, wa:'https://chat.whatsapp.com/KnOAOLPgBuIGfRsBE85dMD' },
+    { name:'Metrowest',  nnc:'Abdullah Mohammed',  lng:-71.4184, lat:42.2973, wa:'https://chat.whatsapp.com/JlnnhQ9i0BzEjwhdia6aPM' },
+    { name:'Sharon',     nnc:'Yussuf Nasri',       lng:-71.1787, lat:42.1237, wa:'https://chat.whatsapp.com/Lcv9WlXXyWVAg3PDLb4hlP' },
+    { name:'Quincy',     nnc:'Yoseph Hassan',      lng:-71.0023, lat:42.2529, wa:'https://chat.whatsapp.com/LWFdSXpAQdB7Du5uX7k1IQ' },
+    { name:'Pawtucket',  nnc:'Hanzalah Qamar',     lng:-71.3829, lat:41.8785, wa:'https://chat.whatsapp.com/JHkvkx4AwTeLBrjtkzNRqm' },
+];
+
+let nnMapRendered = false;
+
+async function renderNNMap() {
+    if (nnMapRendered || !window.d3 || !window.topojson) return;
+
+    const outer = document.getElementById('nn-map-outer');
+    const svg = d3.select('#nn-map-svg');
+    if (!outer || svg.empty()) return;
+
+    nnMapRendered = true;
+
+    try {
+        // Fetch US states TopoJSON from CDN
+        const us = await d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json');
+        document.getElementById('nn-map-loading').style.display = 'none';
+
+        const W = outer.clientWidth || 600;
+        const H = Math.round(W * 0.52);
+        svg.attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+
+        // MA = FIPS 25, RI = FIPS 44
+        const states = topojson.feature(us, us.objects.states);
+        const ma = states.features.find(f => f.id === '25');
+        const ri = states.features.find(f => f.id === '44');
+        if (!ma || !ri) return;
+
+        // Create a combined feature to fit both states
+        const combined = { type:'FeatureCollection', features:[ma, ri] };
+
+        const projection = d3.geoMercator().fitExtent([[24, 24], [W-24, H-24]], combined);
+        const path = d3.geoPath().projection(projection);
+
+        const g = svg.append('g');
+
+        // MA
+        g.append('path')
+            .datum(ma)
+            .attr('d', path)
+            .attr('fill', '#0b3d2e')
+            .attr('stroke', '#c8a951')
+            .attr('stroke-width', 1.5)
+            .attr('class', 'nn-state')
+            .on('mouseenter', function() { d3.select(this).attr('fill','#145945'); })
+            .on('mouseleave', function() { d3.select(this).attr('fill','#0b3d2e'); });
+
+        // MA label
+        const maCentroid = path.centroid(ma);
+        g.append('text')
+            .attr('x', maCentroid[0])
+            .attr('y', maCentroid[1])
+            .attr('text-anchor','middle')
+            .attr('font-family','Poppins,sans-serif')
+            .attr('font-size','11')
+            .attr('font-weight','700')
+            .attr('fill','rgba(200,169,81,0.6)')
+            .attr('letter-spacing','2')
+            .attr('pointer-events','none')
+            .text('MASSACHUSETTS');
+
+        // RI
+        g.append('path')
+            .datum(ri)
+            .attr('d', path)
+            .attr('fill', '#0b3d2e')
+            .attr('stroke', '#c8a951')
+            .attr('stroke-width', 1.5)
+            .attr('class', 'nn-state')
+            .on('mouseenter', function() { d3.select(this).attr('fill','#145945'); })
+            .on('mouseleave', function() { d3.select(this).attr('fill','#0b3d2e'); });
+
+        // RI label
+        const riCentroid = path.centroid(ri);
+        g.append('text')
+            .attr('x', riCentroid[0])
+            .attr('y', riCentroid[1])
+            .attr('text-anchor','middle')
+            .attr('font-family','Poppins,sans-serif')
+            .attr('font-size','8')
+            .attr('font-weight','700')
+            .attr('fill','rgba(200,169,81,0.6)')
+            .attr('pointer-events','none')
+            .text('RI');
+
+        // Pins
+        NN_PINS.forEach(pin => {
+            const [px, py] = projection([pin.lng, pin.lat]);
+            const pg = g.append('g')
+                .attr('transform', `translate(${px},${py})`)
+                .style('cursor','pointer');
+
+            pg.append('circle')
+                .attr('r', 13)
+                .attr('fill','#0b3d2e')
+                .attr('stroke','#c8a951')
+                .attr('stroke-width', 2)
+                .on('mouseenter', function(e) {
+                    d3.select(this).attr('fill','#c8a951');
+                    d3.select(this.nextSibling).attr('fill','#0b3d2e');
+                    nnShowTip(e, pin.name, pin.nnc, pin.wa);
+                })
+                .on('mousemove', nnMoveTip)
+                .on('mouseleave', function() {
+                    d3.select(this).attr('fill','#0b3d2e');
+                    d3.select(this.nextSibling).attr('fill','#c8a951');
+                    nnHideTip();
+                });
+
+            pg.append('text')
+                .attr('text-anchor','middle')
+                .attr('dominant-baseline','central')
+                .attr('font-family','Poppins,sans-serif')
+                .attr('font-size','10')
+                .attr('font-weight','900')
+                .attr('fill','#c8a951')
+                .attr('pointer-events','none')
+                .text(pin.name[0]);
+
+            pg.append('text')
+                .attr('y', 22)
+                .attr('text-anchor','middle')
+                .attr('font-family','Poppins,sans-serif')
+                .attr('font-size','8')
+                .attr('font-weight','700')
+                .attr('fill','#0b3d2e')
+                .attr('pointer-events','none')
+                .text(pin.name);
+        });
+
+    } catch(err) {
+        document.getElementById('nn-map-loading').textContent = 'Map unavailable';
+        console.error('Map error:', err);
+    }
+}
+
 function nnShowTip(e, name, nnc, wa) {
     const tt = document.getElementById('nn-tooltip');
     document.getElementById('nn-tt-name').textContent = name;
@@ -1042,9 +1102,9 @@ function nnShowTip(e, name, nnc, wa) {
 function nnHideTip() { document.getElementById('nn-tooltip').classList.remove('show'); }
 function nnMoveTip(e) {
     const tt = document.getElementById('nn-tooltip');
-    const container = document.querySelector('.nn-map-container');
-    if (!container) return;
-    const rect = container.getBoundingClientRect();
+    const outer = document.getElementById('nn-map-outer');
+    if (!outer) return;
+    const rect = outer.getBoundingClientRect();
     let x = e.clientX - rect.left + 14;
     let y = e.clientY - rect.top - 14;
     if (x + 180 > rect.width) x = e.clientX - rect.left - 192;
@@ -1072,6 +1132,9 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchAllEvents();
     renderUnifiedChart();
     initScrollSpy();
+    // Render map when section becomes visible
+    const mapObs = new IntersectionObserver(entries => { if(entries[0].isIntersecting) renderNNMap(); }, {threshold:0.1});
+    const mapSec = document.getElementById('map'); if(mapSec) mapObs.observe(mapSec);
 });
 </script>
 
