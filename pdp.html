@@ -452,28 +452,33 @@ async function submitAuth() {
             const name = document.getElementById('signup-name').value.trim();
             if (!name) { errEl.textContent = 'Please enter your name'; btn.disabled = false; btn.textContent = 'Create Account'; return; }
 
-            const { data, error } = await sb.auth.signUp({ email, password });
+            const { data, error } = await sb.auth.signUp({ email, password, options: { data: { name } } });
             if (error) throw error;
 
-            // Create profile - may need email confirmation first
-            if (data.user) {
-                const pairingCode = generatePairingCode();
-                const { error: profErr } = await sb.from('profiles').insert({
-                    id: data.user.id, name, email, pairing_code: pairingCode
-                });
-                if (profErr && !profErr.message.includes('duplicate')) throw profErr;
-            }
-
             if (!data.session) {
+                // Email confirmation required — try signing in directly anyway
+                const { data: signInData, error: signInError } = await sb.auth.signInWithPassword({ email, password });
+                if (!signInError && signInData.session) {
+                    await loadApp();
+                    return;
+                }
+                // Truly needs confirmation
                 errEl.style.color = '#059669';
-                errEl.textContent = 'Check your email to confirm your account, then log in.';
+                errEl.textContent = '✓ Account created! Check your email for a confirmation link, then log in.';
                 btn.disabled = false; btn.textContent = 'Create Account';
+                // Switch to login tab so they can log in after confirming
+                setTimeout(() => switchTab('login'), 2000);
                 return;
             }
             await loadApp();
         } else {
-            const { error } = await sb.auth.signInWithPassword({ email, password });
-            if (error) throw error;
+            const { data: signInData, error } = await sb.auth.signInWithPassword({ email, password });
+            if (error) {
+                if (error.message.includes('Email not confirmed')) {
+                    throw new Error('Please check your email and click the confirmation link first.');
+                }
+                throw error;
+            }
             await loadApp();
         }
     } catch (err) {
@@ -696,14 +701,37 @@ function renderGoals(containerId, goals, isMine) {
                 ${isMine ? `<button class="btn-danger" onclick="deleteGoal('${g.id}')">Delete</button>` : ''}
             </div>
             <div class="goal-bar-wrap">
-                <div class="goal-bar-top">
-                    <div class="goal-bar-label">Progress</div>
-                    <div class="goal-bar-pct">${g.progress}%</div>
-                </div>
-                <div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${g.progress}%"></div></div>
-                ${isMine ? `<input type="range" class="goal-slider" min="0" max="100" value="${g.progress}" oninput="this.parentElement.querySelector('.goal-bar-fill').style.width=this.value+'%';this.parentElement.querySelector('.goal-bar-pct').textContent=this.value+'%'" onchange="updateGoalProgress('${g.id}', this.value)">` : ''}
+                <div class="goal-bar-bg" style="margin-bottom:0.75rem"><div class="goal-bar-fill" id="bar-${g.id}" style="width:${g.progress}%"></div></div>
+                ${isMine ? `
+                <div style="display:flex;align-items:center;gap:0.5rem">
+                    <button onclick="stepGoal('${g.id}',-10)" style="width:2rem;height:2rem;border-radius:0.5rem;background:var(--gray-100);color:var(--gray-700);font-size:1rem;font-weight:900;border:none;cursor:pointer;flex-shrink:0">−</button>
+                    <button onclick="stepGoal('${g.id}',-5)" style="width:2rem;height:2rem;border-radius:0.5rem;background:var(--gray-100);color:var(--gray-700);font-size:0.7rem;font-weight:900;border:none;cursor:pointer;flex-shrink:0">-5</button>
+                    <input type="number" id="pct-${g.id}" min="0" max="100" value="${g.progress}"
+                        style="flex:1;text-align:center;border:1.5px solid var(--gray-200);border-radius:0.625rem;padding:0.4rem;font-family:inherit;font-size:0.875rem;font-weight:900;color:var(--green);width:0"
+                        onchange="setGoalProgress('${g.id}', this.value)"
+                        onkeypress="if(event.key==='Enter')setGoalProgress('${g.id}',this.value)">
+                    <span style="font-size:0.875rem;font-weight:900;color:var(--green);flex-shrink:0">%</span>
+                    <button onclick="stepGoal('${g.id}',5)" style="width:2rem;height:2rem;border-radius:0.5rem;background:var(--gray-100);color:var(--gray-700);font-size:0.7rem;font-weight:900;border:none;cursor:pointer;flex-shrink:0">+5</button>
+                    <button onclick="stepGoal('${g.id}',10)" style="width:2rem;height:2rem;border-radius:0.5rem;background:var(--green);color:white;font-size:1rem;font-weight:900;border:none;cursor:pointer;flex-shrink:0">+</button>
+                </div>` : `<div style="font-size:0.75rem;font-weight:900;color:var(--green)">${g.progress}%</div>`}
             </div>
         </div>`).join('');
+}
+
+function stepGoal(id, delta) {
+    const input = document.getElementById('pct-' + id);
+    const newVal = Math.min(100, Math.max(0, parseInt(input.value || 0) + delta));
+    input.value = newVal;
+    setGoalProgress(id, newVal);
+}
+
+function setGoalProgress(id, value) {
+    const val = Math.min(100, Math.max(0, parseInt(value) || 0));
+    const input = document.getElementById('pct-' + id);
+    const bar = document.getElementById('bar-' + id);
+    if (input) input.value = val;
+    if (bar) bar.style.width = val + '%';
+    updateGoalProgress(id, val);
 }
 
 // ── HABITS ─────────────────────────────────────────────────────
