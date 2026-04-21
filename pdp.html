@@ -117,6 +117,7 @@ a { color: inherit; text-decoration: none; }
 .habit-day.today { border: 2px solid var(--gold); }
 .habit-day.partner-checked { background: #fefce8; border-color: var(--gold); color: var(--gold); cursor: default; }
 .habit-day.partner-checked.checked { background: linear-gradient(135deg, var(--green) 50%, var(--gold) 50%); color: white; }
+        .habit-day.future { opacity: 0.3; cursor: default; }
 
 /* REFLECTIONS */
 .reflection-item { background: var(--gray-50); border: 1px solid var(--gray-100); border-radius: 1.25rem; padding: 1.25rem; margin-bottom: 0.75rem; }
@@ -753,14 +754,21 @@ async function deleteHabit(id) {
     loadHabits();
 }
 
-function getLast7Days() {
+function getCurrentWeekDays() {
     const days = [];
-    for (let i = 6; i >= 0; i--) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
+    const today = new Date();
+    const sunday = new Date(today);
+    sunday.setDate(today.getDate() - today.getDay()); // go back to Sunday
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(sunday);
+        d.setDate(sunday.getDate() + i);
         days.push(d.toISOString().slice(0, 10));
     }
     return days;
+}
+
+function getLast7Days() {
+    return getCurrentWeekDays();
 }
 
 async function toggleHabitCheckin(habitId, date) {
@@ -785,25 +793,28 @@ function computeStreak(checkins, today) {
 }
 
 async function loadHabits() {
-    const days = getLast7Days();
-    const today = days[days.length - 1];
+    const days = getCurrentWeekDays();
+    const today = new Date().toISOString().slice(0, 10);
     const weekStart = days[0];
 
     const { data: mine } = await sb.from('habits').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
-    const { data: myCheckins } = await sb.from('habit_checkins').select('*').eq('user_id', currentUser.id).gte('date', weekStart);
-    renderHabits('my-habits', mine || [], myCheckins || [], days, today, true);
+    // Fetch all checkins for streak calculation, filter to week for display
+    const { data: myAllCheckins } = await sb.from('habit_checkins').select('*').eq('user_id', currentUser.id);
+    const myCheckins = (myAllCheckins || []).filter(c => days.includes(c.date));
+    renderHabits('my-habits', mine || [], myCheckins, myAllCheckins || [], days, today, true);
 
     if (partnerProfile) {
         const { data: theirs } = await sb.from('habits').select('*').eq('user_id', partnerProfile.id).order('created_at', { ascending: false });
-        const { data: theirCheckins } = await sb.from('habit_checkins').select('*').eq('user_id', partnerProfile.id).gte('date', weekStart);
-        renderHabits('partner-habits', theirs || [], theirCheckins || [], days, today, false);
+        const { data: theirAllCheckins } = await sb.from('habit_checkins').select('*').eq('user_id', partnerProfile.id);
+        const theirCheckins = (theirAllCheckins || []).filter(c => days.includes(c.date));
+        renderHabits('partner-habits', theirs || [], theirCheckins, theirAllCheckins || [], days, today, false);
         document.getElementById('partner-habits-card').style.display = 'block';
     } else {
         document.getElementById('partner-habits-card').style.display = 'none';
     }
 }
 
-function renderHabits(containerId, habits, checkins, days, today, isMine) {
+function renderHabits(containerId, habits, weekCheckins, allCheckins, days, today, isMine) {
     const el = document.getElementById(containerId);
     if (!habits.length) {
         el.innerHTML = `<div class="empty">${isMine ? 'No habits yet. Tap + to add one.' : 'No habits yet.'}</div>`;
@@ -811,27 +822,30 @@ function renderHabits(containerId, habits, checkins, days, today, isMine) {
     }
     const DOW = ['S','M','T','W','T','F','S'];
     el.innerHTML = habits.map(h => {
-        const hCheckins = checkins.filter(c => c.habit_id === h.id);
+        const hCheckins = weekCheckins.filter(c => c.habit_id === h.id);
+        const allHCheckins = allCheckins.filter(c => c.habit_id === h.id);
         const dates = new Set(hCheckins.map(c => c.date));
-        const streak = computeStreak(hCheckins, today);
+        const streak = computeStreak(allHCheckins, today);
+        const weekDone = days.filter(d => dates.has(d)).length;
         return `
             <div class="habit-item${isMine ? '' : ' partner'}">
                 <div class="habit-top">
                     <div>
                         <div class="habit-title">${escapeHtml(h.title)}</div>
+                        <div style="font-size:0.6rem;color:var(--gray-400);margin-top:0.15rem">${weekDone}/7 this week</div>
                     </div>
                     <div style="display:flex;align-items:center;gap:0.5rem">
-                        ${streak > 0 ? `<div class="habit-streak">🔥 ${streak} day${streak !== 1 ? 's' : ''}</div>` : ''}
+                        ${streak > 0 ? `<div class="habit-streak">🔥 ${streak}d</div>` : ''}
                         ${isMine ? `<button class="btn-danger" onclick="deleteHabit('${h.id}')">Delete</button>` : ''}
                     </div>
                 </div>
                 <div class="habit-days">
-                    ${days.map(date => {
+                    ${days.map((date, i) => {
                         const checked = dates.has(date);
                         const isToday = date === today;
-                        const dow = DOW[new Date(date + 'T00:00:00').getDay()];
-                        const click = isMine ? `onclick="toggleHabitCheckin('${h.id}','${date}')"` : '';
-                        return `<div class="habit-day${checked ? ' checked' : ''}${isToday ? ' today' : ''}" ${click}>${dow}</div>`;
+                        const isFuture = date > today;
+                        const click = (isMine && !isFuture) ? `onclick="toggleHabitCheckin('${h.id}','${date}')"` : '';
+                        return `<div class="habit-day${checked ? ' checked' : ''}${isToday ? ' today' : ''}${isFuture ? ' future' : ''}" ${click}>${DOW[i]}</div>`;
                     }).join('')}
                 </div>
             </div>`;
