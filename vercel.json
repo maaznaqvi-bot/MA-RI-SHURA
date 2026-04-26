@@ -1,11 +1,13 @@
 {
   "rewrites": [
-    { "source": "/pdp",   "destination": "/pdp.html"   },
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/api/events", "destination": "/api/events.js" }
+    { "source": "/pdp",       "destination": "/pdp.html"     },
+    { "source": "/admin",     "destination": "/admin.html"   },
+    { "source": "/api/events","destination": "/api/events.js"},
+    { "source": "/api/chat",  "destination": "/api/chat.js"  }
   ],
   "builds": [
-    { "src": "*.html", "use": "@vercel/static" },
-    { "src": "api/events.js", "use": "@vercel/node" }
+    { "src": "*.html",         "use": "@vercel/static" },
+    { "src": "api/events.js",  "use": "@vercel/node"   },
+    { "src": "api/chat.js",    "use": "@vercel/node"   }
   ]
 }
