@@ -110,11 +110,11 @@
   // CONFIGURATION — fill these in before uploading to GitHub
   // ============================================================
   // Anthropic key is stored securely in Vercel environment variables
-  const OAUTH_CLIENT_ID = '801693803937-rfad5i0fh52hg5tktr5njka3kidcl8ph.apps.googleusercontent.com';
+  const OAUTH_CLIENT_ID = 'PASTE_YOUR_OAUTH_CLIENT_ID_HERE';
   const DRIVE_FOLDERS = [
-    { id: '0AJqltT-iYzWOUk9PVA', name: 'SOPs' },
-    { id: '0AIoZUN2Tgnm4Uk9PVA', name: 'Cabinet' },
-    { id: '0AEhqO14nhrExUk9PVA', name: 'YM Massachusetts/Rhode Island' },
+    { id: 'PASTE_FOLDER_ID_1', name: 'SOPs' },
+    { id: 'PASTE_FOLDER_ID_2', name: 'Finance' },
+    { id: 'PASTE_FOLDER_ID_3', name: 'Meeting Notes' },
     // Add more folders here if needed
   ];
   // ============================================================
@@ -321,7 +321,7 @@
       const data = await res.json();
       typing.style.display = 'none';
       if (data.error) {
-        addMsg('assistant', 'Error: ' + data.error.message);
+        addMsg('assistant', 'Error: ' + (data.error.message || data.error || JSON.stringify(data)));
       } else {
         const reply = data.content[0].text;
         history.push({ role: 'assistant', content: reply });
