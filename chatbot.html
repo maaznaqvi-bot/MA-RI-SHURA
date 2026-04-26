@@ -178,8 +178,10 @@
     const ids = [rootId];
     try {
       const q = encodeURIComponent("'" + rootId + "' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false");
+      console.log('Scanning folder:', rootId, 'depth:', depth);
       const res = await gFetch('https://www.googleapis.com/drive/v3/files?q=' + q + '&fields=files(id)&pageSize=10&supportsAllDrives=true&includeItemsFromAllDrives=true&corpora=allDrives');
       const data = await res.json();
+      console.log('Folder scan result:', rootId, data);
       if (data.error) console.warn('Folder scan error:', rootId, data.error.message);
       if (data.files) {
         const subResults = await Promise.all(data.files.map(sub => getAllFolderIds(sub.id, depth + 1)));
@@ -206,8 +208,10 @@
       for (const q of attempts) {
         if (found) break;
         try {
+          console.log('Searching with query:', q);
           const res = await gFetch('https://www.googleapis.com/drive/v3/files?q=' + encodeURIComponent(q) + '&fields=files(id,name,mimeType)&pageSize=6&supportsAllDrives=true&includeItemsFromAllDrives=true&corpora=allDrives');
           const data = await res.json();
+          console.log('Search result:', data);
           if (data.files && data.files.length > 0) {
             all.push(...data.files.map(f => ({ ...f, driveName: folder.name })));
             found = true;
