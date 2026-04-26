@@ -236,9 +236,9 @@
       const allFolderIds = await getAllFolderIds(folder.id);
       const parentClause = allFolderIds.map(id => "'" + id + "' in parents").join(' or ');
       const attempts = [
-        '(' + parentClause + ') and fullText contains '' + safe + '' and trashed=false',
-        '(' + parentClause + ') and name contains '' + safe + '' and trashed=false',
-        '(' + parentClause + ') and trashed=false'
+        "(" + parentClause + ") and fullText contains '" + safe + "' and trashed=false",
+        "(" + parentClause + ") and name contains '" + safe + "' and trashed=false",
+        "(" + parentClause + ") and trashed=false"
       ];
       let found = false;
       for (const q of attempts) {
