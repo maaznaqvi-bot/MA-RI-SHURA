@@ -174,7 +174,7 @@
 
   async function getAllFolderIds(rootId, depth) {
     if (depth === undefined) depth = 0;
-    if (depth > 2) return [rootId];
+    if (depth > 5) return [rootId];
     const ids = [rootId];
     try {
       const q = encodeURIComponent("'" + rootId + "' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false");
@@ -209,7 +209,7 @@
         if (found) break;
         try {
           console.log('Searching with query:', q);
-          const res = await gFetch('https://www.googleapis.com/drive/v3/files?q=' + encodeURIComponent(q) + '&fields=files(id,name,mimeType)&pageSize=6&supportsAllDrives=true&includeItemsFromAllDrives=true&corpora=allDrives');
+          const res = await gFetch('https://www.googleapis.com/drive/v3/files?q=' + encodeURIComponent(q) + '&fields=files(id,name,mimeType)&pageSize=15&supportsAllDrives=true&includeItemsFromAllDrives=true&corpora=allDrives');
           const data = await res.json();
           console.log('Search result:', data);
           if (data.files && data.files.length > 0) {
@@ -294,7 +294,7 @@
 
     if (accessToken && folders.length) {
       const files = await searchDrive(text);
-      const topFiles = files.slice(0, 3);
+      const topFiles = files.slice(0, 6);
       const texts = await Promise.all(topFiles.map(f => fetchText(f.id, f.mimeType)));
       topFiles.forEach((file, i) => {
         if (texts[i]) {
