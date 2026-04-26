@@ -158,7 +158,7 @@
   function signInGoogle() {
     const clientId = document.getElementById('oauth-client').value.trim();
     if (!clientId) { showErr('Enter your OAuth Client ID first.'); return; }
-    const scope = encodeURIComponent('https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/drive.metadata.readonly');
+    const scope = encodeURIComponent('https://www.googleapis.com/auth/drive');
     const redirect = encodeURIComponent(window.location.origin + window.location.pathname);
     window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(clientId)}&redirect_uri=${redirect}&response_type=token&scope=${scope}&prompt=consent`;
   }
@@ -210,17 +210,16 @@
 
   async function getAllFolderIds(rootId, depth) {
     if (depth === undefined) depth = 0;
-    if (depth > 3) return [rootId];
+    if (depth > 2) return [rootId];
     const ids = [rootId];
     try {
       const q = encodeURIComponent("'" + rootId + "' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false");
-      const res = await gFetch('https://www.googleapis.com/drive/v3/files?q=' + q + '&fields=files(id,name)&pageSize=20&supportsAllDrives=true&includeItemsFromAllDrives=true&corpora=allDrives');
+      const res = await gFetch('https://www.googleapis.com/drive/v3/files?q=' + q + '&fields=files(id)&pageSize=10&supportsAllDrives=true&includeItemsFromAllDrives=true&corpora=allDrives');
       const data = await res.json();
+      if (data.error) console.warn('Folder scan error:', rootId, data.error.message);
       if (data.files) {
-        for (const sub of data.files) {
-          const subIds = await getAllFolderIds(sub.id, depth + 1);
-          ids.push(...subIds);
-        }
+        const subResults = await Promise.all(data.files.map(sub => getAllFolderIds(sub.id, depth + 1)));
+        subResults.forEach(subIds => ids.push(...subIds));
       }
     } catch(e) {}
     return ids;
@@ -237,14 +236,13 @@
       const parentClause = allFolderIds.map(id => "'" + id + "' in parents").join(' or ');
       const attempts = [
         "(" + parentClause + ") and fullText contains '" + safe + "' and trashed=false",
-        "(" + parentClause + ") and name contains '" + safe + "' and trashed=false",
         "(" + parentClause + ") and trashed=false"
       ];
       let found = false;
       for (const q of attempts) {
         if (found) break;
         try {
-          const res = await gFetch('https://www.googleapis.com/drive/v3/files?q=' + encodeURIComponent(q) + '&fields=files(id,name,mimeType)&pageSize=10&supportsAllDrives=true&includeItemsFromAllDrives=true&corpora=allDrives');
+          const res = await gFetch('https://www.googleapis.com/drive/v3/files?q=' + encodeURIComponent(q) + '&fields=files(id,name,mimeType)&pageSize=6&supportsAllDrives=true&includeItemsFromAllDrives=true&corpora=allDrives');
           const data = await res.json();
           if (data.files && data.files.length > 0) {
             all.push(...data.files.map(f => ({ ...f, driveName: folder.name })));
@@ -256,26 +254,29 @@
 
     const seen = new Set();
     return all.filter(f => { if (seen.has(f.id)) return false; seen.add(f.id); return true; });
-  }async function fetchText(fileId, mimeType) {
+  }
+
+  async function fetchText(fileId, mimeType) {
     const b = 'https://www.googleapis.com/drive/v3/files';
     let url;
     try {
       if (mimeType === 'application/vnd.google-apps.document')
-        url = `${b}/${fileId}/export?mimeType=text%2Fplain&supportsAllDrives=true`;
+        url = b + '/' + fileId + '/export?mimeType=text%2Fplain&supportsAllDrives=true';
       else if (mimeType === 'application/vnd.google-apps.spreadsheet')
-        url = `${b}/${fileId}/export?mimeType=text%2Fcsv&supportsAllDrives=true`;
+        url = b + '/' + fileId + '/export?mimeType=text%2Fcsv&supportsAllDrives=true';
       else if (mimeType === 'application/vnd.google-apps.presentation')
-        url = `${b}/${fileId}/export?mimeType=text%2Fplain&supportsAllDrives=true`;
-      else if (mimeType && (mimeType.startsWith('text/') || mimeType === 'application/json'))
-        url = `${b}/${fileId}?alt=media&supportsAllDrives=true`;
+        url = b + '/' + fileId + '/export?mimeType=text%2Fplain&supportsAllDrives=true';
+      else if (mimeType && mimeType.startsWith('text/'))
+        url = b + '/' + fileId + '?alt=media&supportsAllDrives=true';
       else return null;
 
       const res = await gFetch(url);
       if (!res.ok) return null;
       const text = await res.text();
-      return text.trim().length > 30 ? text.substring(0, 4000) : null;
+      return text.trim().length > 30 ? text.substring(0, 2000) : null;
     } catch(e) { return null; }
   }
+
 
   function fillChip(el) {
     document.getElementById('chat-input').value = el.textContent.trim();
@@ -325,13 +326,14 @@
 
     if (accessToken && folders.length) {
       const files = await searchDrive(text);
-      for (const file of files.slice(0, 5)) {
-        const txt = await fetchText(file.id, file.mimeType);
-        if (txt) {
-          docContext += `\n\n=== "${file.name}" (${file.driveName}) ===\n${txt}`;
+      const topFiles = files.slice(0, 3);
+      const texts = await Promise.all(topFiles.map(f => fetchText(f.id, f.mimeType)));
+      topFiles.forEach((file, i) => {
+        if (texts[i]) {
+          docContext += "\n\n=== \"" + file.name + "\" ===\n" + texts[i];
           usedSources.push(file.name);
         }
-      }
+      });
     }
 
     const sysMsg = SYSTEM + (docContext
