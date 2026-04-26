@@ -7,263 +7,61 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: #0f0f11;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    #app {
-      width: 100%;
-      max-width: 780px;
-      height: 90vh;
-      max-height: 820px;
-      display: flex;
-      flex-direction: column;
-      background: #18181c;
-      border: 1px solid #2a2a35;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
-    }
-
-    #header {
-      padding: 14px 20px;
-      border-bottom: 1px solid #2a2a35;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: #13131a;
-      flex-shrink: 0;
-    }
-
-    #avatar {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: linear-gradient(135deg, #534AB7, #7F77DD);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 15px; font-weight: 500; color: #fff;
-      flex-shrink: 0;
-    }
-
+    body { font-family: 'DM Sans', sans-serif; background: #0f0f11; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    #app { width: 100%; max-width: 780px; height: 90vh; max-height: 820px; display: flex; flex-direction: column; background: #18181c; border: 1px solid #2a2a35; border-radius: 16px; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,0.6); }
+    #header { padding: 14px 20px; border-bottom: 1px solid #2a2a35; display: flex; align-items: center; gap: 12px; background: #13131a; flex-shrink: 0; }
+    #avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #534AB7, #7F77DD); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 500; color: #fff; flex-shrink: 0; }
     #header-text h1 { font-size: 15px; font-weight: 500; color: #f0eff8; }
     #header-text p { font-size: 11px; color: #888; margin-top: 1px; }
-
     #status { margin-left: auto; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
-
-    .badge {
-      font-size: 10px; padding: 3px 9px; border-radius: 20px;
-      font-weight: 500; white-space: nowrap;
-    }
+    .badge { font-size: 10px; padding: 3px 9px; border-radius: 20px; font-weight: 500; white-space: nowrap; }
     .badge.off { background: #1e1e28; color: #666; border: 1px solid #2a2a35; }
     .badge.on { background: #0a2e1e; color: #3dca8c; border: 1px solid #1a5c3a; }
-    .badge.warn { background: #2a1e00; color: #f0a500; border: 1px solid #5a3e00; }
-
-    #setup {
-      padding: 14px 20px;
-      border-bottom: 1px solid #2a2a35;
-      background: #13131a;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      flex-shrink: 0;
-    }
-
+    #setup { padding: 14px 20px; border-bottom: 1px solid #2a2a35; background: #13131a; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
     .row { display: flex; gap: 8px; align-items: center; }
-    .lbl { font-size: 11px; color: #666; width: 100px; flex-shrink: 0; }
-
-    input[type="text"], input[type="password"] {
-      flex: 1; font-size: 12px; padding: 7px 11px;
-      border-radius: 8px;
-      border: 1px solid #2a2a35;
-      background: #0f0f15;
-      color: #e8e7f4;
-      font-family: 'DM Sans', sans-serif;
-      outline: none;
-      transition: border-color 0.15s;
-    }
+    .lbl { font-size: 11px; color: #666; width: 110px; flex-shrink: 0; }
+    input[type="text"], input[type="password"] { flex: 1; font-size: 12px; padding: 7px 11px; border-radius: 8px; border: 1px solid #2a2a35; background: #0f0f15; color: #e8e7f4; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.15s; }
     input:focus { border-color: #534AB7; }
-
-    button {
-      font-family: 'DM Sans', sans-serif;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 500;
-      border-radius: 8px;
-      padding: 7px 14px;
-      transition: all 0.15s;
-      white-space: nowrap;
-    }
-
-    .btn-primary {
-      background: #534AB7;
-      color: #fff;
-      border: 1px solid #7F77DD;
-    }
+    button { font-family: 'DM Sans', sans-serif; cursor: pointer; font-size: 12px; font-weight: 500; border-radius: 8px; padding: 7px 14px; transition: all 0.15s; white-space: nowrap; }
+    .btn-primary { background: #534AB7; color: #fff; border: 1px solid #7F77DD; }
     .btn-primary:hover { background: #6259c8; }
     .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    .btn-outline {
-      background: transparent;
-      color: #9490cc;
-      border: 1px solid #2a2a35;
-    }
+    .btn-outline { background: transparent; color: #9490cc; border: 1px solid #2a2a35; }
     .btn-outline:hover { border-color: #534AB7; color: #c0bcf0; }
-
-    .btn-google {
-      background: #fff;
-      color: #333;
-      border: 1px solid #ccc;
-      display: flex; align-items: center; gap: 7px;
-    }
+    .btn-google { background: #fff; color: #333; border: 1px solid #ccc; display: flex; align-items: center; gap: 7px; }
     .btn-google:hover { background: #f5f5f5; }
-
-    #drive-bar {
-      display: none;
-      padding: 8px 20px;
-      border-bottom: 1px solid #2a2a35;
-      background: #13131a;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      flex-shrink: 0;
-    }
-
-    #drive-bar span.lbl2 { font-size: 11px; color: #666; }
+    #drive-bar { display: none; padding: 8px 20px; border-bottom: 1px solid #2a2a35; background: #13131a; align-items: center; gap: 8px; flex-wrap: wrap; flex-shrink: 0; }
+    .lbl2 { font-size: 11px; color: #666; }
     #folder-chips { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
-
-    .folder-chip {
-      font-size: 11px; padding: 3px 10px;
-      border-radius: 20px;
-      background: #0a2e1e; color: #3dca8c;
-      border: 1px solid #1a5c3a;
-      display: flex; align-items: center; gap: 5px;
-    }
-    .folder-chip button {
-      background: none; border: none; color: #3dca8c;
-      font-size: 13px; padding: 0; line-height: 1; cursor: pointer;
-    }
-
-    #messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 18px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      scrollbar-width: thin;
-      scrollbar-color: #2a2a35 transparent;
-    }
-
+    .folder-chip { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: #0a2e1e; color: #3dca8c; border: 1px solid #1a5c3a; display: flex; align-items: center; gap: 5px; }
+    .folder-chip button { background: none; border: none; color: #3dca8c; font-size: 13px; padding: 0; line-height: 1; cursor: pointer; }
+    #messages { flex: 1; overflow-y: auto; padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; scrollbar-width: thin; scrollbar-color: #2a2a35 transparent; }
     .msg { display: flex; gap: 10px; max-width: 85%; }
     .msg.user { align-self: flex-end; flex-direction: row-reverse; }
     .msg.assistant { align-self: flex-start; }
-
-    .bubble {
-      padding: 10px 14px;
-      border-radius: 16px;
-      font-size: 13px;
-      line-height: 1.65;
-    }
-
-    .msg.user .bubble {
-      background: #534AB7;
-      color: #fff;
-      border-bottom-right-radius: 4px;
-    }
-
-    .msg.assistant .bubble {
-      background: #1e1e28;
-      color: #e0dff0;
-      border: 1px solid #2a2a35;
-      border-bottom-left-radius: 4px;
-    }
-
-    .msg-av {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: #534AB7;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 500; color: #fff;
-      flex-shrink: 0; margin-top: 2px;
-    }
+    .bubble { padding: 10px 14px; border-radius: 16px; font-size: 13px; line-height: 1.65; }
+    .msg.user .bubble { background: #534AB7; color: #fff; border-bottom-right-radius: 4px; }
+    .msg.assistant .bubble { background: #1e1e28; color: #e0dff0; border: 1px solid #2a2a35; border-bottom-left-radius: 4px; }
+    .msg-av { width: 28px; height: 28px; border-radius: 50%; background: #534AB7; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; color: #fff; flex-shrink: 0; margin-top: 2px; }
     .msg.assistant .msg-av { background: #1e1e28; border: 1px solid #2a2a35; }
-
     .sources { margin-top: 7px; display: flex; flex-wrap: wrap; gap: 5px; }
-    .source-pill {
-      font-size: 10px; padding: 2px 8px;
-      background: #1a1a30; color: #9490cc;
-      border: 1px solid #2a2a40; border-radius: 20px;
-    }
-
-    #typing {
-      display: none;
-      align-self: flex-start;
-      padding: 10px 14px;
-      background: #1e1e28;
-      border: 1px solid #2a2a35;
-      border-radius: 16px;
-      border-bottom-left-radius: 4px;
-    }
-    .dot {
-      width: 5px; height: 5px; border-radius: 50%;
-      background: #666; display: inline-block; margin: 0 2px;
-      animation: bounce 1.2s infinite;
-    }
+    .source-pill { font-size: 10px; padding: 2px 8px; background: #1a1a30; color: #9490cc; border: 1px solid #2a2a40; border-radius: 20px; }
+    #typing { display: none; align-self: flex-start; padding: 10px 14px; background: #1e1e28; border: 1px solid #2a2a35; border-radius: 16px; border-bottom-left-radius: 4px; }
+    .dot { width: 5px; height: 5px; border-radius: 50%; background: #666; display: inline-block; margin: 0 2px; animation: bounce 1.2s infinite; }
     .dot:nth-child(2) { animation-delay: 0.2s; }
     .dot:nth-child(3) { animation-delay: 0.4s; }
     @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
-
-    #chips {
-      display: flex; gap: 6px; flex-wrap: wrap;
-      padding: 0 20px 10px;
-      flex-shrink: 0;
-    }
-    .chip {
-      font-size: 11px; padding: 5px 12px; border-radius: 20px;
-      border: 1px solid #2a2a35;
-      background: transparent; color: #888;
-      cursor: pointer; font-family: 'DM Sans', sans-serif;
-      transition: all 0.15s;
-    }
+    #chips { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 20px 10px; flex-shrink: 0; }
+    .chip { font-size: 11px; padding: 5px 12px; border-radius: 20px; border: 1px solid #2a2a35; background: transparent; color: #888; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
     .chip:hover { border-color: #534AB7; color: #c0bcf0; }
-
-    #input-area {
-      padding: 12px 20px;
-      border-top: 1px solid #2a2a35;
-      display: flex; gap: 10px;
-      background: #13131a;
-      flex-shrink: 0;
-    }
-
-    #chat-input {
-      flex: 1; padding: 9px 15px; font-size: 13px;
-      border-radius: 24px;
-      border: 1px solid #2a2a35;
-      background: #0f0f15;
-      color: #e8e7f4;
-      font-family: 'DM Sans', sans-serif;
-      outline: none;
-      transition: border-color 0.15s;
-    }
+    #input-area { padding: 12px 20px; border-top: 1px solid #2a2a35; display: flex; gap: 10px; background: #13131a; flex-shrink: 0; }
+    #chat-input { flex: 1; padding: 9px 15px; font-size: 13px; border-radius: 24px; border: 1px solid #2a2a35; background: #0f0f15; color: #e8e7f4; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.15s; }
     #chat-input:focus { border-color: #534AB7; }
-
-    #send-btn {
-      width: 38px; height: 38px; border-radius: 50%;
-      border: none; background: #534AB7; color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; padding: 0;
-    }
+    #send-btn { width: 38px; height: 38px; border-radius: 50%; border: none; background: #534AB7; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0; }
     #send-btn:hover { background: #6259c8; }
     #send-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-
-    #folder-add-row {
-      display: none;
-      gap: 8px; align-items: center;
-    }
+    #folder-add-row { display: none; gap: 8px; align-items: center; }
+    #err { font-size: 11px; color: #e05555; display: none; padding: 0 2px; }
   </style>
 </head>
 <body>
@@ -293,33 +91,29 @@
     <div class="row">
       <span class="lbl"></span>
       <button class="btn-google" onclick="signInGoogle()">
-        <svg width="14" height="14" viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-        </svg>
+        <svg width="14" height="14" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
         Sign in with Google
       </button>
-      <span id="google-status" style="font-size:11px; color:#666; margin-left:6px;"></span>
+      <span id="google-status" style="font-size:11px;color:#666;margin-left:6px;"></span>
     </div>
     <div id="folder-add-row" class="row">
-      <span class="lbl">Folder ID</span>
-      <input id="folder-id-input" type="text" placeholder="Paste Google Drive folder ID..." />
+      <span class="lbl">Shared Drive ID</span>
+      <input id="folder-id-input" type="text" placeholder="Paste Shared Drive or folder ID..." />
       <button class="btn-outline" onclick="addFolder()">+ Add</button>
     </div>
+    <div id="err"></div>
   </div>
 
   <div id="drive-bar">
     <span class="lbl2">Searching:</span>
     <div id="folder-chips"></div>
-    <button class="btn-outline" style="font-size:11px; padding:4px 10px;" onclick="document.getElementById('folder-add-row').style.display='flex'">+ Folder</button>
+    <button class="btn-outline" style="font-size:11px;padding:4px 10px;" onclick="document.getElementById('folder-add-row').style.display='flex'">+ Add Drive</button>
   </div>
 
   <div id="messages">
     <div class="msg assistant">
       <div class="msg-av">يم</div>
-      <div class="bubble">Assalamu alaykum! I'm YM ka Ghulaam, your internal assistant for Young Mu.<br><br>To get started:<br>1. Enter your Anthropic API key and save it<br>2. Enter your OAuth Client ID and sign in with Google<br>3. Add your Drive folder IDs<br>4. Start asking questions about SOPs, finances, or meeting notes!</div>
+      <div class="bubble">Assalamu alaykum! I'm YM ka Ghulaam.<br><br>To activate:<br>1. Enter Anthropic API key → Save<br>2. Enter OAuth Client ID → Sign in with Google<br>3. Add your Shared Drive IDs<br>4. Start asking questions!</div>
     </div>
   </div>
 
@@ -334,128 +128,143 @@
   <div id="input-area">
     <input id="chat-input" type="text" placeholder="Ask about SOPs, finances, meeting notes..." />
     <button id="send-btn" disabled onclick="send()">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="22" y1="2" x2="11" y2="13"></line>
-        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-      </svg>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
     </button>
   </div>
 </div>
 
 <script>
-  let antKey = '';
-  let accessToken = '';
-  let history = [];
-  let folders = [];
+  let antKey = '', accessToken = '', history = [], folders = [];
 
-  const SYSTEM = `You are YM ka Ghulaam, the internal AI assistant for Young Mu organization. You help employees with:
-1. SOP (Standard Operating Procedure) questions
-2. Finance questions - budgets, expenses, financial reports
-3. Meeting notes - summaries and action items
+  const SYSTEM = `You are YM ka Ghulaam, the internal AI assistant for Young Mu. Help with SOPs, finance questions, and meeting notes. When documents are provided from Google Shared Drive, answer based on them and cite the document name. If info isn't in the documents, say so clearly. Be concise, warm, and professional.`;
 
-When document context is provided, base your answers on those documents and mention which document the info came from. Be concise, warm, and professional. If the answer isn't in the provided documents, say so clearly.`;
+  function showErr(msg) {
+    const e = document.getElementById('err');
+    e.textContent = msg; e.style.display = 'block';
+    setTimeout(() => e.style.display = 'none', 4000);
+  }
 
   function saveAntKey() {
     const v = document.getElementById('ant-key').value.trim();
-    if (!v.startsWith('sk-ant-')) {
-      document.getElementById('ant-key').style.borderColor = '#c0392b';
-      return;
-    }
+    if (!v.startsWith('sk-ant-')) { document.getElementById('ant-key').style.borderColor='#c0392b'; return; }
     antKey = v;
     document.getElementById('api-badge').textContent = 'API key set';
     document.getElementById('api-badge').className = 'badge on';
     document.getElementById('ant-key').value = '••••••••••••••••';
     document.getElementById('send-btn').disabled = false;
-    addMessage('assistant', 'Anthropic key saved! Now sign in with Google to connect your Drive folders.');
+    addMsg('assistant', 'API key saved! Now sign in with Google to connect your Shared Drives.');
   }
 
   function signInGoogle() {
     const clientId = document.getElementById('oauth-client').value.trim();
-    if (!clientId) { alert('Please enter your OAuth Client ID first.'); return; }
-    const scope = 'https://www.googleapis.com/auth/drive.readonly';
-    const redirectUri = window.location.origin + window.location.pathname;
-    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}&prompt=consent`;
-    window.location.href = url;
+    if (!clientId) { showErr('Enter your OAuth Client ID first.'); return; }
+    const scope = encodeURIComponent('https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/drive.metadata.readonly');
+    const redirect = encodeURIComponent(window.location.origin + window.location.pathname);
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(clientId)}&redirect_uri=${redirect}&response_type=token&scope=${scope}&prompt=consent`;
   }
 
-  function checkOAuthCallback() {
+  function checkOAuth() {
     const hash = window.location.hash;
     if (hash && hash.includes('access_token')) {
-      const params = new URLSearchParams(hash.substring(1));
-      accessToken = params.get('access_token');
+      const p = new URLSearchParams(hash.substring(1));
+      accessToken = p.get('access_token');
       window.history.replaceState(null, '', window.location.pathname);
-      onGoogleSignedIn();
+      if (accessToken) onSignedIn();
     }
   }
 
-  function onGoogleSignedIn() {
+  function onSignedIn() {
     document.getElementById('google-status').textContent = 'Signed in!';
     document.getElementById('google-status').style.color = '#3dca8c';
     document.getElementById('drive-badge').textContent = 'Drive: connected';
     document.getElementById('drive-badge').className = 'badge on';
     document.getElementById('drive-bar').style.display = 'flex';
     document.getElementById('folder-add-row').style.display = 'flex';
-    addMessage('assistant', "Google Drive connected! Now paste your folder IDs in the setup area above. You can find a folder's ID in its URL: drive.google.com/drive/folders/YOUR_FOLDER_ID");
+    addMsg('assistant', 'Google Drive connected! Now add your Shared Drive IDs above.\n\nFind a Shared Drive ID in its URL:\ndrive.google.com/drive/folders/YOUR_ID_HERE\n\nPaste just the ID part after the last /');
   }
 
   function addFolder() {
     const input = document.getElementById('folder-id-input');
     const id = input.value.trim();
-    if (!id || folders.find(f => f.id === id)) return;
-    folders.push({ id, name: 'Folder ' + (folders.length + 1) });
-    renderFolderChips();
+    if (!id) return;
+    if (folders.find(f => f.id === id)) { showErr('Already added.'); return; }
+    const name = 'Drive ' + (folders.length + 1);
+    folders.push({ id, name });
+    renderChips();
     input.value = '';
-    addMessage('assistant', `Folder ${folders.length} added! Add more or start asking questions.`);
+    addMsg('assistant', name + ' added! Add more drives or start chatting.');
   }
 
-  function renderFolderChips() {
-    document.getElementById('folder-chips').innerHTML = folders.map((f, i) => `
-      <span class="folder-chip">${f.name} <button onclick="removeFolder(${i})">×</button></span>
-    `).join('');
+  function renderChips() {
+    document.getElementById('folder-chips').innerHTML = folders.map((f, i) =>
+      `<span class="folder-chip">${f.name} <button onclick="removeFolder(${i})">×</button></span>`
+    ).join('');
   }
 
-  function removeFolder(i) { folders.splice(i, 1); renderFolderChips(); }
+  function removeFolder(i) { folders.splice(i, 1); renderChips(); }
+
+  async function gFetch(url) {
+    const res = await fetch(url, { headers: { Authorization: 'Bearer ' + accessToken } });
+    return res;
+  }
 
   async function searchDrive(query) {
     if (!accessToken || !folders.length) return [];
-    const results = [];
+    const kw = query.split(' ').filter(w => w.length > 3).slice(0, 4).join(' ') || query.substring(0, 30);
+    const safe = kw.replace(/'/g, "\\'");
+    const all = [];
+
     for (const folder of folders) {
-      try {
-        const q = encodeURIComponent(`'${folder.id}' in parents and trashed=false`);
-        const res = await fetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name,mimeType)&pageSize=5`, {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        });
-        const data = await res.json();
-        if (data.files) results.push(...data.files.map(f => ({ ...f, folderName: folder.name })));
-      } catch(e) {}
+      const attempts = [
+        `'${folder.id}' in parents and fullText contains '${safe}' and trashed=false`,
+        `'${folder.id}' in parents and name contains '${safe}' and trashed=false`,
+        `'${folder.id}' in parents and trashed=false`
+      ];
+      let found = false;
+      for (const q of attempts) {
+        if (found) break;
+        try {
+          const res = await gFetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name,mimeType)&pageSize=8&supportsAllDrives=true&includeItemsFromAllDrives=true&corpora=allDrives`);
+          const data = await res.json();
+          if (data.files && data.files.length > 0) {
+            all.push(...data.files.map(f => ({ ...f, driveName: folder.name })));
+            found = true;
+          }
+        } catch(e) {}
+      }
     }
-    return results;
+
+    const seen = new Set();
+    return all.filter(f => { if (seen.has(f.id)) return false; seen.add(f.id); return true; });
   }
 
-  async function fetchFileText(fileId, mimeType) {
+  async function fetchText(fileId, mimeType) {
+    const b = 'https://www.googleapis.com/drive/v3/files';
+    let url;
     try {
-      let url;
-      if (mimeType === 'application/vnd.google-apps.document') {
-        url = `https://www.googleapis.com/drive/v3/files/${fileId}/export?mimeType=text/plain`;
-      } else if (mimeType === 'application/vnd.google-apps.spreadsheet') {
-        url = `https://www.googleapis.com/drive/v3/files/${fileId}/export?mimeType=text/csv`;
-      } else if (mimeType === 'application/vnd.google-apps.presentation') {
-        url = `https://www.googleapis.com/drive/v3/files/${fileId}/export?mimeType=text/plain`;
-      } else {
-        url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
-      }
-      const res = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
+      if (mimeType === 'application/vnd.google-apps.document')
+        url = `${b}/${fileId}/export?mimeType=text%2Fplain&supportsAllDrives=true`;
+      else if (mimeType === 'application/vnd.google-apps.spreadsheet')
+        url = `${b}/${fileId}/export?mimeType=text%2Fcsv&supportsAllDrives=true`;
+      else if (mimeType === 'application/vnd.google-apps.presentation')
+        url = `${b}/${fileId}/export?mimeType=text%2Fplain&supportsAllDrives=true`;
+      else if (mimeType && (mimeType.startsWith('text/') || mimeType === 'application/json'))
+        url = `${b}/${fileId}?alt=media&supportsAllDrives=true`;
+      else return null;
+
+      const res = await gFetch(url);
+      if (!res.ok) return null;
       const text = await res.text();
-      return text.substring(0, 3000);
+      return text.trim().length > 30 ? text.substring(0, 4000) : null;
     } catch(e) { return null; }
   }
 
   function fillChip(el) {
-    document.getElementById('chat-input').value = el.textContent;
+    document.getElementById('chat-input').value = el.textContent.trim();
     document.getElementById('chat-input').focus();
   }
 
-  function addMessage(role, text, sources) {
+  function addMsg(role, text, sources) {
     const msgs = document.getElementById('messages');
     const wrap = document.createElement('div');
     wrap.className = 'msg ' + role;
@@ -464,14 +273,14 @@ When document context is provided, base your answers on those documents and ment
     av.textContent = role === 'assistant' ? 'يم' : 'You';
     const bub = document.createElement('div');
     bub.className = 'bubble';
-    bub.textContent = text;
+    bub.innerHTML = text.replace(/\n/g, '<br>');
     if (sources && sources.length) {
       const sp = document.createElement('div');
       sp.className = 'sources';
       sources.forEach(s => {
         const p = document.createElement('span');
         p.className = 'source-pill';
-        p.textContent = s;
+        p.textContent = '📄 ' + s;
         sp.appendChild(p);
       });
       bub.appendChild(sp);
@@ -487,30 +296,29 @@ When document context is provided, base your answers on those documents and ment
     if (!text || !antKey) return;
     document.getElementById('chat-input').value = '';
     document.getElementById('send-btn').disabled = true;
-    addMessage('user', text);
+    addMsg('user', text);
     history.push({ role: 'user', content: text });
 
     const typing = document.getElementById('typing');
     typing.style.display = 'flex';
     document.getElementById('messages').scrollTop = 99999;
 
-    let docContext = '';
-    let usedSources = [];
+    let docContext = '', usedSources = [];
 
     if (accessToken && folders.length) {
       const files = await searchDrive(text);
-      for (const file of files.slice(0, 4)) {
-        const txt = await fetchFileText(file.id, file.mimeType);
+      for (const file of files.slice(0, 5)) {
+        const txt = await fetchText(file.id, file.mimeType);
         if (txt) {
-          docContext += `\n\n--- Document: ${file.name} ---\n${txt}`;
+          docContext += `\n\n=== "${file.name}" (${file.driveName}) ===\n${txt}`;
           usedSources.push(file.name);
         }
       }
     }
 
-    const systemFinal = SYSTEM + (docContext
-      ? `\n\nRelevant documents from Google Drive:\n${docContext}`
-      : '\n\nNo Drive documents connected. Let the user know to add folders for org-specific answers.');
+    const sysMsg = SYSTEM + (docContext
+      ? `\n\nRelevant documents from Google Shared Drive:\n${docContext}`
+      : '\n\nNo matching documents found in the connected drives. Let the user know and suggest they verify their folder IDs or rephrase the question.');
 
     try {
       const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -522,24 +330,24 @@ When document context is provided, base your answers on those documents and ment
           'anthropic-dangerous-direct-browser-access': 'true'
         },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-5',
-          max_tokens: 1000,
-          system: systemFinal,
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 1024,
+          system: sysMsg,
           messages: history
         })
       });
       const data = await res.json();
       typing.style.display = 'none';
       if (data.error) {
-        addMessage('assistant', 'Error: ' + data.error.message);
+        addMsg('assistant', 'Error: ' + data.error.message);
       } else {
         const reply = data.content[0].text;
         history.push({ role: 'assistant', content: reply });
-        addMessage('assistant', reply, usedSources);
+        addMsg('assistant', reply, usedSources);
       }
-    } catch(err) {
+    } catch(e) {
       typing.style.display = 'none';
-      addMessage('assistant', 'Something went wrong. Please check your API key and try again.');
+      addMsg('assistant', 'Something went wrong. Check your API key and try again.');
     }
 
     document.getElementById('send-btn').disabled = false;
@@ -550,7 +358,7 @@ When document context is provided, base your answers on those documents and ment
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
   });
 
-  checkOAuthCallback();
+  checkOAuth();
 </script>
 </body>
 </html>
