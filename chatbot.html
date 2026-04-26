@@ -109,7 +109,7 @@
   // ============================================================
   // CONFIGURATION — fill these in before uploading to GitHub
   // ============================================================
-  const ANTHROPIC_KEY = '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';
+  // Anthropic key is stored securely in Vercel environment variables
   const OAUTH_CLIENT_ID = '801693803937-rfad5i0fh52hg5tktr5njka3kidcl8ph.apps.googleusercontent.com';
   const DRIVE_FOLDERS = [
     { id: '0AJqltT-iYzWOUk9PVA', name: 'SOPs' },
@@ -119,7 +119,7 @@
   ];
   // ============================================================
 
-  let antKey = ANTHROPIC_KEY;
+  let antKey = '';
   let accessToken = '', history = [];
   let folders = DRIVE_FOLDERS;
 
@@ -277,7 +277,7 @@
 
   async function send() {
     const text = document.getElementById('chat-input').value.trim();
-    if (!text || !antKey) return;
+    if (!text) return;
     document.getElementById('chat-input').value = '';
     document.getElementById('send-btn').disabled = true;
     addMsg('user', text);
@@ -306,13 +306,10 @@
       : '\n\nNo matching documents found in the connected drives. Let the user know and suggest they verify their folder IDs or rephrase the question.');
 
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': antKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           model: 'claude-haiku-4-5-20251001',
