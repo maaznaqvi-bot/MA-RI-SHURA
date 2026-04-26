@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'API key not configured' });
+    return res.status(500).json({ error: 'ANTHROPIC_API_KEY environment variable not set' });
   }
 
   try {
@@ -20,8 +20,13 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-    return res.status(response.status).json(data);
+
+    if (!response.ok) {
+      return res.status(response.status).json({ error: data.error?.message || 'Anthropic API error', details: data });
+    }
+
+    return res.status(200).json(data);
   } catch (error) {
-    return res.status(500).json({ error: 'Failed to reach Anthropic API' });
+    return res.status(500).json({ error: error.message || 'Unknown server error' });
   }
 }
