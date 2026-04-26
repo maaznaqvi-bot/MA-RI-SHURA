@@ -73,47 +73,19 @@
       <p>Young Mu internal assistant</p>
     </div>
     <div id="status">
-      <span id="api-badge" class="badge off">No API key</span>
       <span id="drive-badge" class="badge off">Drive: off</span>
-    </div>
-  </div>
-
-  <div id="setup">
-    <div class="row">
-      <span class="lbl">Anthropic key</span>
-      <input id="ant-key" type="password" placeholder="sk-ant-api03-..." />
-      <button class="btn-primary" onclick="saveAntKey()">Save</button>
-    </div>
-    <div class="row">
-      <span class="lbl">OAuth Client ID</span>
-      <input id="oauth-client" type="text" placeholder="xxxxxx.apps.googleusercontent.com" />
-    </div>
-    <div class="row">
-      <span class="lbl"></span>
-      <button class="btn-google" onclick="signInGoogle()">
-        <svg width="14" height="14" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      <button class="btn-google" id="signin-btn" onclick="signInGoogle()" style="padding:5px 12px;font-size:11px;">
+        <svg width="13" height="13" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
         Sign in with Google
       </button>
-      <span id="google-status" style="font-size:11px;color:#666;margin-left:6px;"></span>
     </div>
-    <div id="folder-add-row" class="row">
-      <span class="lbl">Shared Drive ID</span>
-      <input id="folder-id-input" type="text" placeholder="Paste Shared Drive or folder ID..." />
-      <button class="btn-outline" onclick="addFolder()">+ Add</button>
-    </div>
-    <div id="err"></div>
   </div>
 
-  <div id="drive-bar">
-    <span class="lbl2">Searching:</span>
-    <div id="folder-chips"></div>
-    <button class="btn-outline" style="font-size:11px;padding:4px 10px;" onclick="document.getElementById('folder-add-row').style.display='flex'">+ Add Drive</button>
-  </div>
 
   <div id="messages">
     <div class="msg assistant">
       <div class="msg-av">يم</div>
-      <div class="bubble">Assalamu alaykum! I'm YM ka Ghulaam.<br><br>To activate:<br>1. Enter Anthropic API key → Save<br>2. Enter OAuth Client ID → Sign in with Google<br>3. Add your Shared Drive IDs<br>4. Start asking questions!</div>
+      <div class="bubble">Assalamu alaykum! I'm YM ka Ghulaam, your Young Mu internal assistant.<br><br>Sign in with Google using your <strong>@youngmuslims.com</strong> account to get started. Then ask me anything about SOPs, finances, or meeting notes!</div>
     </div>
   </div>
 
@@ -134,7 +106,22 @@
 </div>
 
 <script>
-  let antKey = '', accessToken = '', history = [], folders = [];
+  // ============================================================
+  // CONFIGURATION — fill these in before uploading to GitHub
+  // ============================================================
+  const ANTHROPIC_KEY = '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';
+  const OAUTH_CLIENT_ID = '801693803937-rfad5i0fh52hg5tktr5njka3kidcl8ph.apps.googleusercontent.com';
+  const DRIVE_FOLDERS = [
+    { id: '0AJqltT-iYzWOUk9PVA', name: 'SOPs' },
+    { id: '0AIoZUN2Tgnm4Uk9PVA', name: 'Cabinet' },
+    { id: '0AEhqO14nhrExUk9PVA', name: 'YM Massachusetts/Rhode Island' },
+    // Add more folders here if needed
+  ];
+  // ============================================================
+
+  let antKey = ANTHROPIC_KEY;
+  let accessToken = '', history = [];
+  let folders = DRIVE_FOLDERS;
 
   const SYSTEM = `You are YM ka Ghulaam, the internal AI assistant for Young Mu. Help with SOPs, finance questions, and meeting notes. When documents are provided from Google Shared Drive, answer based on them and cite the document name. If info isn't in the documents, say so clearly. Be concise, warm, and professional.`;
 
@@ -156,11 +143,9 @@
   }
 
   function signInGoogle() {
-    const clientId = document.getElementById('oauth-client').value.trim();
-    if (!clientId) { showErr('Enter your OAuth Client ID first.'); return; }
     const scope = encodeURIComponent('https://www.googleapis.com/auth/drive');
     const redirect = encodeURIComponent(window.location.origin + window.location.pathname);
-    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(clientId)}&redirect_uri=${redirect}&response_type=token&scope=${scope}&prompt=consent`;
+    window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?client_id=' + encodeURIComponent(OAUTH_CLIENT_ID) + '&redirect_uri=' + redirect + '&response_type=token&scope=' + scope + '&prompt=consent';
   }
 
   function checkOAuth() {
@@ -174,34 +159,14 @@
   }
 
   function onSignedIn() {
-    document.getElementById('google-status').textContent = 'Signed in!';
-    document.getElementById('google-status').style.color = '#3dca8c';
     document.getElementById('drive-badge').textContent = 'Drive: connected';
     document.getElementById('drive-badge').className = 'badge on';
-    document.getElementById('drive-bar').style.display = 'flex';
-    document.getElementById('folder-add-row').style.display = 'flex';
-    addMsg('assistant', 'Google Drive connected! Now add your Shared Drive IDs above.\n\nFind a Shared Drive ID in its URL:\ndrive.google.com/drive/folders/YOUR_ID_HERE\n\nPaste just the ID part after the last /');
+    document.getElementById('signin-btn').style.display = 'none';
+    document.getElementById('send-btn').disabled = false;
+    addMsg('assistant', 'Google Drive connected! You can now ask me anything about your SOPs, finances, or meeting notes.');
   }
 
-  function addFolder() {
-    const input = document.getElementById('folder-id-input');
-    const id = input.value.trim();
-    if (!id) return;
-    if (folders.find(f => f.id === id)) { showErr('Already added.'); return; }
-    const name = 'Drive ' + (folders.length + 1);
-    folders.push({ id, name });
-    renderChips();
-    input.value = '';
-    addMsg('assistant', name + ' added! Add more drives or start chatting.');
-  }
 
-  function renderChips() {
-    document.getElementById('folder-chips').innerHTML = folders.map((f, i) =>
-      `<span class="folder-chip">${f.name} <button onclick="removeFolder(${i})">×</button></span>`
-    ).join('');
-  }
-
-  function removeFolder(i) { folders.splice(i, 1); renderChips(); }
 
   async function gFetch(url) {
     const res = await fetch(url, { headers: { Authorization: 'Bearer ' + accessToken } });
