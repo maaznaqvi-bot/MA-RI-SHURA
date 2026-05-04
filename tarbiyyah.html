@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tarbiyyah Newsletter — YM NJ North</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-dark: #062d22;
+      --green:      #0b3d2e;
+      --green-mid:  #145945;
+      --gold:       #c8a951;
+      --gold-lt:    #e8c97a;
+      --white:      #ffffff;
+      --cream:      #fdf8f0;
+      --gray-50:    #f8fafc;
+      --gray-100:   #f1f5f9;
+      --gray-200:   #e2e8f0;
+      --gray-400:   #94a3b8;
+      --gray-500:   #64748b;
+      --gray-900:   #0f172a;
+      --border:     #e0d4b8;
+      --teal-mid:   #2e6b6b;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      line-height: 1.6;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 4px; }
+
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(160deg, var(--green) 0%, var(--green-dark) 100%);
+      padding: 2.5rem 1rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(60deg,  transparent, transparent 28px, rgba(200,169,81,.08) 28px, rgba(200,169,81,.08) 29px),
+        repeating-linear-gradient(120deg, transparent, transparent 28px, rgba(200,169,81,.08) 28px, rgba(200,169,81,.08) 29px),
+        repeating-linear-gradient(0deg,   transparent, transparent 28px, rgba(200,169,81,.08) 28px, rgba(200,169,81,.08) 29px);
+      pointer-events: none;
+    }
+    .header-inner { max-width: 80rem; margin: 0 auto; position: relative; z-index: 1; }
+    .accent-bar { width: 5rem; height: 5px; background: var(--gold); border-radius: 9999px; margin: 0 auto 1.75rem; box-shadow: 0 0 14px var(--gold); }
+    .header h1 {
+      color: white;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 7vw, 4rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .header h1 span { color: var(--gold); font-style: italic; }
+    .header-sub {
+      color: rgba(255,255,255,0.55);
+      font-size: clamp(0.65rem, 1.8vw, 0.85rem);
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-top: 0.5rem;
+    }
+    .header-badge {
+      display: inline-block;
+      margin-top: 0.75rem;
+      padding: 0.2rem 0.9rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(200,169,81,0.3);
+      border-radius: 9999px;
+      font-size: 0.55rem;
+      color: var(--gold);
+      font-weight: 900;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      background: white;
+      border-bottom: 1px solid var(--gray-100);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .nav-inner {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-inner::-webkit-scrollbar { display: none; }
+    .nav-links { display: flex; overflow-x: auto; scrollbar-width: none; }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-link {
+      display: block;
+      padding: 1.1rem 1rem;
+      font-size: 0.6rem;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .nav-link:hover { color: var(--green); }
+    .nav-link.active { color: var(--green); border-bottom-color: var(--green); }
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.6rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      text-decoration: none;
+      transition: color 0.15s;
+      white-space: nowrap;
+      padding: 1.1rem 0;
+    }
+    .nav-back:hover { color: var(--green); }
+    .nav-back svg { width: 14px; height: 14px; }
+
+    /* ── HADITH BAND ── */
+    .hadith-band {
+      background: var(--green);
+      border-top: 3px solid var(--gold);
+      border-bottom: 3px solid var(--gold);
+      padding: 1.5rem 2rem;
+      text-align: center;
+    }
+    .hadith-text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(0.9rem, 2.5vw, 1.15rem);
+      color: rgba(255,255,255,0.9);
+      max-width: 620px;
+      margin: 0 auto 0.4rem;
+      line-height: 1.6;
+    }
+    .hadith-mark { color: var(--gold); font-size: 1.4em; line-height: 0; vertical-align: -0.2em; }
+    .hadith-source {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 70rem;
+      margin: 0 auto;
+      padding: 3rem 1.25rem 5rem;
+      display: grid;
+      gap: 2rem;
+    }
+
+    /* ── REGION CARD ── */
+    .region {
+      background: white;
+      border-radius: 2rem;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      border: 1px solid var(--gray-100);
+    }
+    .region-header {
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .region-icon {
+      width: 2rem;
+      height: 2rem;
+      background: rgba(200,169,81,0.2);
+      border: 1px solid rgba(200,169,81,0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.9rem;
+    }
+    .region-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── EVENT ROW ── */
+    .event {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--gray-100);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: start;
+      transition: background 0.15s;
+    }
+    .event:last-child { border-bottom: none; }
+    .event:hover { background: #f8fafc; }
+
+    .event-org {
+      font-size: 0.6rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.3rem;
+    }
+    .event-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--green);
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+    }
+    .event-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 1rem;
+    }
+    .detail-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.72rem;
+      color: var(--gray-500);
+    }
+    .detail-chip svg { width: 12px; height: 12px; flex-shrink: 0; opacity: 0.6; }
+    .event-desc {
+      margin-top: 0.6rem;
+      font-size: 0.75rem;
+      color: #666;
+      line-height: 1.55;
+      font-style: italic;
+    }
+    .event-meta { text-align: right; flex-shrink: 0; }
+
+    /* ── BADGES ── */
+    .type-badge {
+      display: inline-block;
+      font-size: 0.55rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      white-space: nowrap;
+    }
+    .type-class    { background: #e8f4f0; color: #1a7a5e; }
+    .type-event    { background: #fef3e2; color: #a06c00; }
+    .type-workshop { background: #eaf0fb; color: #2a4f8a; }
+    .type-halaqa   { background: #f3eaf5; color: #6a2c8a; }
+    .type-multiple { background: var(--gray-100); color: var(--gray-500); }
+
+    .register-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 0.6rem;
+      font-size: 0.6rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(200,169,81,0.4);
+      padding-bottom: 1px;
+      transition: color 0.15s;
+    }
+    .register-link:hover { color: var(--green); border-bottom-color: var(--green); }
+
+    /* ── COMING SOON ── */
+    .coming-soon { padding: 2rem 1.5rem; text-align: center; }
+    .coming-soon-inner {
+      border: 2px dashed var(--gray-200);
+      border-radius: 1rem;
+      padding: 1.75rem 1.25rem;
+    }
+    .coming-soon strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--gray-400);
+      margin-bottom: 0.4rem;
+    }
+    .coming-soon p { font-size: 0.75rem; color: var(--gray-400); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: white;
+      border-top: 1px solid var(--gray-100);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    .footer-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--green);
+      font-style: italic;
+      margin-bottom: 0.5rem;
+    }
+    footer p { font-size: 0.7rem; color: var(--gray-400); line-height: 1.8; }
+    footer strong { color: var(--gray-500); }
+    .footer-contact {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--gray-100);
+    }
+    .footer-contact-label {
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      margin-bottom: 0.35rem;
+    }
+    .footer-contact-name { font-weight: 700; font-size: 0.8rem; color: var(--gray-900); }
+    .footer-contact-phone {
+      display: inline-block;
+      margin-top: 0.25rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .footer-contact-phone:hover { color: var(--green); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .event { grid-template-columns: 1fr; }
+      .event-meta { text-align: left; }
+      main { padding: 1.5rem 0.75rem 4rem; gap: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="accent-bar"></div>
+    <h1>Tarbiyyah <span>Newsletter</span></h1>
+    <p class="header-sub">Classes · Talks · Events</p>
+    <div class="header-badge">Young Muslims · New Jersey North Subregion</div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-back">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      MA/RI Portal
+    </a>
+    <div class="nav-links">
+      <a href="#bayonne"     class="nav-link active">Bayonne</a>
+      <a href="#newark"      class="nav-link">Newark</a>
+      <a href="#morris"      class="nav-link">Morris</a>
+      <a href="#paramus"     class="nav-link">Paramus</a>
+      <a href="#jersey-city" class="nav-link">Jersey City</a>
+      <a href="#teaneck"     class="nav-link">Teaneck</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HADITH BAND -->
+<div class="hadith-band">
+  <div class="hadith-text">
+    <span class="hadith-mark">"</span>
+    Seeking knowledge is an obligation upon every Muslim.
+    <span class="hadith-mark">"</span>
+  </div>
+  <div class="hadith-source">— Prophet Muhammad ﷺ &nbsp;|&nbsp; Ibn Mājah</div>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- BAYONNE -->
+  <section class="region" id="bayonne">
+    <div class="region-header">
+      <div class="region-icon">🕌</div>
+      <h2>Bayonne</h2>
+    </div>
+    <div>
+      <div class="event">
+        <div class="event-main">
+          <div class="event-org">Bayonne Masjid</div>
+          <div class="event-name">The Ideal Muslim</div>
+          <div class="event-details">
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Every Monday after Isha
+            </span>
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Dr. Umer
+            </span>
+          </div>
+        </div>
+        <div class="event-meta"><span class="type-badge type-class">Weekly Class</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWARK & EAST ORANGE -->
+  <section class="region" id="newark">
+    <div class="region-header">
+      <div class="region-icon">📚</div>
+      <h2>Newark &amp; East Orange</h2>
+    </div>
+    <div>
+      <div class="event">
+        <div class="event-main">
+          <div class="event-org">NIA — 231 Roseville Ave, Newark</div>
+          <div class="event-name">Shahadah Class</div>
+          <div class="event-details">
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              Every Sunday
+            </span>
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              11:30 am – 1:00 pm
+            </span>
+          </div>
+        </div>
+        <div class="event-meta"><span class="type-badge type-class">Weekly Class</span></div>
+      </div>
+
+      <div class="event">
+        <div class="event-main">
+          <div class="event-org">NIA — 231 Roseville Ave, Newark</div>
+          <div class="event-name">Tafsir with Imam Daud Haqq</div>
+          <div class="event-details">
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              Every Sunday
+            </span>
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              6:30 – 7:45 am
+            </span>
+          </div>
+        </div>
+        <div class="event-meta"><span class="type-badge type-class">Weekly Class</span></div>
+      </div>
+
+      <div class="event">
+        <div class="event-main">
+          <div class="event-org">Masjid As-Habul Yameen — 224 N 18th St, East Orange</div>
+          <div class="event-name">Beginners Arabic Classes</div>
+          <div class="event-details">
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              Every Monday · Starts Apr 20
+            </span>
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              7:00 pm
+            </span>
+            <span class="detail-chip">💵 $10/class</span>
+          </div>
+        </div>
+        <div class="event-meta"><span class="type-badge type-class">Weekly Class</span></div>
+      </div>
+
+      <div class="event">
+        <div class="event-main">
+          <div class="event-org">Masjid Ahlis Sunnah — 215 N Oraton Pkwy, East Orange</div>
+          <div class="event-name">Arabic Classes &amp; New Shahadah Classes</div>
+          <div class="event-details">
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              Arabic: Mon–Thu after Asr
+            </span>
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              Shahadah: Sundays 11:00 am
+            </span>
+          </div>
+        </div>
+        <div class="event-meta"><span class="type-badge type-multiple">Multiple</span></div>
+      </div>
+
+      <div class="event">
+        <div class="event-main">
+          <div class="event-org">Masjid Muhammad — 255 S Orange Ave #253, Newark</div>
+          <div class="event-name">Islamic Studies Class</div>
+          <div class="event-details">
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              Every Sunday
+            </span>
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              12:00 pm
+            </span>
+          </div>
+        </div>
+        <div class="event-meta"><span class="type-badge type-class">Weekly Class</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MORRIS COUNTY -->
+  <section class="region" id="morris">
+    <div class="region-header">
+      <div class="region-icon">🌿</div>
+      <h2>Morris County</h2>
+    </div>
+    <div>
+      <div class="event">
+        <div class="event-main">
+          <div class="event-org">ICMC — 1 Mannino Dr, Rockaway · icmcnj.com</div>
+          <div class="event-name">Weekly Programming with Imam Adel Elmorsi</div>
+          <div class="event-details">
+            <span class="detail-chip">📅 Mon after Isha — Q&amp;A Facebook Live</span>
+            <span class="detail-chip">📅 Tue after Isha — Read Quran w/ Imam Adel</span>
+            <span class="detail-chip">📅 Wed after Isha — Quran Stories &amp; Lessons</span>
+            <span class="detail-chip">📅 Thu after Isha — Halaqa &amp; Surah Al-Khaf</span>
+            <span class="detail-chip">📅 Sat Fajr — Hajj &amp; Umrah, Tafseer, Breakfast</span>
+            <span class="detail-chip">📅 Sun — Youth &amp; Parent Halaqa + Brothers' Tajweed</span>
+          </div>
+          <div class="event-details" style="margin-top:0.5rem">
+            <span class="detail-chip">👩 Sisters Halaqa — Thu 1:00 pm · Sisters Fajr — Sat 5:45 am</span>
+            <span class="detail-chip">🕌 Jummah — 1st Khutbah 12:30 pm · 2nd Khutbah 1:45 pm</span>
+            <span class="detail-chip">📖 Reverts Study Circle — 6:30 pm · Mon 4/6 &amp; 4/20</span>
+            <span class="detail-chip">👨‍👩‍👧 Family Nights — Fri 4/10 &amp; 4/24 · 6:30 pm</span>
+            <span class="detail-chip">🧑 Youth Nights — Fri 4/3 &amp; 4/17 · 7:00 pm</span>
+          </div>
+        </div>
+        <div class="event-meta"><span class="type-badge type-multiple">Multiple</span></div>
+      </div>
+
+      <div class="event">
+        <div class="event-main">
+          <div class="event-org">ICCC — IC3NJ.com/brothers</div>
+          <div class="event-name">Building Your House — Brothers Only Workshop</div>
+          <div class="event-details">
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              Saturday, May 2
+            </span>
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              1:30 pm
+            </span>
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Dr. Raymond Brock Murray
+            </span>
+          </div>
+          <div class="event-desc">For young men ready to find a spouse and start their family. Topics: reaching readiness, managing expectations, prioritizing needs vs. wants, healthy communication, navigating family pressures.</div>
+          <a class="register-link" href="https://ic3nj.com/brothers" target="_blank">Register → IC3NJ.com/brothers</a>
+        </div>
+        <div class="event-meta"><span class="type-badge type-workshop">Workshop</span></div>
+      </div>
+
+      <div class="event">
+        <div class="event-main">
+          <div class="event-org">Jam-e-Masjid Islamic Center (JMIC) — 110 Harrison St, Boonton</div>
+          <div class="event-name">The Beginning of Guidance — In-Depth Study of Imam Al-Ghazali</div>
+          <div class="event-details">
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              Tuesday Nights · Apr 28 – Jul 7
+            </span>
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              7:00 – 9:00 pm
+            </span>
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Shaykh Yasir Fahmy
+            </span>
+          </div>
+          <a class="register-link" href="https://propheticliving.org/beginning-of-guidance" target="_blank">Register → propheticliving.org/beginning-of-guidance</a>
+        </div>
+        <div class="event-meta"><span class="type-badge type-class">Course</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARAMUS & NORTH NJ -->
+  <section class="region" id="paramus">
+    <div class="region-header">
+      <div class="region-icon">✨</div>
+      <h2>Paramus &amp; North NJ <span style="font-size:0.75rem;font-weight:400;opacity:0.6;">(ICPC)</span></h2>
+    </div>
+    <div>
+      <div class="event">
+        <div class="event-main">
+          <div class="event-org">ICPC-Clifton · icpcnj.org/courses</div>
+          <div class="event-name">Purification of the Soul — A Primer on the Spiritual Path</div>
+          <div class="event-details">
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              Sundays · Apr 19 – Jun 28
+            </span>
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              6:30 pm
+            </span>
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Shaykh Osamah
+            </span>
+          </div>
+          <div class="event-desc">Defining the framework of Islamic spirituality — cleansing spiritual diseases, beautifying the soul with worship, and gaining spiritual awareness.</div>
+          <a class="register-link" href="https://icpcnj.org/courses" target="_blank">Register → icpcnj.org/courses</a>
+        </div>
+        <div class="event-meta"><span class="type-badge type-class">Course</span></div>
+      </div>
+
+      <div class="event">
+        <div class="event-main">
+          <div class="event-org">ICPC-Clifton · icpcnj.org/courses</div>
+          <div class="event-name">The Problem of Evil — The Wisdom Behind Suffering</div>
+          <div class="event-details">
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              Tuesdays · Apr 21 – May 12
+            </span>
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              8:00 pm
+            </span>
+            <span class="detail-chip">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Shaykh Osamah
+            </span>
+          </div>
+          <div class="event-desc">A four-week academic intensive exploring the questions of suffering, free will, evil, and Allah's magnificence.</div>
+          <a class="register-link" href="https://icpcnj.org/courses" target="_blank">Register → icpcnj.org/courses</a>
+        </div>
+        <div class="event-meta"><span class="type-badge type-class">Course</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JERSEY CITY -->
+  <section class="region" id="jersey-city">
+    <div class="region-header">
+      <div class="region-icon">🔜</div>
+      <h2>Jersey City</h2>
+    </div>
+    <div class="coming-soon">
+      <div class="coming-soon-inner">
+        <strong>Coming Soon</strong>
+        <p>Information for Jersey City is being collected and will be included in the next update.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEANECK -->
+  <section class="region" id="teaneck">
+    <div class="region-header">
+      <div class="region-icon">🔜</div>
+      <h2>Teaneck</h2>
+    </div>
+    <div class="coming-soon">
+      <div class="coming-soon-inner">
+        <strong>Coming Soon</strong>
+        <p>Information for Teaneck is being collected and will be included in the next update.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-title">Tarbiyyah Newsletter</p>
+  <p>
+    Produced by <strong>Young Muslims · New Jersey North (NJN)</strong><br />
+    A regional resource for Islamic education across Bayonne, Newark, Morris County, Paramus, Jersey City &amp; Teaneck.
+  </p>
+  <div class="footer-contact">
+    <div class="footer-contact-label">📬 Submit a Class or Event</div>
+    <div class="footer-contact-name">Mahmoud Mohamed</div>
+    <a class="footer-contact-phone" href="tel:2019695581">(201) 969-5581</a>
+  </div>
+</footer>
+
+<script>
+  // Highlight active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
