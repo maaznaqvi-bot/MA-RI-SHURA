@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/tarbiyyah", "destination": "/tarbiyyah.html" },
     { "source": "/pdp",       "destination": "/pdp.html"     },
     { "source": "/admin",     "destination": "/admin.html"   },
     { "source": "/api/events","destination": "/api/events.js"},
